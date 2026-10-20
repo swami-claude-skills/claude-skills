@@ -2,6 +2,8 @@
 
 Claude skills built by Swami (Vibe Coding: Swami · AI: Claude). Each skill is one zip with its `SKILL.md` at the top, ready to upload in Claude under Customize › Skills. This repository is refreshed nightly.
 
+**All skills in one zip:** [claude-skills-all.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/claude-skills-all.zip)
+
 | Skill | What it does | Download |
 |---|---|---|
 | `facebook-comments` | Extracts every comment and reply from a Facebook post into threaded JSON, optionally as a vibe dashboard. | [facebook-comments.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/facebook-comments.zip) |
