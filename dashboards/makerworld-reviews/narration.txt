@@ -1,0 +1,33 @@
+This page is the skill sheet for the MakerWorld reviews skill. It pulls every rating, comment, and nested reply from a MakerWorld model page into one translated, threaded file with a working link for each entry, and it can turn that file into a vibe dashboard.
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is, and why it exists: MakerWorld loads reviews ten at a time by script, so the data has to come from the site's own interface, called from a real browser tab.
+
+Section four, What It Does. Eight things it handles: the full pull in the background, a count check, translation, the threaded file, permalinks, a plain text version, and a dashboard in the current vibe dashboard format, with search, a mind map, and a glossary.
+
+Section five, How to Use It. What to ask for, then eight steps on the Mac, from opening the desktop app and pasting the model link, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet.
+
+Section six, Skills It Depends On. The built in browser skill, or the Chrome browser skill for Chrome, and the vibe dashboard skill for dashboards. The Facebook comments and YouTube comments skills are related siblings.
+
+Section seven, Programs It Depends On. The Claude desktop app, Google Chrome with the Claude in Chrome extension, or Perplexity's Comet browser, plus Python in Claude's workspace. Edge and [Bambu](/bˈæmbuː/) Studio are not needed.
+
+Section eight, Capabilities and Limitations. It gets every thread with no sign in, reads only, and translates any language. But it needs a real browser tab, does one model per run, can miss a few deleted replies, skips photos, and this version hasn't been run end to end yet.
+
+Section nine, Scheduled Tasks. None. The skill runs only when asked.
+
+Section ten, Where It Runs. It is meant for the desktop app linked to the Mac, but this version hasn't been run end to end there yet; an earlier version worked in the Comet browser, which is supported again. Plain web and mobile sessions can only build a dashboard from an existing file, and Windows, Claude Code, and other assistants are untested.
+
+Section eleven, Gotchas. Thirteen traps, from the empty page that web fetch sees and the forty five second script limit, to sign in errors, unsupported browsers, and personal details in reviews.
+
+Section twelve, Other Requirements. A Mac or a Windows ten or eleven PC with the desktop app or Chrome, code execution, access to the site, and the vibe dashboard skill for dashboards.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

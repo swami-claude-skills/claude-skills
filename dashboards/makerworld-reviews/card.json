@@ -1,0 +1,579 @@
+{
+  "skill": "makerworld-reviews",
+  "title": "MakerWorld Reviews",
+  "summary": "Pulls every rating, comment, and nested reply from a MakerWorld model page into one translated, threaded JSON file with a working link per entry, and can turn it into a vibe dashboard.",
+  "what_it_is": [
+    "A Claude skill that collects the complete **Reviews & Ratings** tab of a MakerWorld model: star ratings, comments, and every reply under them, however deep. Non-English posts are translated, and each entry gets a permalink that opens the model page with that thread pinned at the top.",
+    "The result is one JSON file (plus an optional plain-text thread tree). After delivering it, Claude offers a button to build Swami's vibe dashboard from the same file, with stats, a Q&A synthesis, critical feedback, every thread, the designer's replies, a search, a mind map, a glossary, and an audio overview."
+  ],
+  "why": "MakerWorld loads reviews by script, 10 at a time, with replies hidden behind \"View N more replies\". WebFetch only sees an empty page and Claude's cloud workspace can't reach makerworld.com at all, so the data has to come from the site's own API, called from inside a real browser tab.",
+  "what_it_does": [
+    {
+      "topic": "Full extraction",
+      "text": "Pages through every top-level rating and comment, then every reply thread, from inside the model page's browser tab. It only reads; it never posts, likes, or replies."
+    },
+    {
+      "topic": "Background pull",
+      "text": "Runs the extraction in the background and checks on it every 35 seconds, because each browser script call times out after about 45 seconds."
+    },
+    {
+      "topic": "Count check",
+      "text": "Compares what it got with the page's own **Reviews & Ratings (N)** count, and reports any small reply gap left by deleted replies."
+    },
+    {
+      "topic": "Translation",
+      "text": "Translates every non-English post into English and keeps the original text beside it, with short [bracketed] clarifications only where needed."
+    },
+    {
+      "topic": "Threaded JSON",
+      "text": "Writes `<model-slug>_makerworld_reviews.json`: a nested reply tree with dotted ids (12, 12.3, 12.3.1), plus a flat list of the same entries."
+    },
+    {
+      "topic": "Permalinks",
+      "text": "Gives every entry a link using MakerWorld's own `replyId` / `replyType` format, which opens the page at that thread (verified working Oct 2026)."
+    },
+    {
+      "topic": "Plain text",
+      "text": "Also writes `threaded.txt`, the whole thread tree in the original languages, delivered as the main output when Swami asks for \"just the text\"."
+    },
+    {
+      "topic": "Dashboard",
+      "text": "On request, or from the button after delivery, builds a vibe dashboard from the JSON in the current vibe-dashboard format: stats (including ratings by print profile), common questions, critical feedback, rating and comment threads, designer replies, and contributors, plus the Search section, Mind Map, Glossary, References, and an audio overview."
+    }
+  ],
+  "triggers": [
+    "\"Get the reviews for https://makerworld.com/en/models/…\" (or just paste the model link)",
+    "\"Get the reviews **and** make a vibe dashboard\" (extracts, then builds without stopping to ask)",
+    "\"Make a dashboard from this JSON\" (with a JSON this skill made earlier)",
+    "\"Just the text\" (delivers the plain thread tree alongside the JSON)"
+  ],
+  "how_to_use": [
+    {
+      "topic": "Open the app",
+      "step": "Start the chat in the **Claude desktop app** on the Mac, so Claude can use its built-in browser pane. Claude in Chrome (real Google Chrome with the extension) and Perplexity's Comet are the other supported browsers.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Ask",
+      "step": "Paste the MakerWorld model link and say what you want: the reviews, the reviews and a dashboard, or just the text.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Allow the site",
+      "step": "If the browser pane asks, approve access to makerworld.com. No sign-in is normally needed, because reviews are public.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Pull",
+      "step": "Claude opens the model page, starts the background pull, and polls it until done (about one minute per 100 top-level posts).",
+      "who": "Claude"
+    },
+    {
+      "topic": "Copy out",
+      "step": "Claude writes each data chunk into the page as plain text and reads it back into its workspace as `raw_NN.jsonl` files, then closes the tab.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Build and translate",
+      "step": "Claude runs `build_reviews.py` once, translates the non-English posts into `translations.json`, and runs it again to fold the translations in.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Deliver",
+      "step": "Claude checks the counts and links, sends the JSON (and `threaded.txt` if asked), and sums up counts, average stars, languages, and any reply gap.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Dashboard",
+      "step": "Pick **Yes, build it** on the button (or type \"yes\") to get the vibe dashboard from the same JSON, with no second extraction.",
+      "who": "Swami, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Open the app",
+      "step": "Start the chat in the **Claude desktop app for Windows**. If it offers the built-in browser pane on your account, the steps are the same as on the Mac. This has not been tried yet, so treat the first run as a test.",
+      "who": "You"
+    },
+    {
+      "topic": "Or another browser",
+      "step": "If the desktop app has no browser pane, use real **Google Chrome** with the Claude in Chrome extension, or Perplexity's **Comet**. Edge and other Chromium browsers are not supported.",
+      "who": "You"
+    },
+    {
+      "topic": "Ask",
+      "step": "Paste the MakerWorld model link and say what you want: the reviews, the reviews and a dashboard, or just the text.",
+      "who": "You"
+    },
+    {
+      "topic": "Allow the site",
+      "step": "Approve access to makerworld.com if the browser asks. Sign in to MakerWorld yourself only if Claude reports the site refused its requests.",
+      "who": "You"
+    },
+    {
+      "topic": "Pull and build",
+      "step": "Claude pulls, copies out, translates, and builds the JSON exactly as on the Mac. Nothing is installed on the PC; the processing runs in Claude's workspace.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Deliver",
+      "step": "Claude sends the JSON and its summary, then the dashboard button.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Dashboard",
+      "step": "Pick **Yes, build it** (or type \"yes\") for the vibe dashboard.",
+      "who": "You, then Claude"
+    }
+  ],
+  "skills": [
+    {
+      "name": "built-in-browser",
+      "need": "Required",
+      "why": "Claude reads it before driving the desktop app's browser pane, the preferred place to run the extraction. Not needed when using Chrome instead."
+    },
+    {
+      "name": "chrome-browser",
+      "need": "Optional",
+      "why": "Claude reads it before using Claude in Chrome, the fallback browser when the built-in pane isn't available."
+    },
+    {
+      "name": "vibe-dashboard",
+      "need": "Optional",
+      "why": "Required only for the dashboard step: its design system, template, search, mind map, glossary, and audio all apply, and this skill only maps the reviews onto it."
+    },
+    {
+      "name": "facebook-comments",
+      "need": "Related",
+      "why": "Sibling skill with the same pattern (browser pull, threaded JSON, permalinks, dashboard button) for a Facebook post's comments."
+    },
+    {
+      "name": "youtube-comments",
+      "need": "Related",
+      "why": "Sibling skill that does the same for a YouTube video's comments, using yt-dlp instead of a browser."
+    }
+  ],
+  "programs": [
+    {
+      "name": "Claude desktop app",
+      "need": "Required",
+      "where": "Swami's Mac (or a Windows PC)",
+      "why": "Hosts the built-in browser pane that opens the model page and runs the extraction script inside it.",
+      "install": "Download from claude.ai/download and drag it to Applications; open the chat there so the browser pane is available.",
+      "install_windows": "Download the Windows installer from claude.ai/download. Whether it offers the browser pane on your account is untested; if it doesn't, use Chrome below."
+    },
+    {
+      "name": "Google Chrome + Claude in Chrome",
+      "need": "Optional",
+      "where": "Mac or Windows PC",
+      "why": "Fallback browser when the built-in pane isn't available; the skill says it works the same way in a real Chrome tab, but no extraction has been run there yet.",
+      "install": "Install Chrome from google.com/chrome, then add the Claude in Chrome extension from the Chrome Web Store and sign in.",
+      "install_windows": "`winget install Google.Chrome` in PowerShell (or the installer from google.com/chrome), then add the Claude in Chrome extension from the Chrome Web Store."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs `build_reviews.py`, which threads, translates, and writes the JSON and text files, and the dashboard build.",
+      "install": "Nothing to install; it is already in Claude's workspace. Code execution must be on.",
+      "install_windows": "Same: nothing to install on the PC."
+    },
+    {
+      "name": "Playwright or Puppeteer",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Used, when present, to render the dashboard headlessly and check column widths, console errors, and search hits before delivery.",
+      "install": "Claude installs or skips it on its own; no action needed.",
+      "install_windows": "Same: nothing to install on the PC."
+    },
+    {
+      "name": "Comet",
+      "need": "Optional",
+      "where": "Mac or Windows PC",
+      "why": "Perplexity's browser. Supported: an earlier version of this skill ran there, with the same steps. The current version hasn't been run in it yet.",
+      "install": "Download from perplexity.ai/comet and install it like any Mac app.",
+      "install_windows": "Download the Windows installer from perplexity.ai/comet."
+    },
+    {
+      "name": "Edge and other Chromium browsers",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Not supported; use the desktop app's pane, real Chrome, or Comet.",
+      "install": "—",
+      "install_windows": "—"
+    },
+    {
+      "name": "Bambu Studio",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Not used. The reviews come straight from the MakerWorld website; no slicer or Bambu software is involved.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Complete threads",
+      "text": "Gets every rating, comment, and reply, including the ones hidden behind \"View N more replies\", in one run."
+    },
+    {
+      "topic": "No sign-in",
+      "text": "Reviews are public, so it normally works without a MakerWorld account."
+    },
+    {
+      "topic": "Read-only",
+      "text": "Never posts, rates, likes, replies, boosts, downloads, or follows on Swami's behalf."
+    },
+    {
+      "topic": "Many languages",
+      "text": "Translates Spanish, French, German, Italian, Portuguese, and any other language, keeping the original text."
+    },
+    {
+      "topic": "Deep links",
+      "text": "Every entry links straight to its thread on MakerWorld."
+    },
+    {
+      "topic": "Reusable JSON",
+      "text": "A dashboard can be built later from a JSON this skill made, with no new extraction."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Needs a browser",
+      "text": "Extraction needs a real browser tab: the desktop app's built-in pane, Claude in Chrome, or Comet. WebFetch and the cloud workspace can't reach makerworld.com."
+    },
+    {
+      "topic": "One model",
+      "text": "One model page per run."
+    },
+    {
+      "topic": "Reply gap",
+      "text": "Reply counts can come out a little lower than the site's, because the site still counts deleted replies."
+    },
+    {
+      "topic": "No images",
+      "text": "Image-only posts come through with empty text; photos are not downloaded."
+    },
+    {
+      "topic": "Site changes",
+      "text": "It relies on MakerWorld's own web API, which the site can change without notice."
+    },
+    {
+      "topic": "Machine translation",
+      "text": "Translations are Claude's own, with bracketed clarifications; the original text is kept beside each one."
+    },
+    {
+      "topic": "Not yet run",
+      "text": "The current version hasn't been run end to end in any browser yet; an earlier version worked in Comet."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill runs only when asked and neither needs nor creates a scheduled task. The nightly \"Skills dashboard nightly refresh\" repackages its zip for GitHub but never runs it.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Partial",
+      "notes": "Dashboard-only mode (from an existing JSON) works wherever code execution is on. Extraction needs a browser tool, which a plain web or mobile session doesn't have."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Untested",
+      "notes": "The intended setup: the built-in browser pane runs the pull and Claude's workspace does the rest. Not yet run end to end there. An earlier version of the skill worked in Perplexity's Comet browser, which is supported again."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Same steps if the app offers the browser pane on that account; otherwise Claude in Chrome in real Chrome. Not tried yet."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Partial",
+      "notes": "Only dashboard-only mode from an uploaded JSON; the phone has no browser tool for extraction."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Would need Claude in Chrome connected to Claude Code to run the pull. Not tried."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. Extraction needs a browser agent that can run JavaScript in a real tab; processing needs ChatGPT's code tool. Swami tests in Claude only."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Needs a browser tool and code execution; the dashboard hand-off also needs the vibe-dashboard skill installed there. Swami tests in Claude only."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip (or the SKILL.md if refused). Installing by chat tends to drift from the original; add the skill directly. Swami tests in Claude only."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Empty page",
+      "text": "WebFetch returns an empty shell and the cloud workspace's proxy refuses makerworld.com, so don't try to fetch the page; use the browser."
+    },
+    {
+      "topic": "Script timeout",
+      "text": "Browser script calls stop after about 45 seconds. The pull runs in the background and Claude polls it; a long model just takes more polls."
+    },
+    {
+      "topic": "Blocked results",
+      "text": "Script results holding URL query strings or long encoded data come back as `[BLOCKED: …]`. The fix is built in: each chunk is written into the page as text and read back with `get_page_text`."
+    },
+    {
+      "topic": "Sign-in",
+      "text": "If the API calls fail with 401 or 403 or return nothing, sign in to MakerWorld yourself in that browser. Claude never types credentials or solves CAPTCHAs."
+    },
+    {
+      "topic": "Fetch failure",
+      "text": "A fetch error is retried once after a minute. If it fails again, sign in or reload the page."
+    },
+    {
+      "topic": "Reply gap",
+      "text": "A few missing replies are normal (deleted ones still count on the site). Claude reports the gap in one line and doesn't chase it."
+    },
+    {
+      "topic": "Wrong browser",
+      "text": "Use the desktop app's pane, real Chrome, or Perplexity's Comet. Edge and other Chromium browsers are not supported."
+    },
+    {
+      "topic": "Hidden offer",
+      "text": "The dashboard offer comes as a button, sent last, because a file card can push a text offer out of view."
+    },
+    {
+      "topic": "Project threads",
+      "text": "Where the file, message, or button tools aren't available (a project thread or another surface), Claude attaches the files that surface's own way and sends the summary and the dashboard offer as plain messages."
+    },
+    {
+      "topic": "Translation typos",
+      "text": "`build_reviews.py` refuses translation ids it doesn't know, so a mistyped id shows up at once instead of silently dropping a translation."
+    },
+    {
+      "topic": "Crushed columns",
+      "text": "Dashboard thread tables use exactly three columns (From, Review, Link); splitting out author, stars, and date makes names break one letter per line."
+    },
+    {
+      "topic": "Personal details",
+      "text": "Emails or phone numbers in reviews are kept as written. Claude mentions them and asks before putting them on a dashboard meant for public sharing."
+    },
+    {
+      "topic": "First run",
+      "text": "The current version hasn't been run end to end yet in any browser (an earlier version worked in Comet). Treat the first run as a test and check the counts against the page."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "A computer",
+      "text": "A Mac, or a Windows 10 or 11 PC, with the Claude desktop app or Google Chrome with the Claude in Chrome extension."
+    },
+    {
+      "topic": "Code execution",
+      "text": "Claude's code execution (\"Create and edit files\") must be on to build the JSON and the dashboard."
+    },
+    {
+      "topic": "Site access",
+      "text": "The browser must be allowed to open makerworld.com; Claude asks for it the first time."
+    },
+    {
+      "topic": "MakerWorld account",
+      "text": "Only needed if the site refuses Claude's requests; then sign in yourself in that browser."
+    },
+    {
+      "topic": "Dashboards",
+      "text": "The vibe-dashboard skill must be installed to build a reviews dashboard."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "MakerWorld",
+      "topic": "Sites",
+      "match": "MakerWorld",
+      "code": "",
+      "def": "Bambu Lab's website for sharing 3D print models, where each model page has a Reviews & Ratings tab."
+    },
+    {
+      "term": "Reviews & Ratings",
+      "topic": "Sites",
+      "match": "Reviews &(?:amp;)? Ratings|Reviews and Ratings",
+      "code": "",
+      "def": "The model page's tab holding star ratings, comments, and their replies; its count includes all three."
+    },
+    {
+      "term": "Print profile",
+      "topic": "Sites",
+      "match": "print profiles?",
+      "code": "",
+      "def": "A saved set of slicer settings attached to a MakerWorld model; each rating records which profile the reviewer printed with."
+    },
+    {
+      "term": "Built-in browser",
+      "topic": "Browsers",
+      "match": "built-in browser|browser pane|built-in pane",
+      "code": "",
+      "def": "The browser pane inside the Claude desktop app, which Claude can drive; the preferred place to run the extraction."
+    },
+    {
+      "term": "Claude in Chrome",
+      "topic": "Browsers",
+      "match": "Claude in Chrome",
+      "code": "",
+      "def": "Anthropic's extension that lets Claude act in a real Google Chrome tab; the fallback browser for this skill."
+    },
+    {
+      "term": "Comet",
+      "topic": "Browsers",
+      "match": "Comet",
+      "code": "",
+      "def": "Perplexity's AI browser; supported, and the browser an earlier version of this skill ran in."
+    },
+    {
+      "term": "WebFetch",
+      "topic": "Browsers",
+      "match": "WebFetch",
+      "code": "",
+      "def": "Claude's tool for reading a web page as text; it only sees an empty shell on MakerWorld, because the reviews load by script."
+    },
+    {
+      "term": "javascript_tool",
+      "topic": "Extraction",
+      "match": "browser script calls?|script calls?",
+      "code": "javascript_tool",
+      "def": "The browser tool that runs JavaScript in the open tab; the extraction runs through it and each call stops after about 45 seconds."
+    },
+    {
+      "term": "get_page_text",
+      "topic": "Extraction",
+      "match": "page as text|read back",
+      "code": "get_page_text",
+      "def": "The browser tool that reads a page's text; used to copy each data chunk out of the tab."
+    },
+    {
+      "term": "Background pull",
+      "topic": "Extraction",
+      "match": "background pull|in the background",
+      "code": "",
+      "def": "The extraction script left running in the tab while Claude checks its progress every 35 seconds."
+    },
+    {
+      "term": "Chunk",
+      "topic": "Extraction",
+      "match": "chunks?",
+      "code": "raw_NN.jsonl",
+      "def": "A piece of the extracted data, about 18,000 characters of JSON Lines, copied out of the tab one at a time."
+    },
+    {
+      "term": "API",
+      "topic": "Extraction",
+      "match": "API",
+      "code": "",
+      "def": "MakerWorld's own web interface that returns reviews and replies as data; the skill calls it from inside the model page."
+    },
+    {
+      "term": "build_reviews.py",
+      "topic": "Output",
+      "match": "build_reviews",
+      "code": "build_reviews.py",
+      "def": "The Python script the skill saves and runs in Claude's workspace to thread, translate, and write the output files."
+    },
+    {
+      "term": "translations.json",
+      "topic": "Output",
+      "match": "translations",
+      "code": "translations.json",
+      "def": "The file of English translations by entry id that the second build pass folds into the JSON."
+    },
+    {
+      "term": "Threaded JSON",
+      "topic": "Output",
+      "match": "threaded JSON|JSON",
+      "code": "",
+      "def": "The main output: every entry nested under its parent, with counts, notes, source details, and a flat list of the same entries."
+    },
+    {
+      "term": "threaded.txt",
+      "topic": "Output",
+      "match": "plain thread tree|thread tree",
+      "code": "threaded.txt",
+      "def": "A plain-text version of the whole thread tree in the original languages."
+    },
+    {
+      "term": "Dotted id",
+      "topic": "Output",
+      "match": "dotted ids?",
+      "code": "",
+      "def": "An entry's position in its thread: 12 is a top-level post, 12.3 a reply to it, 12.3.1 a reply to that."
+    },
+    {
+      "term": "Permalink",
+      "topic": "Output",
+      "match": "permalinks?",
+      "code": "replyId|replyType",
+      "def": "A link that opens the model page at Reviews & Ratings with one thread pinned at the top, using MakerWorld's replyId and replyType."
+    },
+    {
+      "term": "Reply gap",
+      "topic": "Output",
+      "match": "reply gap",
+      "code": "",
+      "def": "The small shortfall between replies found and the site's reply count, caused by deleted replies the site still counts."
+    },
+    {
+      "term": "Vibe dashboard",
+      "topic": "Delivery",
+      "match": "vibe dashboard|vibe-dashboard",
+      "code": "vibe-dashboard",
+      "def": "Swami's dark-theme single-page dashboard design; this skill can build one from the reviews JSON."
+    },
+    {
+      "term": "AskUserQuestion",
+      "topic": "Delivery",
+      "match": "dashboard button|the button",
+      "code": "AskUserQuestion",
+      "def": "The Claude tool that shows clickable choices; used for the \"Build a vibe-dashboard?\" offer."
+    },
+    {
+      "term": "SendUserFile",
+      "topic": "Delivery",
+      "match": "file card",
+      "code": "SendUserFile",
+      "def": "The Claude tool that delivers a file into the chat as a card."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the MakerWorld reviews skill. It pulls every rating, comment, and nested reply from a MakerWorld model page into one translated, threaded file with a working link for each entry, and it can turn that file into a vibe dashboard.",
+    "Dashboard Summary": "A short intro and a table of every section",
+    "What It Is": "What the skill is, and why it exists: MakerWorld loads reviews ten at a time by script, so the data has to come from the site's own interface, called from a real browser tab",
+    "What It Does": "Eight things it handles: the full pull in the background, a count check, translation, the threaded file, permalinks, a plain text version, and a dashboard in the current vibe dashboard format, with search, a mind map, and a glossary",
+    "How to Use It": "What to ask for, then eight steps on the Mac, from opening the desktop app and pasting the model link, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet",
+    "Skills It Depends On": "The built in browser skill, or the Chrome browser skill for Chrome, and the vibe dashboard skill for dashboards. The Facebook comments and YouTube comments skills are related siblings",
+    "Programs It Depends On": "The Claude desktop app, Google Chrome with the Claude in Chrome extension, or Perplexity's Comet browser, plus Python in Claude's workspace. Edge and [Bambu](/bˈæmbuː/) Studio are not needed",
+    "Capabilities and Limitations": "It gets every thread with no sign in, reads only, and translates any language. But it needs a real browser tab, does one model per run, can miss a few deleted replies, skips photos, and this version hasn't been run end to end yet",
+    "Scheduled Tasks": "None. The skill runs only when asked",
+    "Where It Runs": "It is meant for the desktop app linked to the Mac, but this version hasn't been run end to end there yet; an earlier version worked in the Comet browser, which is supported again. Plain web and mobile sessions can only build a dashboard from an existing file, and Windows, Claude Code, and other assistants are untested",
+    "Gotchas": "Thirteen traps, from the empty page that web fetch sees and the forty five second script limit, to sign in errors, unsupported browsers, and personal details in reviews",
+    "Other Requirements": "A Mac or a Windows ten or eleven PC with the desktop app or Chrome, code execution, access to the site, and the vibe dashboard skill for dashboards",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+  },
+  "meta": {
+    "card_version": 3,
+    "fingerprint": "sha256:4cd944b2c2f8f2ee",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Sat Nov 7, 2026",
+    "carded": "Sat Nov 7, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/makerworld-reviews.zip",
+    "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/makerworld-reviews/"
+  }
+}

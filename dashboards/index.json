@@ -1,4 +1,12 @@
 {
+  "makerworld-reviews": {
+    "title": "MakerWorld Reviews",
+    "page": "dashboards/makerworld-reviews/",
+    "fingerprint": "sha256:4cd944b2c2f8f2ee",
+    "skill_updated": "Sat Nov 7, 2026",
+    "published": "2026-11-07",
+    "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
+  },
   "youtube-comments": {
     "title": "YouTube Comments",
     "page": "dashboards/youtube-comments/",
