@@ -1,0 +1,535 @@
+{
+  "skill": "youtube-transcript",
+  "title": "YouTube Transcript",
+  "summary": "Turns a YouTube link into a timestamped transcript and a chapter list where every time is a clickable link, optionally with the full comment tree, then summarizes it or builds a vibe dashboard.",
+  "what_it_is": [
+    "A Claude skill built around **ytx**, Swami's own command-line tool that wraps yt-dlp. One command (or one double-click on a Desktop icon) saves a video's transcript, chapters, and details into a folder, and Claude works from those files.",
+    "By default Claude answers in chat: the video's title, channel, date, and length, then one short summary per chapter with clickable timestamps. On request it builds a vibe dashboard instead, and with comments added it pulls in the youtube-comments skill's threads."
+  ],
+  "why": "Claude's cloud workspace can't reach youtube.com, and in Oct 2026 YouTube refused the Claude app's browser for transcripts (an empty transcript panel, errors, and empty caption files). Running ytx on Swami's own computer is the dependable way in.",
+  "what_it_does": [
+    {
+      "topic": "Transcript",
+      "text": "Saves `transcript.md`: the title, channel, date, length, chapter list, and roughly 20-second paragraphs under chapter headings, with every `[m:ss]` stamp linked to that moment on YouTube."
+    },
+    {
+      "topic": "Plain text",
+      "text": "Also saves `transcript.txt`, the same transcript without links."
+    },
+    {
+      "topic": "Chapters",
+      "text": "Saves `chapters.txt`, one line per chapter with its time, title, and link, whenever the video has chapters."
+    },
+    {
+      "topic": "Comments",
+      "text": "With `ytx -c`, also saves the full comment tree and `comments-threaded.txt` for the youtube-comments skill."
+    },
+    {
+      "topic": "Chat summary",
+      "text": "Answers with a header line and one paragraph per chapter, each led by a linked timestamp. Without chapters, Claude makes its own sections from topic shifts and says so."
+    },
+    {
+      "topic": "Dashboard",
+      "text": "On request, builds a vibe dashboard in the current vibe-dashboard format: the Search section, a video overview and chapter index with timestamp links, topic sections, any caveats, optional takeaways, a Mind Map, a Glossary, references, and an audio overview."
+    },
+    {
+      "topic": "Copyright care",
+      "text": "Gives a full verbatim transcript only for Swami's own videos and Zoom recordings. For anyone else's video it gives chapter links and summaries in Claude's own words."
+    },
+    {
+      "topic": "Windows",
+      "text": "`ytx.ps1` is a PowerShell port with the same commands and output, plus an offline self-test against the Mac version."
+    }
+  ],
+  "triggers": [
+    "\"Get the transcript and chapters for https://youtu.be/…\" (or just paste the YouTube link)",
+    "\"Summarize this video\" / \"Make a vibe dashboard of this video\"",
+    "\"Transcript **and** comments\" (adds the comment tree)"
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "Paste the YouTube link and say what you want: the transcript and chapters, a summary, a dashboard, or comments too.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Run ytx",
+      "step": "Copy the video link and double-click **YouTube Transcript** on the Desktop (answer y or N for comments), or run `ytx URL` in Terminal. Claude gives you the exact link to copy.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Or let Claude",
+      "step": "When the chat is linked to the Mac with a shell, Claude runs `ytx -n \"URL\"` itself and reads the files; skip the next step.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Upload",
+      "step": "From `~/yt/<video-id>/`, upload `transcript.md` and the `.info.json`, or zip the whole folder and upload that.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Read",
+      "step": "Claude reads the `.info.json` for the title, channel, date, length, description, and chapters, then the transcript.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Answer",
+      "step": "Claude replies with the header line and a linked summary per chapter, then offers the vibe dashboard.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Dashboard",
+      "step": "Say yes to get the dashboard, built from the files with a script.",
+      "who": "Swami, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Install once",
+      "step": "Run `winget install yt-dlp.yt-dlp` in PowerShell. Save `ytx.ps1` (Claude writes it when asked) to Downloads and run `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`.",
+      "who": "You"
+    },
+    {
+      "topic": "Check",
+      "step": "Close and reopen PowerShell, then run `ytx -v` (prints `ytx 1.1.0-win`) and `ytx -SelfTest` (every line PASS).",
+      "who": "You"
+    },
+    {
+      "topic": "Ask",
+      "step": "Paste the YouTube link and say what you want.",
+      "who": "You"
+    },
+    {
+      "topic": "Run ytx",
+      "step": "Copy the link and double-click **YouTube Transcript** on the Desktop, or run `ytx URL` (`ytx -p` uses the clipboard). The folder opens in File Explorer.",
+      "who": "You"
+    },
+    {
+      "topic": "Upload",
+      "step": "From `%USERPROFILE%\\yt\\<video-id>\\`, upload `transcript.md` and the `.info.json`, or a zip of the folder.",
+      "who": "You"
+    },
+    {
+      "topic": "Answer",
+      "step": "Claude summarizes by chapter and offers the dashboard, exactly as on the Mac. ytx.ps1 hasn't run on a real PC yet, so treat the first run as a test.",
+      "who": "Claude"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Optional",
+      "why": "Required only for dashboards: its design system and template apply, and this skill maps the video onto it."
+    },
+    {
+      "name": "youtube-comments",
+      "need": "Optional",
+      "why": "Supplies the comment sections when comments are included, and holds the yt-dlp install steps ytx depends on."
+    },
+    {
+      "name": "built-in-browser",
+      "need": "Optional",
+      "why": "Only as a last resort when ytx is unavailable: the app's browser can still read a video's chapters and title, but not its transcript."
+    },
+    {
+      "name": "makerworld-reviews",
+      "need": "Related",
+      "why": "Sibling skill in the same family of web-content skills (threaded data, permalinks, dashboard hand-off)."
+    },
+    {
+      "name": "facebook-comments",
+      "need": "Related",
+      "why": "Sibling skill that does the same for a Facebook post's comments."
+    }
+  ],
+  "programs": [
+    {
+      "name": "ytx",
+      "need": "Required",
+      "where": "Mac or Windows PC",
+      "why": "Swami's one-step wrapper around yt-dlp: `ytx URL` (or the Desktop icon) saves the transcript, chapters, and details into `~/yt/<video-id>/`; `-c` adds comments.",
+      "install": "A Bash script installed to `/usr/local/bin/ytx`. Claude writes the file when asked; save it to Downloads and run the one-line `sudo cp …` install from the skill, which also clears the quarantine flag and makes the Desktop icon.",
+      "install_windows": "`ytx.ps1`, the PowerShell port (same commands and output, no Python). Install with `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`, reopen PowerShell, then run `ytx -SelfTest`."
+    },
+    {
+      "name": "yt-dlp",
+      "need": "Required",
+      "where": "Mac or Windows PC",
+      "why": "Downloads the captions, chapters, details, and optional comments that ytx cleans up.",
+      "install": "The standalone binary at `/usr/local/bin/yt-dlp` (install steps are in the youtube-comments skill). Update with `sudo yt-dlp -U` when downloads fail.",
+      "install_windows": "`winget install yt-dlp.yt-dlp` (winget also installs Deno and FFmpeg). Update with `winget upgrade yt-dlp.yt-dlp` or `yt-dlp -U`."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required (Mac)",
+      "where": "Swami's Mac",
+      "why": "The Mac version of ytx needs `python3` for its cleanup.",
+      "install": "Already on the Mac.",
+      "install_windows": "Not needed: ytx.ps1 does the same work in PowerShell."
+    },
+    {
+      "name": "Terminal / PowerShell",
+      "need": "Optional",
+      "where": "Mac or Windows PC",
+      "why": "For running `ytx` by hand and for the one-time install; the Desktop icon covers everyday use.",
+      "install": "Terminal comes with macOS.",
+      "install_windows": "PowerShell comes with Windows 10 and 11."
+    },
+    {
+      "name": "Deno",
+      "need": "Optional",
+      "where": "Mac or Windows PC",
+      "why": "yt-dlp's JavaScript runtime. Its \"No supported JavaScript runtime\" warning is harmless for captions, chapters, and comments.",
+      "install": "Not needed for this skill.",
+      "install_windows": "Comes with `winget install yt-dlp.yt-dlp`."
+    },
+    {
+      "name": "Python in Claude's workspace",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Builds dashboards from the files with a script. Not needed for the chat summary.",
+      "install": "Nothing to install; code execution must be on.",
+      "install_windows": "Same: nothing to install on the PC."
+    },
+    {
+      "name": "Web browser",
+      "need": "Not needed",
+      "where": "—",
+      "why": "YouTube refuses transcripts in the Claude app's browser; it is used only for chapters and title when ytx is unavailable.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Clickable times",
+      "text": "Every timestamp, in the files and in Claude's answers, opens the video at that moment."
+    },
+    {
+      "topic": "No API key",
+      "text": "Works with no YouTube account or API key."
+    },
+    {
+      "topic": "Any length",
+      "text": "Handles long videos and Zoom recordings, grouped by chapter."
+    },
+    {
+      "topic": "Comments too",
+      "text": "Adds the complete comment tree in the same run when asked."
+    },
+    {
+      "topic": "Own sections",
+      "text": "Makes its own sections from topic shifts when a video has no chapters."
+    },
+    {
+      "topic": "Same output",
+      "text": "Mac and Windows versions write the same files."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Needs a computer",
+      "text": "ytx runs on Swami's Mac or a Windows PC; Claude's cloud workspace and the app's browser can't get transcripts."
+    },
+    {
+      "topic": "Captions needed",
+      "text": "If the creator turned captions off, or a new upload has none yet, there is no transcript; Claude says so instead of guessing."
+    },
+    {
+      "topic": "Auto-captions",
+      "text": "Automatic captions have garbled spots and cut-off phrases, so quotes from them are flagged as approximate."
+    },
+    {
+      "topic": "Others' videos",
+      "text": "No full transcript or verbatim section for someone else's video, only chapter links and summaries."
+    },
+    {
+      "topic": "Site changes",
+      "text": "YouTube changes can break older yt-dlp versions until it is updated."
+    },
+    {
+      "topic": "Windows untested",
+      "text": "ytx.ps1 has not been run on a real Windows PC yet."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill runs only when asked and neither needs nor creates a scheduled task. The nightly \"Skills dashboard nightly refresh\" repackages its zip for GitHub but never runs it.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Yes",
+      "notes": "How Swami uses it: he runs ytx on the Mac (the Desktop icon or Terminal) and uploads the files; Claude summarizes. Dashboards need code execution on."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Untested",
+      "notes": "When a shell on the Mac is available, Claude can run `ytx -n` itself and read the folder, so there's nothing to upload. Not tried yet; Swami runs ytx himself."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Claude could run ytx.ps1 through the linked PC; ytx.ps1 itself hasn't run on a real PC yet."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Partial",
+      "notes": "Summaries work if the files are already on the phone; running ytx needs a computer."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Should run ytx directly in the terminal, since Claude Code runs on the Mac itself."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. ytx still runs on the computer; summaries work from the uploaded files. Swami tests in Claude only."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Summaries work from uploaded files; dashboards need code execution and the vibe-dashboard skill installed there. Swami tests in Claude only."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip (or the SKILL.md if refused). Installing by chat tends to drift from the original; add the skill directly. Swami tests in Claude only."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Browser refused",
+      "text": "Don't try the Claude app's browser for the transcript: in Oct 2026 the panel stayed empty, `get_transcript` returned 400, and caption files came back empty."
+    },
+    {
+      "topic": "Cloud can't reach",
+      "text": "Claude's cloud workspace can't reach youtube.com, so it can't download anything itself."
+    },
+    {
+      "topic": "yt-dlp failed",
+      "text": "Run `sudo yt-dlp -U` (YouTube changes break old versions), then retry."
+    },
+    {
+      "topic": "Harmless warning",
+      "text": "\"No supported JavaScript runtime\" is harmless for captions, chapters, and comments."
+    },
+    {
+      "topic": "No captions",
+      "text": "\"No English captions found\" means captions are off or not ready yet (new uploads can take hours)."
+    },
+    {
+      "topic": "Don't search",
+      "text": "Never use `find ~` to look for the files: it can run for minutes and stall on macOS privacy prompts. Everything is in `~/yt/<video-id>/`."
+    },
+    {
+      "topic": "No recipes",
+      "text": "Claude gives the link to copy and the Desktop icon, never a multi-line Terminal recipe; that's what ytx replaced."
+    },
+    {
+      "topic": "Links with &",
+      "text": "On Windows, a link with `&` (like `watch?v=…&t=30s`) can be cut at the `&` and print a stray error. Use the Desktop icon, `ytx -p`, or the youtu.be share link."
+    },
+    {
+      "topic": "Reopen PowerShell",
+      "text": "After installing ytx.ps1, close and reopen PowerShell so the new `ytx` command is found."
+    },
+    {
+      "topic": "Self-test FAIL",
+      "text": "If `ytx -SelfTest` shows FAIL, upload the files from the folder it names."
+    },
+    {
+      "topic": "Garbled captions",
+      "text": "Auto-captions mishear words. Treat quotes from them as approximate, not what the speaker actually said."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "A computer",
+      "text": "A Mac with ytx and yt-dlp installed, or a Windows 10 or 11 PC with ytx.ps1 and yt-dlp."
+    },
+    {
+      "topic": "Admin password",
+      "text": "Needed once on the Mac for the `sudo` install of ytx and yt-dlp."
+    },
+    {
+      "topic": "File upload",
+      "text": "Upload `transcript.md` and the `.info.json` (or a zip) unless Claude runs ytx through a linked Mac."
+    },
+    {
+      "topic": "Internet on the computer",
+      "text": "The Mac or PC needs to reach YouTube."
+    },
+    {
+      "topic": "Dashboards",
+      "text": "Code execution on and the vibe-dashboard skill installed."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "ytx",
+      "topic": "Tools",
+      "match": "ytx",
+      "code": "ytx|ytx URL|ytx -c URL|ytx -p|ytx -n|ytx -v|ytx -n \"URL\"|ytx -SelfTest|ytx --make-launcher|ytx -MakeLauncher",
+      "def": "Swami's command-line tool that wraps yt-dlp and cleans up its output: a Bash script on the Mac and ytx.ps1 on Windows."
+    },
+    {
+      "term": "ytx.ps1",
+      "topic": "Tools",
+      "match": "ytx\\.ps1",
+      "code": "ytx.ps1",
+      "def": "The PowerShell port of ytx for Windows, with the same commands and output and an offline self-test."
+    },
+    {
+      "term": "yt-dlp",
+      "topic": "Tools",
+      "match": "yt-dlp",
+      "code": "yt-dlp|sudo yt-dlp -U|yt-dlp -U|winget install yt-dlp.yt-dlp|winget upgrade yt-dlp.yt-dlp",
+      "def": "A free command-line downloader for YouTube and other sites; ytx uses it to fetch captions, chapters, details, and comments."
+    },
+    {
+      "term": "Desktop icon",
+      "topic": "Tools",
+      "match": "Desktop icon|YouTube Transcript\\.command",
+      "code": "",
+      "def": "The double-click YouTube Transcript icon that runs ytx on the copied link and opens the result folder."
+    },
+    {
+      "term": "Terminal",
+      "topic": "Tools",
+      "match": "Terminal",
+      "code": "",
+      "def": "The macOS app for typing commands; used for the one-time install and for running ytx by hand."
+    },
+    {
+      "term": "PowerShell",
+      "topic": "Tools",
+      "match": "PowerShell",
+      "code": "",
+      "def": "Windows' command shell; runs ytx.ps1 and the install command."
+    },
+    {
+      "term": "winget",
+      "topic": "Tools",
+      "match": "winget",
+      "code": "",
+      "def": "Windows' built-in package manager; installs yt-dlp along with Deno and FFmpeg."
+    },
+    {
+      "term": "Deno",
+      "topic": "Tools",
+      "match": "Deno",
+      "code": "",
+      "def": "A JavaScript runtime yt-dlp can use; its missing-runtime warning doesn't affect transcripts."
+    },
+    {
+      "term": "transcript.md",
+      "topic": "Files",
+      "match": "transcript\\.md",
+      "code": "transcript.md",
+      "def": "ytx's main output: the transcript in ~20-second paragraphs under chapter headings, with linked timestamps."
+    },
+    {
+      "term": "transcript.txt",
+      "topic": "Files",
+      "match": "transcript\\.txt",
+      "code": "transcript.txt",
+      "def": "The same transcript as plain text with [m:ss] stamps."
+    },
+    {
+      "term": "chapters.txt",
+      "topic": "Files",
+      "match": "chapters\\.txt",
+      "code": "chapters.txt",
+      "def": "One line per chapter: time, title, and link. Missing when the video has no chapters."
+    },
+    {
+      "term": ".info.json",
+      "topic": "Files",
+      "match": "info\\.json",
+      "code": ".info.json|*.info.json",
+      "def": "yt-dlp's file of the video's details (title, channel, date, length, description, chapters, and comments when asked)."
+    },
+    {
+      "term": "Video folder",
+      "topic": "Files",
+      "match": "the folder|whole folder|result folder",
+      "code": "~/yt/<video-id>/|%USERPROFILE%\\yt\\<video-id>\\",
+      "def": "Where ytx saves everything for one video: ~/yt/<video-id>/ on the Mac, %USERPROFILE%\\yt\\<video-id>\\ on Windows."
+    },
+    {
+      "term": "Chapter",
+      "topic": "Video",
+      "match": "chapters?",
+      "code": "",
+      "def": "A titled section of a YouTube video, set by its creator, with a start time."
+    },
+    {
+      "term": "Timestamp link",
+      "topic": "Video",
+      "match": "timestamps?|linked timestamp",
+      "code": "",
+      "def": "A link like youtu.be/<id>?t=<seconds> that opens the video at that moment."
+    },
+    {
+      "term": "Auto-captions",
+      "topic": "Video",
+      "match": "auto-captions|automatic captions|captions",
+      "code": "",
+      "def": "YouTube's machine-made subtitles; ytx builds transcripts from them when there are no human ones, so they can contain misheard words."
+    },
+    {
+      "term": "Verbatim",
+      "topic": "Output",
+      "match": "verbatim",
+      "code": "",
+      "def": "Word for word. Only Swami's own videos get a full verbatim transcript."
+    },
+    {
+      "term": "Vibe dashboard",
+      "topic": "Output",
+      "match": "vibe dashboard|vibe-dashboard",
+      "code": "vibe-dashboard",
+      "def": "Swami's dark-theme single-page dashboard design; this skill can build one from a video."
+    },
+    {
+      "term": "Linked Mac",
+      "topic": "Output",
+      "match": "linked to the Mac|linked Mac",
+      "code": "",
+      "def": "A chat connected to Swami's Mac through the Claude desktop app, letting Claude run ytx there itself."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the YouTube transcript skill. It turns a YouTube link into a timestamped transcript and a chapter list where every time is a clickable link, optionally with all the comments, then summarizes the video or builds a vibe dashboard.",
+    "Dashboard Summary": "A short intro and a table of every section",
+    "What It Is": "What the skill is, and why it exists: Claude's cloud workspace can't reach YouTube, and YouTube refused transcripts in the Claude app's browser, so YTX runs on Swami's own computer",
+    "What It Does": "Eight things it handles: the linked transcript, a plain text copy, the chapter list, comments, a chapter by chapter summary, a dashboard in the current vibe dashboard format, care with other people's videos, and a Windows version",
+    "How to Use It": "What to ask for, then seven steps on the Mac: ask, run YTX from the Desktop icon, or let Claude run it on a linked Mac, [upload](/ʌplˈoʊd/) the files, and get the summary and dashboard. A second table gives six steps on Windows, starting with a one time install",
+    "Skills It Depends On": "The vibe dashboard skill for dashboards and the YouTube comments skill for comments, plus the built in browser as a last resort for chapters only. MakerWorld reviews and Facebook comments are related siblings",
+    "Programs It Depends On": "YTX and why-tee-dee-ell-pee on the computer, Python on the Mac, Terminal or PowerShell, and optionally Deno and Python in Claude's workspace. A web browser is not needed. Each program has Mac and Windows notes",
+    "Capabilities and Limitations": "It gives clickable times with no API key, for any length of video. But it needs a computer, needs captions, quotes auto-captions with care, summarizes other people's videos instead of copying them, and the Windows version is untested",
+    "Scheduled Tasks": "None. The skill runs only when asked",
+    "Where It Runs": "It works in any Claude app session when Swami [uploads](/ʌplˈoʊdz/) the files. A linked Mac or Windows PC, Claude Code, and other assistants are untested; Swami tests in Claude only",
+    "Gotchas": "Eleven traps, from YouTube refusing the app's browser, to outdated why-tee-dee-ell-pee, missing captions, never searching the whole home folder, and links with an ampersand on Windows",
+    "Other Requirements": "A Mac or a Windows ten or eleven PC with YTX installed, an admin password once on the Mac, a way to [upload](/ʌplˈoʊd/) the files, internet on the computer, and code execution for dashboards",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+  },
+  "meta": {
+    "card_version": 2,
+    "fingerprint": "sha256:38b05e275cc285b6",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Sat Nov 7, 2026",
+    "carded": "Sat Nov 7, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/youtube-transcript.zip",
+    "draft_url": "https://claude.ai/artifact/T9Bmgn8JhtQPyTc8Z24Rg2",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/youtube-transcript/"
+  }
+}

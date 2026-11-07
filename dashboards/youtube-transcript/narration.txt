@@ -1,0 +1,33 @@
+This page is the skill sheet for the YouTube transcript skill. It turns a YouTube link into a timestamped transcript and a chapter list where every time is a clickable link, optionally with all the comments, then summarizes the video or builds a vibe dashboard.
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is, and why it exists: Claude's cloud workspace can't reach YouTube, and YouTube refused transcripts in the Claude app's browser, so YTX runs on Swami's own computer.
+
+Section four, What It Does. Eight things it handles: the linked transcript, a plain text copy, the chapter list, comments, a chapter by chapter summary, a dashboard in the current vibe dashboard format, care with other people's videos, and a Windows version.
+
+Section five, How to Use It. What to ask for, then seven steps on the Mac: ask, run YTX from the Desktop icon, or let Claude run it on a linked Mac, [upload](/ʌplˈoʊd/) the files, and get the summary and dashboard. A second table gives six steps on Windows, starting with a one time install.
+
+Section six, Skills It Depends On. The vibe dashboard skill for dashboards and the YouTube comments skill for comments, plus the built in browser as a last resort for chapters only. MakerWorld reviews and Facebook comments are related siblings.
+
+Section seven, Programs It Depends On. YTX and why-tee-dee-ell-pee on the computer, Python on the Mac, Terminal or PowerShell, and optionally Deno and Python in Claude's workspace. A web browser is not needed. Each program has Mac and Windows notes.
+
+Section eight, Capabilities and Limitations. It gives clickable times with no API key, for any length of video. But it needs a computer, needs captions, quotes auto-captions with care, summarizes other people's videos instead of copying them, and the Windows version is untested.
+
+Section nine, Scheduled Tasks. None. The skill runs only when asked.
+
+Section ten, Where It Runs. It works in any Claude app session when Swami [uploads](/ʌplˈoʊdz/) the files. A linked Mac or Windows PC, Claude Code, and other assistants are untested; Swami tests in Claude only.
+
+Section eleven, Gotchas. Eleven traps, from YouTube refusing the app's browser, to outdated why-tee-dee-ell-pee, missing captions, never searching the whole home folder, and links with an ampersand on Windows.
+
+Section twelve, Other Requirements. A Mac or a Windows ten or eleven PC with YTX installed, an admin password once on the Mac, a way to [upload](/ʌplˈoʊd/) the files, internet on the computer, and code execution for dashboards.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
