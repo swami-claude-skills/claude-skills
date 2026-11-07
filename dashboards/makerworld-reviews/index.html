@@ -2510,6 +2510,15 @@ buildFloatingHeaders();
   const ti = ths.findIndex(th => { const t = th.childNodes[0]; return t && t.nodeType === 3 && t.nodeValue.trim().toUpperCase() === 'TOPIC'; });
   if(ti >= 0) ths[ti].click();
 })();
+/* DEFAULT-SORTS:BEGIN */
+/* ---- open these tables sorted (asc) by one column, like the Glossary's Topic sort ---- */
+[['Program dependencies','NEED'],['Claude surfaces','WORKS'],['Other AIs','WORKS']].forEach(([desc, col]) => {
+  const w = [...document.querySelectorAll('.table-wrap')].find(x => x.dataset.desc === desc); if(!w) return;
+  const t = w.querySelector('table'); if(!t || !t.tHead) return;
+  const th = [...t.tHead.rows[0].cells].find(h => { const n = h.childNodes[0]; return n && n.nodeType === 3 && n.nodeValue.trim().toUpperCase() === col; });
+  if(th) th.click();
+});
+/* DEFAULT-SORTS:END */
 
 
 /* ---- references: start sorted by Topic column (asc); no-op without a Topic column ---- */
