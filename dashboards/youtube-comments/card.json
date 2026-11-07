@@ -1,0 +1,528 @@
+{
+  "skill": "youtube-comments",
+  "title": "YouTube Comments",
+  "summary": "Gets every comment and reply on a YouTube video with yt-dlp, then turns them into threads for analysis or a vibe-dashboard.",
+  "what_it_is": [
+    "A Claude skill for pulling the **complete** comment tree of a YouTube video, every top-level comment and every reply, with the thread structure intact.",
+    "The download runs on Swami's Mac with the free yt-dlp tool, either directly or through Swami's ytx shortcut, or on a Windows PC with yt-dlp in PowerShell (no API key, no video download). The resulting `.info.json` file is uploaded, and Claude does all of the processing: counts, a threaded text file, and the hand-off to a dashboard, table, or export."
+  ],
+  "why": "YouTube lazy-loads comments and hides replies behind \"show more replies\". Copying by hand on the FORTH video captured 75 of 474 comments (about 16%), with whole reply chains missing and no way to tell. yt-dlp gets everything in one pass.",
+  "what_it_does": [
+    {
+      "topic": "Ready commands",
+      "text": "Gives Swami the ytx one-liner, or the yt-dlp commands with the real video URL and a short folder name already filled in, ready to paste."
+    },
+    {
+      "topic": "Full extraction",
+      "text": "Pulls every comment and reply, sorted the way the YouTube page shows them (`comment_sort=top`), with no reply-depth limit."
+    },
+    {
+      "topic": "Stats",
+      "text": "Reports title, channel, views, upload date, the page's comment count versus the number extracted, top-level comments, replies, unique authors, and uploader replies."
+    },
+    {
+      "topic": "Threaded text",
+      "text": "Writes `comments-threaded.txt`: threads ranked by total likes, replies in time order, uploader replies marked."
+    },
+    {
+      "topic": "Dashboard",
+      "text": "Hands off to the vibe-dashboard skill: ideas credited to specific @handles, sections grouped by theme, plus a Method section with the command, counts, and date pulled."
+    },
+    {
+      "topic": "Table view",
+      "text": "One row per comment with the @handle linked to the comment's permalink, text, likes, and a sentiment tag."
+    },
+    {
+      "topic": "Raw export",
+      "text": "Sends the threaded text file, or a CSV or Excel file built with the xlsx skill."
+    },
+    {
+      "topic": "Fallback",
+      "text": "When yt-dlp is not an option, a browser-console script loads and expands the comments for copying (partial: reply nesting is flattened)."
+    }
+  ],
+  "triggers": [
+    "\"Get the comments from this video: <YouTube URL>\"",
+    "\"Make a dashboard of the comments on <YouTube URL>\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "Give Claude the YouTube link and say what you want: a dashboard, a table, or the raw comments.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Install once",
+      "step": "If yt-dlp is not on the Mac yet, install the standalone `yt-dlp_macos` binary to `/usr/local/bin/yt-dlp` (Claude gives the four commands), then ytx (see the youtube-transcript skill). Check with `yt-dlp --version` and `ytx -v`.",
+      "who": "Swami, one time"
+    },
+    {
+      "topic": "Extract",
+      "step": "Quickest: `ytx -c \"VIDEO_URL\"`, or copy the link, double-click **YouTube Transcript** on the Desktop, and answer y for comments. Or paste Claude's yt-dlp commands (folder `~/yt/SHORTNAME`, `--skip-download --write-comments --write-info-json`). It may sit quiet for a minute or more.",
+      "who": "Swami (or Claude, through a linked Mac shell)"
+    },
+    {
+      "topic": "Upload",
+      "step": "Upload the `TITLE [VIDEOID].info.json` file from that folder to the chat. It is often over 1 MB.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Process",
+      "step": "Claude loads the file, prints the stats, and writes `comments-threaded.txt`.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Hand off",
+      "step": "Claude builds the dashboard (vibe-dashboard skill), the table, or the export.",
+      "who": "Claude"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Optional",
+      "why": "Builds the comments dashboard, the usual goal. Needed only for dashboards."
+    },
+    {
+      "name": "xlsx",
+      "need": "Optional",
+      "why": "Builds a CSV or Excel export when asked. Anthropic's built-in skill."
+    },
+    {
+      "name": "youtube-transcript",
+      "need": "Related",
+      "why": "A sibling skill for a video's transcript and chapters; it documents installing ytx, which this skill uses as its shortcut. Not called by this skill."
+    }
+  ],
+  "programs": [
+    {
+      "name": "yt-dlp",
+      "need": "Required",
+      "where": "Mac or Windows PC",
+      "why": "Downloads the comments and video metadata into the `.info.json` file.",
+      "install": "Use the standalone `yt-dlp_macos` binary (bundles its own Python). Needs macOS 10.15 or newer. Update with `sudo yt-dlp -U` when extraction breaks.",
+      "install_windows": "`winget install yt-dlp.yt-dlp` (also installs Deno and FFmpeg), or `yt-dlp.exe` from the releases page on the PATH. Update with `winget upgrade yt-dlp.yt-dlp` or `yt-dlp -U`."
+    },
+    {
+      "name": "ytx",
+      "need": "Required",
+      "where": "Mac or Windows PC",
+      "why": "Swami's one-step wrapper around yt-dlp: `ytx -c URL` (or the Desktop **YouTube Transcript** icon) pulls the comments and writes `comments-threaded.txt`.",
+      "install": "A custom Bash script installed to `/usr/local/bin/ytx`; setup steps are in the youtube-transcript skill. Needs yt-dlp and `python3`.",
+      "install_windows": "`ytx.ps1`, the PowerShell port (same commands and output, no Python). Save it to Downloads, then run `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`, reopen PowerShell, and run `ytx -SelfTest`."
+    },
+    {
+      "name": "Deno",
+      "need": "Optional",
+      "where": "Mac or Windows PC",
+      "why": "The JavaScript runtime yt-dlp uses to solve YouTube's challenges. Comments-only pulls have worked without it on the Mac (the warning is safe to ignore); install it if extraction fails.",
+      "install": "Not installed on the Mac today. If needed, install from docs.deno.com (version 2.3 or newer).",
+      "install_windows": "Comes with `winget install yt-dlp.yt-dlp`. With a manual `yt-dlp.exe`, put `deno.exe` (2.3 or newer) on the PATH or next to `yt-dlp.exe`."
+    },
+    {
+      "name": "Terminal / PowerShell",
+      "need": "Required",
+      "where": "Mac / Windows PC",
+      "why": "Runs the install and extraction commands.",
+      "install": "Built into macOS. Installing uses `sudo`, so an admin password is needed once.",
+      "install_windows": "Use PowerShell, built into Windows 10 and 11. Commands go one per line, with no `sudo`."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Processes the uploaded JSON into stats and threads.",
+      "install": "Already there when Claude's code execution is on.",
+      "install_windows": "Same: runs in Claude's workspace."
+    },
+    {
+      "name": "Web browser",
+      "need": "Optional",
+      "where": "Swami's Mac",
+      "why": "Only for the fallback console script.",
+      "install": "Any desktop browser with developer tools (F12).",
+      "install_windows": "Same: any desktop browser with developer tools (F12)."
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Complete tree",
+      "text": "Every top-level comment and every reply, with parent links, in one pass."
+    },
+    {
+      "topic": "No API key",
+      "text": "No YouTube API key, no Google account, and no video download."
+    },
+    {
+      "topic": "Rich fields",
+      "text": "Each comment carries author, text, likes, timestamp, uploader flag, and pinned flag."
+    },
+    {
+      "topic": "Permalinks",
+      "text": "Any comment can be linked directly: `https://www.youtube.com/watch?v=VIDEOID&lc=COMMENTID`."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Cloud can't reach YouTube",
+      "text": "Claude's cloud workspace usually cannot reach youtube.com, so the download runs on the Mac (or through a linked Mac shell), never from the workspace."
+    },
+    {
+      "topic": "Counts drift",
+      "text": "The comment count YouTube shows rarely matches the number extracted, because its counter drifts as comments are held or removed. Both numbers are reported."
+    },
+    {
+      "topic": "Breaks with YouTube changes",
+      "text": "YouTube changes often break older yt-dlp versions; updating usually fixes it."
+    },
+    {
+      "topic": "Fallback is partial",
+      "text": "The browser-console fallback flattens reply nesting and may miss comments."
+    },
+    {
+      "topic": "One video at a time",
+      "text": "Each run covers one video."
+    },
+    {
+      "topic": "New Windows port",
+      "text": "ytx.ps1 hasn't been run on a real Windows PC yet. Its built-in `ytx -SelfTest` checks that its output matches the Mac ytx."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill runs on request and does not need or create any scheduled tasks.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Yes",
+      "notes": "Swami runs yt-dlp on the Mac and uploads the `.info.json`; Claude does the rest. Needs code execution on."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Claude can run yt-dlp itself through the linked Mac shell, in a per-video folder. No upload step."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Claude could run the PowerShell commands through the linked PC instead of you; not tried yet."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Partial",
+      "notes": "Processing works if the `.info.json` is already on the phone; the extraction itself needs a computer."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Should run yt-dlp directly in the terminal, since Claude Code runs on the Mac itself."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. Extraction still runs on the Mac; processing needs ChatGPT's code tool. Swami tests in Claude only."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Processing needs code execution; the dashboard hand-off also needs the vibe-dashboard skill installed there. Swami tests in Claude only."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip (or the SKILL.md if refused). Installing by chat tends to drift from the original; add the skill directly. Swami tests in Claude only."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Reply depth",
+      "text": "`max_comments` takes five values: total, parents, replies, replies per thread, and depth. A depth of 1 silently discards every reply, so always pass `all,all,all,all,all`."
+    },
+    {
+      "topic": "Wrong yt-dlp file",
+      "text": "The plain `yt-dlp` download needs Python 3.10 or newer, and the Mac has 3.9. Use the standalone `yt-dlp_macos` binary."
+    },
+    {
+      "topic": "Gatekeeper block",
+      "text": "If macOS blocks it as from an unidentified developer, run `sudo xattr -d com.apple.quarantine /usr/local/bin/yt-dlp`."
+    },
+    {
+      "topic": "Sort order",
+      "text": "yt-dlp's default sort is newest first; the skill sets `comment_sort=top` to match the YouTube page."
+    },
+    {
+      "topic": "Quiet run",
+      "text": "The extraction can print nothing for a minute or more while it pages through comments. That is normal."
+    },
+    {
+      "topic": "JavaScript warning",
+      "text": "A warning about a missing JavaScript runtime is safe to ignore for a comments-only pull."
+    },
+    {
+      "topic": "No cloud retries",
+      "text": "Don't retry the download from Claude's workspace with curl or another route; the network allowlist blocks it."
+    },
+    {
+      "topic": "Renamed uploads",
+      "text": "Uploads may have spaces and brackets replaced with underscores; the processing script's file match handles that."
+    },
+    {
+      "topic": "ytx says yt-dlp failed",
+      "text": "YouTube changed again: run `sudo yt-dlp -U`, then retry the `ytx -c` command."
+    },
+    {
+      "topic": "SmartScreen",
+      "text": "Windows SmartScreen may block a downloaded `yt-dlp.exe` with \"Windows protected your PC\". Choose **More info › Run anyway**."
+    },
+    {
+      "topic": "PowerShell line breaks",
+      "text": "The Mac commands use a backslash to continue a line; PowerShell doesn't. On Windows, paste each command as one line."
+    },
+    {
+      "topic": "Reopen PowerShell",
+      "text": "After `winget install`, close and reopen PowerShell before `yt-dlp` is found."
+    },
+    {
+      "topic": "Missing Deno",
+      "text": "If extraction starts failing with a JavaScript-runtime error, install Deno (winget installs already include it)."
+    },
+    {
+      "topic": "Links with &",
+      "text": "On Windows the `ytx` command runs through a `.cmd` file, which may cut a link at `&` (for example `watch?v=…&t=30s`). ytx still gets the video, but a stray error line may follow; use the Desktop icon, `ytx -p`, or the youtu.be share link."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "A Mac or Windows PC",
+      "text": "macOS 10.15 or newer with an admin password for the one-time install, or Windows 10 or 11 with PowerShell (or a linked Mac shell)."
+    },
+    {
+      "topic": "Code execution",
+      "text": "Claude's code execution (\"Create and edit files\") must be on to process the JSON."
+    },
+    {
+      "topic": "File upload",
+      "text": "The `.info.json` file must be uploaded to the chat unless Claude runs yt-dlp through a linked Mac."
+    },
+    {
+      "topic": "Internet on the computer",
+      "text": "The Mac or PC needs to reach YouTube, and GitHub for the first download of yt-dlp."
+    },
+    {
+      "topic": "Dashboards",
+      "text": "The vibe-dashboard skill must be installed to build a comments dashboard."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "yt-dlp",
+      "topic": "Tools",
+      "match": "yt-dlp(?:_macos)?",
+      "code": "yt-dlp|yt-dlp_macos|yt-dlp -U|sudo yt-dlp -U|sudo yt-dlp -U|yt-dlp.exe|yt-dlp --version",
+      "def": "A free command-line tool that downloads videos and their metadata, including comments, from YouTube and many other sites."
+    },
+    {
+      "term": "Terminal",
+      "topic": "Tools",
+      "match": "Terminal",
+      "code": "",
+      "def": "The macOS app for typing commands; used for the install and extraction on a Mac (PowerShell on Windows)."
+    },
+    {
+      "term": "ytx",
+      "topic": "Tools",
+      "match": "ytx",
+      "code": "ytx -c \"VIDEO_URL\"|ytx -v|ytx -n -c \"VIDEO_URL\"|ytx -v|ytx -SelfTest|ytx -p|ytx.ps1",
+      "def": "Swami's command-line tool that wraps yt-dlp: a Bash script on the Mac and ytx.ps1, a PowerShell port, on Windows. `ytx -c` pulls a video's comments into a yt folder along with a threaded text file."
+    },
+    {
+      "term": "Gatekeeper",
+      "topic": "macOS",
+      "match": "Gatekeeper|unidentified developer",
+      "code": "",
+      "def": "The macOS security check that blocks downloaded apps from unidentified developers until approved."
+    },
+    {
+      "term": "Quarantine flag",
+      "topic": "macOS",
+      "match": "quarantine",
+      "code": "sudo xattr -d com.apple.quarantine /usr/local/bin/yt-dlp",
+      "def": "A file attribute macOS adds to downloads; removing it lets Gatekeeper run the file."
+    },
+    {
+      "term": "sudo",
+      "topic": "macOS",
+      "match": "sudo|admin password",
+      "code": "sudo",
+      "def": "Runs a Terminal command with administrator rights; it asks for the Mac's admin password."
+    },
+    {
+      "term": ".info.json",
+      "topic": "Data",
+      "match": "info\\.json",
+      "code": ".info.json|TITLE [VIDEOID].info.json",
+      "def": "The JSON file yt-dlp writes with the video's metadata and, with --write-comments, its full comments array."
+    },
+    {
+      "term": "Thread",
+      "topic": "Data",
+      "match": "threads?|threaded",
+      "code": "comments-threaded.txt",
+      "def": "A top-level comment together with all of its replies."
+    },
+    {
+      "term": "Permalink",
+      "topic": "Data",
+      "match": "permalinks?",
+      "code": "",
+      "def": "A direct link to one comment, built from the video ID and the comment ID."
+    },
+    {
+      "term": "Uploader reply",
+      "topic": "Data",
+      "match": "uploader",
+      "code": "",
+      "def": "A reply written by the video's own channel, flagged author_is_uploader in the data."
+    },
+    {
+      "term": "max_comments",
+      "topic": "Settings",
+      "match": "max_comments",
+      "code": "max_comments",
+      "def": "yt-dlp's five-part limit on comments: total, parents, replies, replies per thread, and depth."
+    },
+    {
+      "term": "comment_sort",
+      "topic": "Settings",
+      "match": "comment_sort",
+      "code": "comment_sort=top",
+      "def": "yt-dlp's comment order setting; top matches what the YouTube page shows, new is yt-dlp's default."
+    },
+    {
+      "term": "Code execution",
+      "topic": "Claude",
+      "match": "code execution|code tool",
+      "code": "",
+      "def": "Claude's ability to run code and create files, which this skill needs for processing."
+    },
+    {
+      "term": "Linked Mac shell",
+      "topic": "Claude",
+      "match": "linked Mac(?: shell)?",
+      "code": "",
+      "def": "When a Claude conversation is linked to Swami's Mac through the desktop app, Claude can run commands there directly."
+    },
+    {
+      "term": "Cloud workspace",
+      "topic": "Claude",
+      "match": "cloud workspace|workspace",
+      "code": "",
+      "def": "The private Linux machine Claude works in; its network is allowlisted, so it usually cannot reach youtube.com."
+    },
+    {
+      "term": "vibe-dashboard",
+      "topic": "Claude",
+      "match": "vibe-dashboard",
+      "code": "",
+      "def": "Swami's skill that builds dark-theme, single-file HTML dashboards; this skill hands its data to it."
+    },
+    {
+      "term": "Fingerprint",
+      "topic": "Claude",
+      "match": "fingerprint",
+      "code": "",
+      "def": "A short code computed from the skill's files; it changes whenever the skill changes, flagging this page as out of date."
+    },
+    {
+      "term": "PowerShell",
+      "topic": "Windows",
+      "match": "PowerShell",
+      "code": "",
+      "def": "The command-line shell built into Windows 10 and 11; it runs the Windows install and extraction commands."
+    },
+    {
+      "term": "winget",
+      "topic": "Windows",
+      "match": "winget",
+      "code": "winget install yt-dlp.yt-dlp|winget upgrade yt-dlp.yt-dlp",
+      "def": "Windows' built-in package manager; installs and updates yt-dlp with one command."
+    },
+    {
+      "term": "SmartScreen",
+      "topic": "Windows",
+      "match": "SmartScreen",
+      "code": "",
+      "def": "The Windows security check that warns before running downloaded programs from unrecognized publishers."
+    },
+    {
+      "term": "Deno",
+      "topic": "Tools",
+      "match": "Deno",
+      "code": "deno.exe",
+      "def": "A JavaScript runtime that yt-dlp uses to solve YouTube's JavaScript challenges."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the YouTube comments skill. It gets every comment and reply on a YouTube video with the free tool why-tee-dee-ell-pee, or Swami's YTX shortcut on a Mac or Windows PC, then turns them into threads for analysis or a vibe dashboard.",
+    "What It Is": "What the skill is, and why it exists: copying comments by hand once caught only seventy five of four hundred and seventy four",
+    "What It Does": "Eight things it handles, from ready to paste commands and full extraction, to stats, a threaded text file, a dashboard, a table, an export, and a browser fallback",
+    "How to Use It": "What to ask for, then six steps on the Mac: ask, install once, [extract](/ɪkstɹˈækt/) with YTX or why-tee-dee-ell-pee, [upload](/ʌplˈoʊd/) the file, let Claude process it, and choose the hand off. A second table gives the same steps on Windows, with the PowerShell version of YTX",
+    "Skills It Depends On": "None are required. The vibe dashboard skill is used for dashboards, the XLSX skill for spreadsheet exports, and the YouTube transcript skill is a related sibling that explains how to install YTX",
+    "Programs It Depends On": "Why-tee-dee-ell-pee and Swami's YTX shortcut, which now has a PowerShell version for Windows, plus Terminal or PowerShell, Python in Claude's workspace, and optionally [Deno](/dˈiːnoʊ/) and a web browser. Each program has macOS and Windows install notes",
+    "Capabilities and Limitations": "It gets the complete comment tree with no API key. But Claude's cloud workspace can't reach YouTube, comment counts drift, YouTube changes can break older versions, and the Windows YTX is new and not yet tried on a real PC",
+    "Scheduled Tasks": "None. The skill runs only when asked",
+    "Where It Runs": "It works in any Claude app session with code execution on, and best in the desktop app linked to the Mac. A linked Windows PC, Claude Code, and other AI assistants are not tested; Swami tests in Claude only",
+    "Gotchas": "Fourteen traps, the biggest being that a reply depth of one silently drops every reply. Four are for Windows, and one covers a missing [Deno](/dˈiːnoʊ/)",
+    "Other Requirements": "A Mac running macOS ten fifteen or newer, or a Windows ten or eleven PC, plus code execution, a way to [upload](/ʌplˈoʊd/) the file, and internet on the computer",
+    "Card and Freshness": "Which version of the skill this page describes and its fingerprint"
+  },
+  "meta": {
+    "card_version": 5,
+    "fingerprint": "sha256:f7525ca010d646fe",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Sat Nov 7, 2026",
+    "carded": "Sat Nov 7, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/youtube-comments.zip",
+    "draft_url": "https://claude.ai/artifact/D9nX5ELyD12Qvd52DAY89p",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/youtube-comments/"
+  },
+  "how_to_use_windows": [
+    {
+      "topic": "Ask",
+      "step": "Give Claude the YouTube link, say you're on Windows, and say what you want.",
+      "who": "You"
+    },
+    {
+      "topic": "Install once",
+      "step": "In PowerShell: `winget install yt-dlp.yt-dlp` (also installs Deno and FFmpeg). Then install ytx: save `ytx.ps1` to Downloads and run `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`. Reopen PowerShell and check `ytx -v` and `ytx -SelfTest`.",
+      "who": "You, one time"
+    },
+    {
+      "topic": "Extract",
+      "step": "Quickest: `ytx -c \"VIDEO_URL\"`, or copy the link, double-click **YouTube Transcript** on the Desktop, and answer y for comments. Without ytx, paste Claude's two PowerShell yt-dlp lines (folder `$HOME\\yt\\SHORTNAME`).",
+      "who": "You"
+    },
+    {
+      "topic": "Upload",
+      "step": "Upload the `TITLE [VIDEOID].info.json` from `C:\\Users\\<name>\\yt\\<video-id>` (ytx) or `C:\\Users\\<name>\\yt\\SHORTNAME` (yt-dlp commands).",
+      "who": "You"
+    },
+    {
+      "topic": "Process",
+      "step": "Claude loads the file, prints the stats, and writes `comments-threaded.txt`, the same as on the Mac.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Hand off",
+      "step": "Dashboard, table, or export, the same as on the Mac.",
+      "who": "Claude"
+    }
+  ]
+}
