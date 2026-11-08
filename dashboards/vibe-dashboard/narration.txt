@@ -1,0 +1,33 @@
+This page is the skill sheet for the vibe dashboard skill. It builds Swami's signature Vibe Coding dashboards: one dark page with numbered sections, search, a mind map, a glossary, and a spoken overview, all in one locked design.
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is, and why it exists: one locked design means every page looks and works the same, and every improvement reaches every new page.
+
+Section four, What It Does. Fourteen house rules it enforces, from the locked look and the single file, through search, the mind map, the glossary, and the audio overview, to the privacy check and nightly backups.
+
+Section five, How to Use It. Seven steps, from giving Claude the content to sharing the finished page. On Windows the steps are the same, because everything runs in Claude's workspace.
+
+Section six, Skills It Depends On. The artifact design skill, plus the eight skills that build their pages on this one.
+
+Section seven, Programs It Depends On. Python, the Kokoro voice, and ffmpeg in Claude's workspace, a web browser to view the page, and optionally Playwright, the Claude Code Remote connector, and GitHub.
+
+Section eight, Capabilities and Limitations. It turns any kind of content into the same kind of page, with owner only parts and self updating pages. But recording needs network access, owner only parts are not private, and a page is not a lyve view.
+
+Section nine, Scheduled Tasks. Three of Swami's scheduled tasks use it: the on demand audio refresh, the nightly GitHub backup, and the nightly Skill Library refresh.
+
+Section ten, Where It Runs. It works in any Claude app session, since everything runs in Claude's workspace. Windows, mobile, Claude Code, and other assistants are untested.
+
+Section eleven, Gotchas. Ten traps, from patch order and double escaped titles to self links, acronyms, the stress check, and blocked recordings.
+
+Section twelve, Other Requirements. Code execution with network access, artifacts, the privacy list in memory, and the connector for the audio button.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

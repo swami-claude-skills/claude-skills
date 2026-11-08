@@ -15,6 +15,14 @@
     "published": "2026-11-07",
     "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
   },
+  "vibe-dashboard": {
+    "title": "Vibe Dashboard",
+    "page": "dashboards/vibe-dashboard/",
+    "fingerprint": "sha256:f7309e5ddfefc192",
+    "skill_updated": "Sun Nov 8, 2026",
+    "published": "2026-11-08",
+    "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx"
+  },
   "youtube-comments": {
     "title": "YouTube Comments",
     "page": "dashboards/youtube-comments/",
