@@ -6,6 +6,7 @@ Claude skills built by Swami (Vibe Coding: Swami · AI: Claude). Each skill is o
 
 | Skill | What it does | Download |
 |---|---|---|
+| `artifact-sharing-audit` | Audits how Swami's skill pages are shared, rescans his skills for problems and refreshes his Skill Maintenance dashboard. | [artifact-sharing-audit.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/artifact-sharing-audit.zip) |
 | `facebook-comments` | Extracts every comment and reply from a Facebook post into threaded JSON, optionally as a vibe dashboard. | [facebook-comments.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/facebook-comments.zip) |
 | `fusion-addin-installer` | Generates double-click macOS and Windows installers that copy a Fusion add-in into Fusion's AddIns folder. | [fusion-addin-installer.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-installer.zip) |
 | `fusion-addin-scaffold` | Scaffolds Fusion Python add-ins and scripts: manifest, commands, handlers, palettes, icons, teardown and debugging. | [fusion-addin-scaffold.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-scaffold.zip) |
