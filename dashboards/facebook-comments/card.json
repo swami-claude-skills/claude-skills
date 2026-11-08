@@ -1,0 +1,540 @@
+{
+  "skill": "facebook-comments",
+  "title": "Facebook Comments",
+  "summary": "Pulls every comment and reply from a Facebook post into one threaded JSON file with exact reply-to links and clean permalinks, and can turn it into a vibe dashboard.",
+  "what_it_is": [
+    "A Claude skill that collects the complete comment tree of a Facebook post, in a group, on a page, or on a profile. It switches the post to **All comments**, expands every hidden reply, records who answered whom, and saves the result as one JSON file.",
+    "After delivering the file, Claude offers a button to build Swami's vibe dashboard from it: the post, discussion stats and participants, Claude's themes and takeaways, every thread, a search, a mind map, a glossary, and an audio overview."
+  ],
+  "why": "Facebook lazy-loads comments, hides replies behind \"View all N replies\", and defaults to \"Most relevant\", which leaves some comments out. Group posts also need a signed-in member, so a plain web fetch or Claude's cloud workspace gets nothing.",
+  "what_it_does": [
+    {
+      "topic": "All comments",
+      "text": "Switches the post's sort from \"Most relevant\" to **All comments**, so filtered and spam-flagged comments show too."
+    },
+    {
+      "topic": "Expand all",
+      "text": "Clicks every \"View more comments\", \"View all N replies\", and \"See more\" until nothing is left. It only clicks expanders, never Like, Reply, or Send."
+    },
+    {
+      "topic": "Count check",
+      "text": "Compares the comments found with the count Facebook shows under the post, and reports any gap."
+    },
+    {
+      "topic": "Reply-to links",
+      "text": "Works out exactly which comment or reply each reply answers, even deep in a thread."
+    },
+    {
+      "topic": "Threaded JSON",
+      "text": "Writes `fb_<group-or-page>_<postid>_comments.json` with the post details, counts, a nested thread tree, and a flat list of the same items."
+    },
+    {
+      "topic": "Permalinks",
+      "text": "Gives every comment a clean link with tracking stripped. Links to group posts open for group members."
+    },
+    {
+      "topic": "Approximate dates",
+      "text": "Turns Facebook's relative ages (4d, 2w, 1y) into approximate dates; exact times only on request."
+    },
+    {
+      "topic": "Dashboard",
+      "text": "On request, or from the button after delivery, builds a vibe dashboard in the current vibe-dashboard format: the post, stats and participants, themes and open requests, every thread (with an OP tag on the post author's own comments), Search, Mind Map, Glossary, references, and an audio overview."
+    }
+  ],
+  "triggers": [
+    "\"Get the comments for https://www.facebook.com/groups/…/posts/…\" (or just paste the post link)",
+    "\"Get the comments **and** make a vibe dashboard\" (extracts, then builds without stopping to ask)",
+    "\"Make a dashboard from this JSON\" (with a JSON this skill made earlier)"
+  ],
+  "how_to_use": [
+    {
+      "topic": "Open the app",
+      "step": "Start the chat in the **Claude desktop app** on the Mac (not claude.ai in a web browser), so Claude can use its built-in browser pane. Real Google Chrome with Claude in Chrome is the fallback.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Ask",
+      "step": "Paste the Facebook post link and say whether you want just the comments or a dashboard too.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Sign in",
+      "step": "If the pane shows **Log In** or **Join group**, sign in to Facebook yourself in the pane. It stays signed in for later chats, so usually this is already done.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Show the pane",
+      "step": "If Claude asks, open the pane with the globe icon at the top right of the app window (left of Share), or Cmd+Shift+B.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Expand",
+      "step": "Claude opens the post, switches to All comments, and expands everything, repeating until nothing is left.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Extract and build",
+      "step": "Claude reads every comment from the page and builds the JSON in its workspace, working out who replied to whom.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Deliver",
+      "step": "Claude checks the counts and links, sends the JSON, and sums up the counts and limits.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Dashboard",
+      "step": "Pick **Yes, build it** on the button (or type \"yes\") for the vibe dashboard from the same JSON.",
+      "who": "Swami, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Open the app",
+      "step": "Start the chat in the **Claude desktop app for Windows**. If it offers the built-in browser pane on your account, the steps are the same as on the Mac. Not tried yet, so treat the first run as a test.",
+      "who": "You"
+    },
+    {
+      "topic": "Or use Chrome",
+      "step": "If there's no pane, use real **Google Chrome** with the Claude in Chrome extension. Edge and Comet are not supported.",
+      "who": "You"
+    },
+    {
+      "topic": "Ask",
+      "step": "Paste the Facebook post link and say what you want.",
+      "who": "You"
+    },
+    {
+      "topic": "Sign in",
+      "step": "Sign in to Facebook yourself in the pane if it shows Log In or Join group.",
+      "who": "You"
+    },
+    {
+      "topic": "Show the pane",
+      "step": "Use the app's globe button (Ctrl instead of Cmd for shortcuts). If the window is hidden, click the Claude icon in the taskbar or system tray, or quit it from the tray and relaunch.",
+      "who": "You"
+    },
+    {
+      "topic": "Extract and deliver",
+      "step": "Claude expands, extracts, builds, and delivers the JSON exactly as on the Mac, then offers the dashboard.",
+      "who": "Claude"
+    }
+  ],
+  "skills": [
+    {
+      "name": "built-in-browser",
+      "need": "Required",
+      "why": "Claude reads it before driving the desktop app's browser pane, where the extraction runs. Not needed when using Chrome instead."
+    },
+    {
+      "name": "chrome-browser",
+      "need": "Optional",
+      "why": "Claude reads it before using Claude in Chrome, the fallback browser."
+    },
+    {
+      "name": "vibe-dashboard",
+      "need": "Optional",
+      "why": "Required only for the dashboard step: its design system, template, search, mind map, glossary, and audio all apply."
+    },
+    {
+      "name": "makerworld-reviews",
+      "need": "Related",
+      "why": "Sibling skill with the same pattern (browser pull, threaded JSON, permalinks, dashboard button) for a MakerWorld model's reviews."
+    },
+    {
+      "name": "youtube-comments",
+      "need": "Related",
+      "why": "Sibling skill that does the same for a YouTube video's comments, using yt-dlp instead of a browser."
+    }
+  ],
+  "programs": [
+    {
+      "name": "Claude desktop app",
+      "need": "Required",
+      "where": "Swami's Mac (or a Windows PC)",
+      "why": "Hosts the built-in browser pane where Swami is signed in to Facebook and the extraction runs.",
+      "install": "Download from claude.ai/download and drag it to Applications.",
+      "install_windows": "Download the Windows installer from claude.ai/download. Whether it offers the browser pane on your account is untested."
+    },
+    {
+      "name": "Google Chrome + Claude in Chrome",
+      "need": "Optional",
+      "where": "Mac or Windows PC",
+      "why": "Fallback browser when the pane won't cooperate; must be real Google Chrome.",
+      "install": "Install Chrome from google.com/chrome, then add the Claude in Chrome extension from the Chrome Web Store and sign in.",
+      "install_windows": "`winget install Google.Chrome` in PowerShell (or the installer from google.com/chrome), then add the Claude in Chrome extension."
+    },
+    {
+      "name": "Python in Claude's workspace",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Builds the JSON (parents, depths, counts) and the dashboard.",
+      "install": "Nothing to install; code execution must be on.",
+      "install_windows": "Same: nothing to install on the PC."
+    },
+    {
+      "name": "BeautifulSoup",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Parses a saved Facebook page in the fallback, when the comments come from an uploaded .html instead of the pane.",
+      "install": "Claude installs it when needed.",
+      "install_windows": "Same: nothing to install on the PC."
+    },
+    {
+      "name": "Playwright",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Used, when present, to render the dashboard headlessly and check its column widths and console before delivery.",
+      "install": "Claude installs or skips it on its own.",
+      "install_windows": "Same: nothing to install on the PC."
+    },
+    {
+      "name": "Comet and Edge",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Not supported for Facebook. Swami often has claude.ai open in Comet, which looks like the app but has no browser pane.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Every reply",
+      "text": "Gets every comment and reply, including the ones hidden behind \"Most relevant\" and collapsed reply links."
+    },
+    {
+      "topic": "Exact threading",
+      "text": "Records the exact comment or reply each reply answers, not just its thread."
+    },
+    {
+      "topic": "Groups too",
+      "text": "Works on group, page, and profile posts, as long as Swami can see the post while signed in."
+    },
+    {
+      "topic": "Read-only",
+      "text": "Never likes, reacts, replies, comments, joins groups, or accepts prompts on Swami's behalf."
+    },
+    {
+      "topic": "Reusable JSON",
+      "text": "A dashboard can be built later from a JSON this skill made, with no new extraction."
+    },
+    {
+      "topic": "Fallback",
+      "text": "If the pane won't work, a saved copy of the page can be uploaded and parsed instead."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Needs sign-in",
+      "text": "Swami must be signed in to Facebook in the browser, and a member of the group for group posts. Claude never types his password."
+    },
+    {
+      "topic": "Needs a browser",
+      "text": "Extraction needs the desktop app's pane or real Chrome with Claude in Chrome; a web fetch or the cloud workspace gets nothing."
+    },
+    {
+      "topic": "Approximate dates",
+      "text": "Dates come from relative ages like 4d or 2w, so they're approximate unless exact times are asked for."
+    },
+    {
+      "topic": "Member-only links",
+      "text": "Permalinks to group posts open only for group members."
+    },
+    {
+      "topic": "Count gaps",
+      "text": "The total can differ a little from Facebook's shown count; Claude reports the gap."
+    },
+    {
+      "topic": "Page changes",
+      "text": "It reads Facebook's page layout, which Facebook can change without notice."
+    },
+    {
+      "topic": "Windows untested",
+      "text": "The Windows desktop app and Chrome on Windows have not been tried yet."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill runs only when asked and neither needs nor creates a scheduled task. The nightly \"Skills dashboard nightly refresh\" repackages its zip for GitHub but never runs it.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Partial",
+      "notes": "Dashboard-only mode, or the saved-page fallback, works wherever code execution is on. Live extraction needs a browser tool and a signed-in Facebook session."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Where the skill runs: the built-in browser pane, signed in to Facebook, does the extraction and Claude's workspace builds the file. A full extraction has run end to end there successfully."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Same steps if the app offers the pane on that account; otherwise Claude in Chrome in real Chrome. Not tried yet."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Partial",
+      "notes": "Only dashboard-only mode from an uploaded JSON; the phone has no browser tool for extraction."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Would need Claude in Chrome connected to Claude Code. Not tried."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. Extraction needs a browser agent signed in to Facebook that can run JavaScript in the page. Swami tests in Claude only."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Needs a signed-in browser tool and code execution; dashboards also need the vibe-dashboard skill installed there. Swami tests in Claude only."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip (or the SKILL.md if refused). Installing by chat tends to drift from the original; add the skill directly. Swami tests in Claude only."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Wrong window",
+      "text": "claude.ai open in Comet looks just like the desktop app. The tell is the browser's tab strip and address bar; there's no browser pane there, and Cmd+Shift+B only toggles Comet's bookmarks bar."
+    },
+    {
+      "topic": "Hidden app window",
+      "text": "The desktop app can be running with no window open. Make Claude active and use Window → Show Main Window (or Cmd+N, or quit and relaunch)."
+    },
+    {
+      "topic": "Opening the pane",
+      "text": "In the app window, click the globe icon at the top right (left of Share), or press Cmd+Shift+B."
+    },
+    {
+      "topic": "Not signed in",
+      "text": "\"Log In\" or \"Join group\" on the page means Claude stops and asks you to sign in yourself."
+    },
+    {
+      "topic": "Most relevant",
+      "text": "Facebook's default sort hides some comments; the skill always switches to All comments first."
+    },
+    {
+      "topic": "Long output",
+      "text": "Big threads are read from the page in chunks so nothing gets cut off."
+    },
+    {
+      "topic": "Tagged names",
+      "text": "Facebook starts many replies with the tagged person's name; the text is kept as it is."
+    },
+    {
+      "topic": "Saved-page fallback",
+      "text": "If the pane won't cooperate, expand everything in your own browser, save the page as Web Page, Complete (Ctrl+S on Windows), and upload the .html."
+    },
+    {
+      "topic": "Hidden offer",
+      "text": "The dashboard offer comes as a button, sent last, because a file card can push a text offer out of view."
+    },
+    {
+      "topic": "Project threads",
+      "text": "Where the file, message, or button tools aren't available, Claude attaches the file that surface's own way and sends the summary and the dashboard offer as plain messages."
+    },
+    {
+      "topic": "Crushed columns",
+      "text": "Dashboard thread tables use exactly three columns (From, Comment, Link); more columns make names break one letter per line."
+    },
+    {
+      "topic": "Personal details",
+      "text": "Emails or phone numbers in comments are kept as written. Claude mentions them and asks before putting them on a dashboard meant for public sharing."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "A computer",
+      "text": "A Mac, or a Windows 10 or 11 PC, with the Claude desktop app or Google Chrome with the Claude in Chrome extension."
+    },
+    {
+      "topic": "Facebook account",
+      "text": "Signed in to Facebook in that browser, and a member of the group for group posts."
+    },
+    {
+      "topic": "Code execution",
+      "text": "Claude's code execution (\"Create and edit files\") must be on to build the JSON and the dashboard."
+    },
+    {
+      "topic": "Site access",
+      "text": "The browser pane must be allowed to open facebook.com; Claude asks for it the first time."
+    },
+    {
+      "topic": "Dashboards",
+      "text": "The vibe-dashboard skill must be installed to build a comments dashboard."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Facebook group",
+      "topic": "Facebook",
+      "match": "groups?",
+      "code": "",
+      "def": "A Facebook community whose posts only signed-in members can see; the skill needs Swami to be a member."
+    },
+    {
+      "term": "Post",
+      "topic": "Facebook",
+      "match": "posts?",
+      "code": "",
+      "def": "The Facebook item whose comments the skill collects, in a group, on a page, or on a profile."
+    },
+    {
+      "term": "All comments",
+      "topic": "Facebook",
+      "match": "All comments",
+      "code": "",
+      "def": "Facebook's comment sort that shows every comment, including filtered ones; the skill always switches to it."
+    },
+    {
+      "term": "Most relevant",
+      "topic": "Facebook",
+      "match": "Most relevant",
+      "code": "",
+      "def": "Facebook's default comment sort, which hides some comments."
+    },
+    {
+      "term": "Expander",
+      "topic": "Facebook",
+      "match": "expanders?|View all N replies|See more",
+      "code": "",
+      "def": "A link like \"View all 4 replies\" or \"See more\" that reveals hidden comments or text; the skill clicks them all."
+    },
+    {
+      "term": "OP",
+      "topic": "Facebook",
+      "match": "OP|original post",
+      "code": "",
+      "def": "The original poster, the person who made the post; marked with an OP tag in dashboard threads."
+    },
+    {
+      "term": "Built-in browser",
+      "topic": "Browsers",
+      "match": "built-in browser|browser pane|the pane",
+      "code": "",
+      "def": "The browser pane inside the Claude desktop app, where Swami stays signed in to Facebook and the extraction runs."
+    },
+    {
+      "term": "Claude in Chrome",
+      "topic": "Browsers",
+      "match": "Claude in Chrome",
+      "code": "",
+      "def": "Anthropic's extension that lets Claude act in a real Google Chrome tab; the fallback browser."
+    },
+    {
+      "term": "Comet",
+      "topic": "Browsers",
+      "match": "Comet",
+      "code": "",
+      "def": "Perplexity's AI browser; not supported by this skill, and easy to mistake for the desktop app when claude.ai is open in it."
+    },
+    {
+      "term": "Saved page",
+      "topic": "Browsers",
+      "match": "saved page|save the page|Web Page, Complete",
+      "code": "",
+      "def": "The fallback: a Facebook page saved from your own browser and uploaded as .html for Claude to parse."
+    },
+    {
+      "term": "Thread",
+      "topic": "Structure",
+      "match": "threads?",
+      "code": "",
+      "def": "A top-level comment and every reply under it."
+    },
+    {
+      "term": "Reply-to link",
+      "topic": "Structure",
+      "match": "who answered whom|reply-to|who replied to whom|answers",
+      "code": "parent_id",
+      "def": "Which exact comment or reply a reply answers, stored as parent_id."
+    },
+    {
+      "term": "Threaded JSON",
+      "topic": "Structure",
+      "match": "JSON",
+      "code": "",
+      "def": "The main output: the post details, counts, a nested thread tree, and a flat list of the same items."
+    },
+    {
+      "term": "Flat list",
+      "topic": "Structure",
+      "match": "flat list",
+      "code": "flat",
+      "def": "Every comment and reply as one row with its reply count, best for dashboards."
+    },
+    {
+      "term": "Permalink",
+      "topic": "Links",
+      "match": "permalinks?",
+      "code": "comment_id|reply_comment_id",
+      "def": "A clean link to one comment, using Facebook's comment_id (and reply_comment_id for replies), with tracking removed."
+    },
+    {
+      "term": "Approximate date",
+      "topic": "Links",
+      "match": "approximate dates?|relative ages?",
+      "code": "",
+      "def": "A date worked out from Facebook's relative age (4d, 2w, 1y) and the day of the pull."
+    },
+    {
+      "term": "Count gap",
+      "topic": "Links",
+      "match": "gap",
+      "code": "",
+      "def": "The difference between the comments found and the count Facebook shows under the post."
+    },
+    {
+      "term": "Vibe dashboard",
+      "topic": "Delivery",
+      "match": "vibe dashboard|vibe-dashboard",
+      "code": "vibe-dashboard",
+      "def": "Swami's dark-theme single-page dashboard design; this skill can build one from the comments JSON."
+    },
+    {
+      "term": "Dashboard button",
+      "topic": "Delivery",
+      "match": "the button|a button",
+      "code": "AskUserQuestion",
+      "def": "The clickable \"Build a vibe-dashboard?\" offer Claude sends as the last thing after delivering the JSON."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the Facebook comments skill. It pulls every comment and reply from a Facebook post into one threaded file with exact reply links and clean permalinks, and it can turn that file into a vibe dashboard.",
+    "Dashboard Summary": "A short intro and a table of every section",
+    "What It Is": "What the skill is, and why it exists: Facebook hides replies, defaults to most relevant, and needs a signed in member for groups, so the comments have to come from a real browser",
+    "What It Does": "Eight things it handles: switching to all comments, expanding every reply, a count check, exact reply links, the threaded file, clean permalinks, approximate dates, and the dashboard",
+    "How to Use It": "What to ask for, then eight steps on the Mac, from opening the desktop app and signing in to Facebook, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet",
+    "Skills It Depends On": "The built in browser skill, or the Chrome browser skill as a fallback, and the vibe dashboard skill for dashboards. MakerWorld reviews and YouTube comments are related siblings",
+    "Programs It Depends On": "The Claude desktop app, or Google Chrome with the Claude in Chrome extension, plus Python in Claude's workspace, with Beautiful Soup and Playwright as helpers. Comet and Edge are not supported",
+    "Capabilities and Limitations": "It gets every reply with exact threading, on groups, pages, and profiles, and reads only. But it needs Swami signed in, a real browser, and group membership for group links, its dates are approximate, and Windows is untested",
+    "Scheduled Tasks": "None. The skill runs only when asked",
+    "Where It Runs": "It runs in the desktop app linked to the Mac, where a full extraction has run end to end. Plain web and mobile sessions can only build a dashboard from an existing file or a saved page, and Windows, Claude Code, and other assistants are untested",
+    "Gotchas": "Twelve traps, from mistaking Comet for the desktop app and a hidden app window, to the most relevant sort, the saved page fallback, and personal details in comments",
+    "Other Requirements": "A Mac or a Windows ten or eleven PC with the desktop app or Chrome, a signed in Facebook account, code execution, access to the site, and the vibe dashboard skill for dashboards",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+  },
+  "meta": {
+    "card_version": 3,
+    "fingerprint": "sha256:fb096452c0892d4a",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Sat Nov 7, 2026",
+    "carded": "Sat Nov 7, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/facebook-comments.zip",
+    "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/facebook-comments/"
+  }
+}

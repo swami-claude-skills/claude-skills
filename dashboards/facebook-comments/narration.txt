@@ -1,0 +1,33 @@
+This page is the skill sheet for the Facebook comments skill. It pulls every comment and reply from a Facebook post into one threaded file with exact reply links and clean permalinks, and it can turn that file into a vibe dashboard.
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is, and why it exists: Facebook hides replies, defaults to most relevant, and needs a signed in member for groups, so the comments have to come from a real browser.
+
+Section four, What It Does. Eight things it handles: switching to all comments, expanding every reply, a count check, exact reply links, the threaded file, clean permalinks, approximate dates, and the dashboard.
+
+Section five, How to Use It. What to ask for, then eight steps on the Mac, from opening the desktop app and signing in to Facebook, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet.
+
+Section six, Skills It Depends On. The built in browser skill, or the Chrome browser skill as a fallback, and the vibe dashboard skill for dashboards. MakerWorld reviews and YouTube comments are related siblings.
+
+Section seven, Programs It Depends On. The Claude desktop app, or Google Chrome with the Claude in Chrome extension, plus Python in Claude's workspace, with Beautiful Soup and Playwright as helpers. Comet and Edge are not supported.
+
+Section eight, Capabilities and Limitations. It gets every reply with exact threading, on groups, pages, and profiles, and reads only. But it needs Swami signed in, a real browser, and group membership for group links, its dates are approximate, and Windows is untested.
+
+Section nine, Scheduled Tasks. None. The skill runs only when asked.
+
+Section ten, Where It Runs. It runs in the desktop app linked to the Mac, where a full extraction has run end to end. Plain web and mobile sessions can only build a dashboard from an existing file or a saved page, and Windows, Claude Code, and other assistants are untested.
+
+Section eleven, Gotchas. Twelve traps, from mistaking Comet for the desktop app and a hidden app window, to the most relevant sort, the saved page fallback, and personal details in comments.
+
+Section twelve, Other Requirements. A Mac or a Windows ten or eleven PC with the desktop app or Chrome, a signed in Facebook account, code execution, access to the site, and the vibe dashboard skill for dashboards.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

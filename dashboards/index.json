@@ -1,4 +1,12 @@
 {
+  "facebook-comments": {
+    "title": "Facebook Comments",
+    "page": "dashboards/facebook-comments/",
+    "fingerprint": "sha256:fb096452c0892d4a",
+    "skill_updated": "Sat Nov 7, 2026",
+    "published": "2026-11-07",
+    "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
+  },
   "makerworld-reviews": {
     "title": "MakerWorld Reviews",
     "page": "dashboards/makerworld-reviews/",
