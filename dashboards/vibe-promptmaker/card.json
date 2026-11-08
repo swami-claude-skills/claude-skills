@@ -1,0 +1,410 @@
+{
+ "skill": "vibe-promptmaker",
+ "title": "Vibe Prompt Maker",
+ "summary": "Builds an AI Prompt Maker: a one-page dark-theme form where you fill in fields and get clean plain ASCII text to paste into an AI prompt.",
+ "what_it_is": [
+  "A Claude skill that makes a small web tool, the AI Prompt Maker, in the same locked Vibe Coding design as Swami's dashboards. The page has two parts: an **Input** form with editable fields, and a live **Output** panel that shows the fields as plain text.",
+  "Swami names the fields and their defaults (or reuses his standard set: subject, topic, issue, date, student, helper, AI used, websites, and content). Claude fills them into a prebuilt template, sets the header text, and publishes the page. All the interaction logic is already built into the template, so Claude never rewrites it."
+ ],
+ "why": "Pasting a situation into an AI chat works best when it is complete, tidy, and plain text. A fill-in form keeps every case (a student, a client, someone Swami is helping) in the same shape, and the plain ASCII output pastes cleanly into any AI.",
+ "what_it_does": [
+  {
+   "topic": "Input form",
+   "text": "One row per field: an editable field name (the mono cyan box) joined to its value. Long text gets a big text box and lists get one box per entry."
+  },
+  {
+   "topic": "Live output",
+   "text": "Shows the text as you type, as `key: value` lines, lists as indented `- ` items, and long text as a block. Empty fields are left out."
+  },
+  {
+   "topic": "Plain ASCII",
+   "text": "Converts smart quotes, dashes, ellipses, accents, and symbols to plain characters, so the text pastes cleanly anywhere."
+  },
+  {
+   "topic": "Edit fields",
+   "text": "Rename a field, delete it with ✕, add one with **+ Add field**, and drag the ⠿ handle to reorder."
+  },
+  {
+   "topic": "Single or list",
+   "text": "The `[ ]` / `[≣]` toggle switches a field between one value and a list, splitting or joining on commas."
+  },
+  {
+   "topic": "Copy and download",
+   "text": "Copies the text to the clipboard, or saves it as a .txt file named after the subject field, from the toolbar or the Output panel."
+  },
+  {
+   "topic": "Reset with undo",
+   "text": "One click restores the default fields, with a 4-second Undo; no pop-up confirmations, because the artifact frame blocks them."
+  },
+  {
+   "topic": "Default field set",
+   "text": "Ships with subject, topic, issue, date (today), student/client/other, teacher/consultant/helper (Swami), AI used, websites (a list), and content/text (long text)."
+  },
+  {
+   "topic": "Locked design",
+   "text": "Same palette, fonts, kicker, and footer as vibe-dashboard; both sections start collapsed."
+  }
+ ],
+ "triggers": [
+  "\"Make me an AI prompt maker\" / \"a prompt builder\"",
+  "\"I need an input sheet for a client case that I can paste into an AI\"",
+  "\"Make a prompt maker with these fields: …\""
+ ],
+ "how_to_use": [
+  {
+   "topic": "Ask",
+   "step": "Ask for a prompt maker, and list the fields you want (or say to use the standard set). Mention any defaults, lists, or long-text fields.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Build",
+   "step": "Claude copies the template, fills in the field list and the header text, and keeps everything else as is.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Publish",
+   "step": "Claude publishes it as a private artifact with the downloads permission, so the Download button works. Expect one approval prompt.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Fill in",
+   "step": "Open the page, expand **Input**, and type into the fields. Rename, add, delete, or reorder fields as needed.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Copy",
+   "step": "Click **Copy text** and paste into your AI chat, or click **Download .txt** to save it.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Start over",
+   "step": "Click **Reset to defaults** for a fresh form; click again within 4 seconds to undo.",
+   "who": "Swami"
+  }
+ ],
+ "how_to_use_windows": [
+  {
+   "topic": "Same steps",
+   "step": "Building happens in Claude's workspace and the page runs in the browser, so the steps are the same on Windows.",
+   "who": "You"
+  },
+  {
+   "topic": "Browser",
+   "step": "Open the page in Edge, Chrome, or Firefox. Copy pastes with Ctrl+V.",
+   "who": "You"
+  },
+  {
+   "topic": "Download",
+   "step": "On the published page, **Download .txt** asks where to save. If you open the .html file from disk instead, it saves to your Downloads folder (`C:\\Users\\<name>\\Downloads`).",
+   "who": "You"
+  },
+  {
+   "topic": "Open the .txt",
+   "step": "The text uses plain line endings; Notepad on Windows 10 (1809 or later) and Windows 11 shows them correctly.",
+   "who": "You"
+  }
+ ],
+ "skills": [
+  {
+   "name": "artifact-capabilities",
+   "need": "Required",
+   "why": "Claude loads it to publish with the downloads permission the Download button needs."
+  },
+  {
+   "name": "vibe-dashboard",
+   "need": "Related",
+   "why": "Shares the locked design system. Use it to turn content into a browsable page."
+  },
+  {
+   "name": "vibe-launchpad",
+   "need": "Related",
+   "why": "The same design for pages that are mostly links."
+  }
+ ],
+ "programs": [
+  {
+   "name": "A web browser",
+   "need": "Required",
+   "where": "Any computer",
+   "why": "Runs the prompt maker; the fonts load from Google Fonts.",
+   "install": "Safari, Chrome, or Firefox.",
+   "install_windows": "Edge, Chrome, or Firefox."
+  },
+  {
+   "name": "A text editor",
+   "need": "Optional",
+   "where": "Your computer",
+   "why": "Opens a downloaded .txt file.",
+   "install": "TextEdit.",
+   "install_windows": "Notepad."
+  },
+  {
+   "name": "Python",
+   "need": "Not needed",
+   "where": "—",
+   "why": "Building is a fill-in of the template; no scripts run.",
+   "install": "—",
+   "install_windows": "—"
+  }
+ ],
+ "capabilities": [
+  {
+   "topic": "Any field set",
+   "text": "Works for any case you want to describe to an AI: students, clients, support requests, projects."
+  },
+  {
+   "topic": "Edit in place",
+   "text": "Fields can be renamed, added, removed, reordered, and switched between single and list while you work."
+  },
+  {
+   "topic": "Clean text",
+   "text": "The output is plain ASCII, so it never brings odd characters into a prompt."
+  },
+  {
+   "topic": "Works offline",
+   "text": "Saved as a .html file, it works from disk with a normal browser download."
+  }
+ ],
+ "limitations": [
+  {
+   "topic": "No memory",
+   "text": "Nothing is saved between visits; reloading the page brings back the defaults. Copy or download before closing."
+  },
+  {
+   "topic": "Text only",
+   "text": "Output is plain `key: value` text; there is no JSON or other format switch."
+  },
+  {
+   "topic": "No import",
+   "text": "There is no way to load a saved .txt back into the form."
+  },
+  {
+   "topic": "Download permission",
+   "text": "On the published page, Download needs the downloads permission; without it, use Copy."
+  }
+ ],
+ "scheduled_tasks": {
+  "summary": "None. The skill needs no scheduled task. Its pages are backed up by the nightly GitHub backup like every other artifact.",
+  "tasks": [
+   {
+    "name": "Vibe dashboards — nightly GitHub backup",
+    "schedule": "Nightly, about 4:07 AM ET",
+    "what": "Saves every artifact created or changed that day, prompt makers included, to the private vibe-dashboards repo."
+   }
+  ]
+ },
+ "runs_in": [
+  {
+   "where": "Claude app, cloud session (web, desktop, mobile)",
+   "status": "Yes",
+   "notes": "Swami has built several AI Prompt Maker pages this way."
+  },
+  {
+   "where": "Claude desktop app linked to the Mac",
+   "status": "Yes",
+   "notes": "Same as a cloud session; the Mac isn't needed."
+  },
+  {
+   "where": "Claude desktop app linked to a Windows PC",
+   "status": "Untested",
+   "notes": "Should work the same, since nothing runs on the PC."
+  },
+  {
+   "where": "Claude mobile app",
+   "status": "Untested",
+   "notes": "Building should work. On a phone, typing works, but dragging the ⠿ handle to reorder may not, since it uses desktop drag-and-drop. Untested."
+  },
+  {
+   "where": "Claude Code on the Mac",
+   "status": "Untested",
+   "notes": "Would write the .html file on the Mac; open it in a browser and the plain download works."
+  }
+ ],
+ "other_ais": [
+  {
+   "ai": "ChatGPT",
+   "status": "Untested",
+   "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. It can fill the template and hand back the .html file; artifacts and the downloads permission are Claude-only."
+  },
+  {
+   "ai": "Gemini",
+   "status": "Untested",
+   "notes": "Upload the unzipped skill folder. The result would be a .html file to open locally."
+  },
+  {
+   "ai": "Grok",
+   "status": "Untested",
+   "notes": "Import the .zip, or the SKILL.md if it is refused; installing by chat drifts from the original."
+  }
+ ],
+ "gotchas": [
+  {
+   "topic": "Reload clears it",
+   "text": "The form keeps no browser storage, by design. Reloading or closing the page loses what you typed."
+  },
+  {
+   "topic": "No pop-ups",
+   "text": "The artifact frame blocks confirm and alert dialogs, so Reset uses the in-button Undo instead. Never add pop-ups back."
+  },
+  {
+   "topic": "Download blocked",
+   "text": "A published page can't start a download by itself. Without the downloads permission the button says to use Copy."
+  },
+  {
+   "topic": "Odd characters",
+   "text": "Characters with no plain equivalent (emoji, other scripts) become `?` in the output."
+  },
+  {
+   "topic": "Collapsed at start",
+   "text": "Both sections start collapsed; click **Input** to begin."
+  },
+  {
+   "topic": "List toggle",
+   "text": "Switching a list back to a single value joins its entries with commas; switching again splits on commas."
+  }
+ ],
+ "requirements": [
+  {
+   "topic": "Artifacts",
+   "text": "Publishing needs Claude's artifacts, plus the downloads permission for the Download button."
+  },
+  {
+   "topic": "Browser",
+   "text": "Any current browser on macOS or on Windows 10 or 11."
+  },
+  {
+   "topic": "Clipboard",
+   "text": "Copy uses the browser clipboard; if the browser blocks it, the page falls back to an older copy method."
+  }
+ ],
+ "glossary": [
+  {
+   "term": "Prompt maker",
+   "topic": "Tool",
+   "match": "prompt makers?|AI Prompt Maker",
+   "code": "",
+   "def": "A one-page form that turns the fields you fill in into plain text for an AI prompt."
+  },
+  {
+   "term": "Field",
+   "topic": "Tool",
+   "match": "fields?",
+   "code": "",
+   "def": "One named entry in the form, made of a field name and its value."
+  },
+  {
+   "term": "Field set",
+   "topic": "Tool",
+   "match": "field set|field list",
+   "code": "DEFAULTS",
+   "def": "The list of fields the form starts with, set in the template's DEFAULTS array."
+  },
+  {
+   "term": "Multi-value list",
+   "topic": "Tool",
+   "match": "lists?",
+   "code": "[≣]",
+   "def": "A field that holds several entries and prints them as an indented list."
+  },
+  {
+   "term": "Long text",
+   "topic": "Tool",
+   "match": "long text|long-text",
+   "code": "",
+   "def": "A field with a big text box for pasted source text."
+  },
+  {
+   "term": "Plain ASCII",
+   "topic": "Output",
+   "match": "ASCII|plain text",
+   "code": "",
+   "def": "Basic English letters, digits, and punctuation only; other characters are converted or replaced."
+  },
+  {
+   "term": "Output panel",
+   "topic": "Output",
+   "match": "Output",
+   "code": "",
+   "def": "The section that shows the finished text live as you type."
+  },
+  {
+   "term": "Template",
+   "topic": "Build",
+   "match": "template",
+   "code": "",
+   "def": "The prebuilt prompt maker page Claude copies and fills in."
+  },
+  {
+   "term": "Locked design system",
+   "topic": "Build",
+   "match": "locked (?:Vibe Coding )?design|design system",
+   "code": "",
+   "def": "The fixed palette, fonts, and layout every Vibe Coding page uses."
+  },
+  {
+   "term": "Kicker",
+   "topic": "Build",
+   "match": "kicker",
+   "code": "",
+   "def": "The short UPPERCASE label above a page's title."
+  },
+  {
+   "term": "Artifact",
+   "topic": "Publishing",
+   "match": "artifacts?",
+   "code": "",
+   "def": "A web page Claude publishes on claude.ai; it starts private."
+  },
+  {
+   "term": "Downloads permission",
+   "topic": "Publishing",
+   "match": "downloads permission",
+   "code": "",
+   "def": "The artifact capability that lets a published page save a file to your computer."
+  },
+  {
+   "term": "Artifact frame",
+   "topic": "Publishing",
+   "match": "artifact frame",
+   "code": "",
+   "def": "The sandbox a published page runs in; it blocks pop-up dialogs and direct downloads."
+  },
+  {
+   "term": "Drag handle",
+   "topic": "Tool",
+   "match": "handle",
+   "code": "",
+   "def": "The ⠿ grip on a field row; drag it to move the field."
+  }
+ ],
+ "confirm": [],
+ "spoken": {
+  "_intro": "This page is the skill sheet for the vibe prompt maker skill. It builds an AI prompt maker: a one page form where you fill in fields and get clean plain text, ready to paste into an AI.",
+  "Dashboard Summary": "A short intro and a table of every section",
+  "What It Is": "What the skill is and why it exists: a fill in form keeps every case in the same shape, and plain text pastes cleanly into any AI",
+  "What It Does": "Nine features, from the input form and the lyve output, through editing, reordering, and switching fields between one value and a list, to copy, download, and [reset](/ɹˈiːsɛt/) with undo",
+  "How to Use It": "Six steps, from asking for a prompt maker to copying the text into your AI chat. On Windows the steps are the same, with notes on where downloads land",
+  "Skills It Depends On": "The artifact capabilities skill for the download permission, plus the vibe dashboard and vibe launchpad skills, which share its design",
+  "Programs It Depends On": "Just a web browser, and a text editor if you download the text. No Python is needed",
+  "Capabilities and Limitations": "It works for any kind of case and turns it into clean text. But it keeps nothing between visits, has no [import](/ˈɪmpɔːɹt/), and outputs text only",
+  "Scheduled Tasks": "None. Its pages are simply backed up each night with all the others",
+  "Where It Runs": "It works in any Claude app session. Windows, mobile, Claude Code, and other assistants are untested",
+  "Gotchas": "Six traps, from losing your typing on reload to blocked pop ups and blocked downloads",
+  "Other Requirements": "Artifacts with the download permission, and any current browser on the Mac or on Windows",
+  "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+ },
+ "meta": {
+  "card_version": 1,
+  "fingerprint": "sha256:8e03f18b2cb8686e",
+  "files": [
+   "SKILL.md",
+   "assets/template.html"
+  ],
+  "skill_updated": "Sun Nov 8, 2026",
+  "carded": "Sun Nov 8, 2026",
+  "status": "published",
+  "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-promptmaker.zip",
+  "draft_url": "https://claude.ai/artifact/ECdwvu8BUfzvDTB1yFyk2o",
+  "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/vibe-promptmaker/"
+ }
+}

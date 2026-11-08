@@ -1,0 +1,33 @@
+This page is the skill sheet for the vibe prompt maker skill. It builds an AI prompt maker: a one page form where you fill in fields and get clean plain text, ready to paste into an AI.
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is and why it exists: a fill in form keeps every case in the same shape, and plain text pastes cleanly into any AI.
+
+Section four, What It Does. Nine features, from the input form and the lyve output, through editing, reordering, and switching fields between one value and a list, to copy, download, and [reset](/ɹˈiːsɛt/) with undo.
+
+Section five, How to Use It. Six steps, from asking for a prompt maker to copying the text into your AI chat. On Windows the steps are the same, with notes on where downloads land.
+
+Section six, Skills It Depends On. The artifact capabilities skill for the download permission, plus the vibe dashboard and vibe launchpad skills, which share its design.
+
+Section seven, Programs It Depends On. Just a web browser, and a text editor if you download the text. No Python is needed.
+
+Section eight, Capabilities and Limitations. It works for any kind of case and turns it into clean text. But it keeps nothing between visits, has no [import](/ˈɪmpɔːɹt/), and outputs text only.
+
+Section nine, Scheduled Tasks. None. Its pages are simply backed up each night with all the others.
+
+Section ten, Where It Runs. It works in any Claude app session. Windows, mobile, Claude Code, and other assistants are untested.
+
+Section eleven, Gotchas. Six traps, from losing your typing on reload to blocked pop ups and blocked downloads.
+
+Section twelve, Other Requirements. Artifacts with the download permission, and any current browser on the Mac or on Windows.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

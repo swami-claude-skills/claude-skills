@@ -23,6 +23,14 @@
     "published": "2026-11-08",
     "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx"
   },
+  "vibe-promptmaker": {
+    "title": "Vibe Prompt Maker",
+    "page": "dashboards/vibe-promptmaker/",
+    "fingerprint": "sha256:8e03f18b2cb8686e",
+    "skill_updated": "Sun Nov 8, 2026",
+    "published": "2026-11-08",
+    "draft_url": "https://claude.ai/artifact/ECdwvu8BUfzvDTB1yFyk2o"
+  },
   "youtube-comments": {
     "title": "YouTube Comments",
     "page": "dashboards/youtube-comments/",
