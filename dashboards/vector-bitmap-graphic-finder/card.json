@@ -1,0 +1,474 @@
+{
+ "skill": "vector-bitmap-graphic-finder",
+ "title": "Vector & Bitmap Graphic Finder",
+ "summary": "Builds and edits Swami's Vector & Bitmap Graphic Finder: a vibe dashboard with a live AI tool that finds SVG, DXF, PNG, and other graphics for 3D CAD, 3D printing, CNC, laser, and plasma.",
+ "what_it_is": [
+  "A Claude skill for one specific page: the **Vector & Bitmap Graphic Finder**, published as a Claude artifact. The page is a full vibe dashboard (same design, Search section, Mind Map, Glossary, and audio overview) with a live tool inside it. You describe a graphic, paste an image link, or drop an image, and Claude suggests where to find it as a vector or bitmap file.",
+  "Around the tool, the page explains search operators, what makes a good vector or bitmap, file types, how to vectorize a bitmap (with a table of tracing tools such as Potrace, Inkscape, and Vector Magic), and the finder's limits. The skill tells Claude where the page's build sources live, how to rebuild it, and which parts of the live tool must never be changed."
+ ],
+ "why": "Makers who cut, carve, or print a design need a clean vector (SVG or DXF) or a high-quality bitmap. The finder turns a plain description into ranked sources and hand-off searches, and the reference sections explain what to look for and how to convert what you find.",
+ "what_it_does": [
+  {
+   "topic": "Live finder",
+   "text": "Takes a description, an image URL, or an uploaded image and asks Claude for ranked source links, shown in a sortable results table (Source, Type, Cost, CAD notes, Link)."
+  },
+  {
+   "topic": "Filters",
+   "text": "File-type chips (SVG, DXF, PNG, JPG, GIF, WEBP) and style chips (Free only, Silhouette, Black & white, Color, Clipart), all on by default."
+  },
+  {
+   "topic": "Hand-offs",
+   "text": "One-click searches on Google, Bing, Brave, and DuckDuckGo, and on the SVGrepo, FreeSVG, and Freepik vector sites, built from your description and filters."
+  },
+  {
+   "topic": "Reference sections",
+   "text": "Sections on search operators, what makes a good vector or bitmap, file types, vectorizing a bitmap, and the finder's limits and caveats."
+  },
+  {
+   "topic": "3D printing tips",
+   "text": "Closed profiles, one closed shape per color, and details at least about two nozzle widths wide so the slicer keeps them."
+  },
+  {
+   "topic": "Vibe dashboard parts",
+   "text": "Dashboard Summary, Search, Mind Map, a 31-term Glossary, and a spoken audio overview, all from the vibe-dashboard skill."
+  },
+  {
+   "topic": "Script-built",
+   "text": "Rebuilds from sources published with the page (`build.txt`, `make.txt`, `tool-source.txt`, `narration.txt`, `check.txt`), so every edit is repeatable."
+  },
+  {
+   "topic": "Copies",
+   "text": "Can make a separate copy of the finder, or use it as the base for a similar finder tool."
+  }
+ ],
+ "triggers": [
+  "\"Add Vector Magic to the vectorize table in the graphic finder\"",
+  "\"Add a glossary term to the graphic finder\"",
+  "\"Make a copy of the graphic finder\" / \"build a similar finder for …\""
+ ],
+ "how_to_use": [
+  {
+   "topic": "Ask",
+   "step": "Tell Claude the change you want to the finder (a new tool row, glossary term, section text), or ask for a copy.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Fetch sources",
+   "step": "Claude loads the vibe-dashboard skill and reads the live page's published sources into a working folder.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Edit",
+   "step": "Content changes go in `build.py`; tool behavior changes go in `tool-source.html`.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Build",
+   "step": "Claude saves the live audio block if the narration won't change, then runs `make.sh` to rebuild the page and apply the vibe patches.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Audio",
+   "step": "Claude puts the saved audio back, or rewrites the narration and records it again if sections or the glossary count changed.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Check",
+   "step": "Claude runs `check.py` at three widths and the privacy check.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Publish",
+   "step": "Claude republishes to the same link with the changed source files, and says what changed in a line.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Use it",
+   "step": "Open the page, expand Find Graphics, describe or drop an image, and run it. The first run asks you to allow Claude (and images).",
+   "who": "Anyone"
+  }
+ ],
+ "how_to_use_windows": [
+  {
+   "topic": "Same build",
+   "step": "Building and editing run in Claude's workspace, not on your PC, so the steps are the same on Windows.",
+   "who": "You"
+  },
+  {
+   "topic": "Browser",
+   "step": "Open the finder in Edge, Chrome, or Firefox. Upload Image uses the normal Windows file picker; dragging a file from File Explorer onto the drop zone also works.",
+   "who": "You"
+  },
+  {
+   "topic": "Downloads",
+   "step": "Files you get from source sites land in `C:\\Users\\<name>\\Downloads`; open SVG in Inkscape or Illustrator, and DXF in your CAD or laser software.",
+   "who": "You"
+  },
+  {
+   "topic": "Vector Magic",
+   "step": "The online edition exports SVG, EPS, and PDF; DXF needs the desktop edition, which runs on Windows.",
+   "who": "You"
+  }
+ ],
+ "skills": [
+  {
+   "name": "vibe-dashboard",
+   "need": "Required",
+   "why": "The authority for the design, template, patches, Search, Mind Map, Glossary, audio overview, and privacy rules. Load it first."
+  },
+  {
+   "name": "artifact-capabilities",
+   "need": "Optional",
+   "why": "Only for a brand-new copy, which needs the `sample` (with images) and connector permissions declared."
+  }
+ ],
+ "programs": [
+  {
+   "name": "Python 3",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Runs `build.py`, the vibe patches, and the audio script.",
+   "install": "Already in Claude's workspace; code execution must be on.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "Kokoro voice and ffmpeg",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Record the audio overview when the narration changes.",
+   "install": "Installed on first use; needs network access to PyPI and GitHub's file servers.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "Playwright and Chrome",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "`check.py` opens the page headlessly to check links, glossary counts, and table fit.",
+   "install": "Present in Claude's workspace (`/usr/bin/google-chrome`).",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "A web browser",
+   "need": "Required",
+   "where": "Any computer",
+   "why": "Runs the finder and opens the hand-off searches in new tabs.",
+   "install": "Safari, Chrome, or Firefox.",
+   "install_windows": "Edge, Chrome, or Firefox."
+  },
+  {
+   "name": "Claude Code Remote connector",
+   "need": "Optional",
+   "where": "Swami's Claude account",
+   "why": "Lets the owner-only ↻ button re-record the audio overview.",
+   "install": "Already connected on Swami's account.",
+   "install_windows": "Same."
+  },
+  {
+   "name": "Vector editor or CAD app",
+   "need": "Optional",
+   "where": "Your computer",
+   "why": "Opens what you find: Inkscape or Illustrator for SVG, your CAD or laser software for DXF.",
+   "install": "Inkscape from inkscape.org, or Illustrator.",
+   "install_windows": "Inkscape (`winget install Inkscape.Inkscape`), or Illustrator."
+  },
+  {
+   "name": "Anthropic API key",
+   "need": "Not needed",
+   "where": "—",
+   "why": "The live finder uses the artifact's built-in Claude access, never an API key in the page.",
+   "install": "—",
+   "install_windows": "—"
+  }
+ ],
+ "capabilities": [
+  {
+   "topic": "Three inputs",
+   "text": "Describe it, paste an image link, or upload an image; uploads are shrunk in the browser before they are sent."
+  },
+  {
+   "topic": "Fallbacks",
+   "text": "If Claude can't be reached, the page still offers Google and Bing links and every hand-off button."
+  },
+  {
+   "topic": "Repeatable edits",
+   "text": "Every change is a small edit to the build sources, rebuilt the same way each time."
+  },
+  {
+   "topic": "Reusable base",
+   "text": "The tool and its build can be copied as a starting point for a similar finder."
+  }
+ ],
+ "limitations": [
+  {
+   "topic": "No browsing",
+   "text": "Claude can't browse from the page, so the finder suggests well-known sites and their own search pages, not exact file links."
+  },
+  {
+   "topic": "Image URLs",
+   "text": "Image URL mode often has to guess from the link text; Upload Image is the reliable way to search by picture."
+  },
+  {
+   "topic": "Claude only",
+   "text": "The main finder button needs Claude's built-in access, so it works only on the published claude.ai page. Elsewhere (opened from disk, or built by another AI) it shows an error banner, but the search-engine and vector-site buttons still work."
+  },
+  {
+   "topic": "One page",
+   "text": "The skill is built around one artifact and its published sources; a new copy needs its own permissions and audio wiring."
+  }
+ ],
+ "scheduled_tasks": {
+  "summary": "It doesn't create one, but two of Swami's tasks touch the page.",
+  "tasks": [
+   {
+    "name": "Vibe dashboard — refresh audio overview",
+    "schedule": "On demand (no schedule)",
+    "what": "Fired by the owner-only ↻ button on the finder's audio player; re-records its overview."
+   },
+   {
+    "name": "Vibe dashboards — nightly GitHub backup",
+    "schedule": "Nightly, about 4:07 AM ET",
+    "what": "Backs up the finder and its published sources to the private vibe-dashboards repo."
+   }
+  ]
+ },
+ "runs_in": [
+  {
+   "where": "Claude app, cloud session (web, desktop, mobile)",
+   "status": "Yes",
+   "notes": "The finder was rebuilt as a vibe dashboard this way on Nov 3, 2026."
+  },
+  {
+   "where": "Claude desktop app linked to the Mac",
+   "status": "Yes",
+   "notes": "Same as a cloud session; the Mac isn't needed for building."
+  },
+  {
+   "where": "Claude desktop app linked to a Windows PC",
+   "status": "Untested",
+   "notes": "Should work the same, since nothing runs on the PC."
+  },
+  {
+   "where": "Claude mobile app",
+   "status": "Untested",
+   "notes": "Building should work. Using the finder on a phone (upload, results table) hasn't been tried."
+  },
+  {
+   "where": "Claude Code on the Mac",
+   "status": "Untested",
+   "notes": "Could build the file on the Mac, but live search only works on the published artifact."
+  }
+ ],
+ "other_ais": [
+  {
+   "ai": "ChatGPT",
+   "status": "Partial",
+   "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. The page works partly: the main finder button relies on Claude's built-in access and does not work, but the search-engine and vector-site buttons still do."
+  },
+  {
+   "ai": "Gemini",
+   "status": "Partial",
+   "notes": "Upload the unzipped skill folder. Same as ChatGPT: the main finder button does not work, the search-engine and vector-site buttons do."
+  },
+  {
+   "ai": "Grok",
+   "status": "Partial",
+   "notes": "Import the .zip, or the SKILL.md if refused. Same as ChatGPT: the main finder button does not work, the search-engine and vector-site buttons do."
+  }
+ ],
+ "gotchas": [
+  {
+   "topic": "Capital Search",
+   "text": "On the finder page, body text that starts a word with a capital-S \"search\" turns into a link to its search section. Say \"the finder\" or \"run it\" instead."
+  },
+  {
+   "topic": "Category names",
+   "text": "Never name a category `search`; the Search patch owns it. The tool's color is `--cat-tool`."
+  },
+  {
+   "topic": "Audio dropped",
+   "text": "`make.sh` rebuilds from scratch and drops the audio player. Save the live audio block first, or record again."
+  },
+  {
+   "topic": "Stress check",
+   "text": "Every new narration gets the vibe-dashboard noun/verb stress audit before recording, so words like \"record\" and \"research\" are stressed correctly."
+  },
+  {
+   "topic": "Model download",
+   "text": "If the voice model download is cut off, delete the partial `kokoro.onnx` and retry once; then fall back to the browser voice."
+  },
+  {
+   "topic": "Chip clicks",
+   "text": "The tool's controls must be skipped by glossary and section linking, or a click on a filter chip jumps to the Glossary."
+  },
+  {
+   "topic": "Live sources",
+   "text": "Always build from the page's published sources, never an older copy; they hold every edit since the skill was last updated."
+  },
+  {
+   "topic": "New windows",
+   "text": "Hand-off buttons open through a real link click, because `window.open` is unreliable inside the artifact viewer."
+  }
+ ],
+ "requirements": [
+  {
+   "topic": "Writer access",
+   "text": "Rebuilding needs edit access to the finder's artifact, which only Swami has."
+  },
+  {
+   "topic": "Code execution",
+   "text": "Claude's code execution with network access, for the build, the check, and the audio."
+  },
+  {
+   "topic": "Viewer approval",
+   "text": "The first run of the live finder in a view asks the viewer to allow Claude, and images for uploads."
+  },
+  {
+   "topic": "Browser",
+   "text": "Any current browser on macOS or on Windows 10 or 11."
+  }
+ ],
+ "glossary": [
+  {
+   "term": "Vector",
+   "topic": "Graphics",
+   "match": "vectors?",
+   "code": "",
+   "def": "A graphic made of lines and curves that scales to any size without losing sharpness."
+  },
+  {
+   "term": "Bitmap",
+   "topic": "Graphics",
+   "match": "bitmaps?",
+   "code": "",
+   "def": "A graphic made of a grid of pixels; it blurs or turns blocky when enlarged."
+  },
+  {
+   "term": "SVG",
+   "topic": "File Formats",
+   "match": "SVG",
+   "code": "",
+   "def": "Scalable Vector Graphics, the common web vector format; most CAD and laser tools import it."
+  },
+  {
+   "term": "DXF",
+   "topic": "File Formats",
+   "match": "DXF",
+   "code": "",
+   "def": "Drawing Exchange Format, the CAD vector format most CNC, laser, and plasma software reads."
+  },
+  {
+   "term": "PNG",
+   "topic": "File Formats",
+   "match": "PNG",
+   "code": "",
+   "def": "A lossless bitmap format that supports transparency."
+  },
+  {
+   "term": "Vectorize",
+   "topic": "Tracing",
+   "match": "vectoriz\\w+|tracing|trace",
+   "code": "",
+   "def": "Turning a bitmap into vector paths by tracing its edges."
+  },
+  {
+   "term": "Potrace",
+   "topic": "Tracing",
+   "match": "Potrace",
+   "code": "",
+   "def": "A free tracing engine that turns black-and-white bitmaps into smooth vectors; Inkscape uses it."
+  },
+  {
+   "term": "Vector Magic",
+   "topic": "Tracing",
+   "match": "Vector Magic",
+   "code": "",
+   "def": "A paid automatic tracing service and desktop app known for clean, low-node results."
+  },
+  {
+   "term": "Closed profile",
+   "topic": "3D Printing",
+   "match": "closed profiles?|closed shapes?",
+   "code": "",
+   "def": "An outline that fully closes on itself, so CAD can extrude it into a solid."
+  },
+  {
+   "term": "Slicer",
+   "topic": "3D Printing",
+   "match": "slicer",
+   "code": "",
+   "def": "The program that turns a 3D model into printer layers and moves."
+  },
+  {
+   "term": "Nozzle width",
+   "topic": "3D Printing",
+   "match": "nozzle widths?",
+   "code": "",
+   "def": "The printer nozzle's opening, commonly 0.4 mm; it limits the finest printable detail."
+  },
+  {
+   "term": "Hand-off",
+   "topic": "Finder",
+   "match": "hand-offs?",
+   "code": "",
+   "def": "A button that opens your query on another search engine or vector site in a new tab."
+  },
+  {
+   "term": "Search operator",
+   "topic": "Finder",
+   "match": "search operators?|operators?",
+   "code": "",
+   "def": "A special term like filetype: or site: that narrows a web search."
+  },
+  {
+   "term": "Sample capability",
+   "topic": "Build",
+   "match": "sample",
+   "code": "sample",
+   "def": "The artifact permission that lets a published page ask Claude a question, with images if allowed."
+  },
+  {
+   "term": "Build sources",
+   "topic": "Build",
+   "match": "sources",
+   "code": "build.txt|make.txt|tool-source.txt|check.txt",
+   "def": "The files published with the page that rebuild it exactly: generator, pipeline, tool source, narration, and checker."
+  },
+  {
+   "term": "Artifact",
+   "topic": "Build",
+   "match": "artifacts?",
+   "code": "",
+   "def": "A web page Claude publishes on claude.ai; it starts private."
+  }
+ ],
+ "confirm": [],
+ "spoken": {
+  "_intro": "This page is the skill sheet for the vector and bitmap graphic finder skill. It builds and edits Swami's graphic finder: a vibe dashboard with a lyve AI tool that finds vector and bitmap graphics for three D cad, three D printing, CNC, laser, and plasma.",
+  "Dashboard Summary": "A short intro and a table of every section",
+  "What It Is": "What the skill is, and why it exists: makers need a clean vector or a sharp bitmap, and the finder turns a plain description into ranked sources",
+  "What It Does": "Eight things, from the lyve finder, its filters, and its hand off buttons, through the reference sections and three D printing tips, to the script that rebuilds the page",
+  "How to Use It": "Eight steps, from asking for a change to using the finder. On Windows the steps are the same, with notes on uploads and downloads",
+  "Skills It Depends On": "The vibe dashboard skill, which sets the design, and the artifact capabilities skill, only for a new copy",
+  "Programs It Depends On": "Python, the Kokoro voice, ffmpeg, and Playwright in Claude's workspace, plus a web browser. No API key is needed",
+  "Capabilities and Limitations": "It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, and lyve search works only on the published page",
+  "Scheduled Tasks": "None of its own. The audio refresh task and the nightly GitHub backup both touch the page",
+  "Where It Runs": "It works in any Claude app session. Windows and mobile are untested. In other assistants it works partly: the main finder button needs Claude, but the search engine buttons still work",
+  "Gotchas": "Eight traps, from a capital S that links to the wrong section, to the stress check, to the audio player that a rebuild drops",
+  "Other Requirements": "Edit access to the page, code execution, viewer approval on first use, and any current browser",
+  "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+ },
+ "meta": {
+  "card_version": 1,
+  "fingerprint": "sha256:3c132a0d6870a611",
+  "files": [
+   "SKILL.md",
+   "assets/template.html"
+  ],
+  "skill_updated": "Sun Nov 8, 2026",
+  "carded": "Sun Nov 8, 2026",
+  "status": "published",
+  "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vector-bitmap-graphic-finder.zip",
+  "draft_url": "https://claude.ai/artifact/EPQj1yqnwomXi6zF8XTe6B",
+  "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/vector-bitmap-graphic-finder/"
+ }
+}

@@ -1,0 +1,33 @@
+This page is the skill sheet for the vector and bitmap graphic finder skill. It builds and edits Swami's graphic finder: a vibe dashboard with a lyve AI tool that finds vector and bitmap graphics for three D cad, three D printing, CNC, laser, and plasma.
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is, and why it exists: makers need a clean vector or a sharp bitmap, and the finder turns a plain description into ranked sources.
+
+Section four, What It Does. Eight things, from the lyve finder, its filters, and its hand off buttons, through the reference sections and three D printing tips, to the script that rebuilds the page.
+
+Section five, How to Use It. Eight steps, from asking for a change to using the finder. On Windows the steps are the same, with notes on uploads and downloads.
+
+Section six, Skills It Depends On. The vibe dashboard skill, which sets the design, and the artifact capabilities skill, only for a new copy.
+
+Section seven, Programs It Depends On. Python, the Kokoro voice, ffmpeg, and Playwright in Claude's workspace, plus a web browser. No API key is needed.
+
+Section eight, Capabilities and Limitations. It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, and lyve search works only on the published page.
+
+Section nine, Scheduled Tasks. None of its own. The audio refresh task and the nightly GitHub backup both touch the page.
+
+Section ten, Where It Runs. It works in any Claude app session. Windows and mobile are untested. In other assistants it works partly: the main finder button needs Claude, but the search engine buttons still work.
+
+Section eleven, Gotchas. Eight traps, from a capital S that links to the wrong section, to the stress check, to the audio player that a rebuild drops.
+
+Section twelve, Other Requirements. Edit access to the page, code execution, viewer approval on first use, and any current browser.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

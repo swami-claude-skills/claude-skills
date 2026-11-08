@@ -15,6 +15,14 @@
     "published": "2026-11-07",
     "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
   },
+  "vector-bitmap-graphic-finder": {
+    "title": "Vector & Bitmap Graphic Finder",
+    "page": "dashboards/vector-bitmap-graphic-finder/",
+    "fingerprint": "sha256:3c132a0d6870a611",
+    "skill_updated": "Sun Nov 8, 2026",
+    "published": "2026-11-08",
+    "draft_url": "https://claude.ai/artifact/EPQj1yqnwomXi6zF8XTe6B"
+  },
   "vibe-dashboard": {
     "title": "Vibe Dashboard",
     "page": "dashboards/vibe-dashboard/",
