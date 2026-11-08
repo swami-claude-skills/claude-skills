@@ -3,7 +3,7 @@
   "title": "Facebook Comments",
   "summary": "Pulls every comment and reply from a Facebook post into one threaded JSON file with exact reply-to links and clean permalinks, and can turn it into a vibe dashboard.",
   "what_it_is": [
-    "A Claude skill that collects the complete comment tree of a Facebook post, in a group, on a page, or on a profile. It switches the post to **All comments**, expands every hidden reply, records who answered whom, and saves the result as one JSON file.",
+    "A Claude skill that collects the complete comment tree of a Facebook post, in a group, on a page, or on a profile. It switches the post to **All comments**, expands every hidden reply, records who answered whom, and saves the result as one JSON file. This page describes version 1.1.0 of the skill.",
     "After delivering the file, Claude offers a button to build Swami's vibe dashboard from it: the post, discussion stats and participants, Claude's themes and takeaways, every thread, a search, a mind map, a glossary, and an audio overview."
   ],
   "why": "Facebook lazy-loads comments, hides replies behind \"View all N replies\", and defaults to \"Most relevant\", which leaves some comments out. Group posts also need a signed-in member, so a plain web fetch or Claude's cloud workspace gets nothing.",
@@ -129,7 +129,7 @@
     {
       "name": "chrome-browser",
       "need": "Optional",
-      "why": "Claude reads it before using Claude in Chrome, the fallback browser."
+      "why": "Claude reads it before using Claude in Chrome, the fallback browser. Since version 1.1.0 the skill names it explicitly: on that route Claude reads chrome-browser instead of built-in-browser."
     },
     {
       "name": "vibe-dashboard",
@@ -525,13 +525,13 @@
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
-    "card_version": 3,
-    "fingerprint": "sha256:fb096452c0892d4a",
+    "card_version": 4,
+    "fingerprint": "sha256:020b7e2fe708e2fe",
     "files": [
       "SKILL.md"
     ],
     "skill_updated": "Sat Nov 7, 2026",
-    "carded": "Sat Nov 7, 2026",
+    "carded": "Sun Nov 8, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/facebook-comments.zip",
     "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba",

@@ -2,9 +2,9 @@
   "facebook-comments": {
     "title": "Facebook Comments",
     "page": "dashboards/facebook-comments/",
-    "fingerprint": "sha256:fb096452c0892d4a",
+    "fingerprint": "sha256:020b7e2fe708e2fe",
     "skill_updated": "Sat Nov 7, 2026",
-    "published": "2026-11-07",
+    "published": "2026-11-08",
     "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
   },
   "makerworld-reviews": {
