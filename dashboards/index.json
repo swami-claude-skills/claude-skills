@@ -26,7 +26,7 @@
   "vibe-dashboard": {
     "title": "Vibe Dashboard",
     "page": "dashboards/vibe-dashboard/",
-    "fingerprint": "sha256:f7309e5ddfefc192",
+    "fingerprint": "sha256:0e98e02b56c20f24",
     "skill_updated": "Sun Nov 8, 2026",
     "published": "2026-11-08",
     "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx"
@@ -34,7 +34,7 @@
   "vibe-promptmaker": {
     "title": "Vibe Prompt Maker",
     "page": "dashboards/vibe-promptmaker/",
-    "fingerprint": "sha256:8e03f18b2cb8686e",
+    "fingerprint": "sha256:2d8805f984e01dcc",
     "skill_updated": "Sun Nov 8, 2026",
     "published": "2026-11-08",
     "draft_url": "https://claude.ai/artifact/ECdwvu8BUfzvDTB1yFyk2o"

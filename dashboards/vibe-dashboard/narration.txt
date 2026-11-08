@@ -10,7 +10,7 @@ Section four, What It Does. Fourteen house rules it enforces, from the locked lo
 
 Section five, How to Use It. Seven steps, from giving Claude the content to sharing the finished page. On Windows the steps are the same, because everything runs in Claude's workspace.
 
-Section six, Skills It Depends On. The artifact design skill, plus the eight skills that build their pages on this one.
+Section six, Skills It Depends On. The artifact design skill, plus the skills that build their pages on this one or share its design.
 
 Section seven, Programs It Depends On. Python, the Kokoro voice, and ffmpeg in Claude's workspace, a web browser to view the page, and optionally Playwright, the Claude Code Remote connector, and GitHub.
 

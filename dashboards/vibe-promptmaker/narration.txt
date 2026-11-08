@@ -10,7 +10,7 @@ Section four, What It Does. Nine features, from the input form and the lyve outp
 
 Section five, How to Use It. Six steps, from asking for a prompt maker to copying the text into your AI chat. On Windows the steps are the same, with notes on where downloads land.
 
-Section six, Skills It Depends On. The artifact capabilities skill for the download permission, plus the vibe dashboard and vibe launchpad skills, which share its design.
+Section six, Skills It Depends On. The artifact capabilities skill for the download permission, plus the vibe dashboard skill, which shares its design.
 
 Section seven, Programs It Depends On. Just a web browser, and a text editor if you download the text. No Python is needed.
 
