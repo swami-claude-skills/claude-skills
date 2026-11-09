@@ -1,0 +1,33 @@
+This page is the skill sheet for the Fusion add-in scaffold skill. It builds correct, ready to run add-ins and scripts for Autodesk Fusion in Python, and debugs the usual reasons an add-in silently does nothing
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is: tested templates that follow four rules, for user interface tools and for geometry tools, and why Fusion's quiet failures make that worth it.
+
+Section four, What It Does. Nine jobs, from choosing a script or an add-in, through six templates, user interface recipes, geometry, dialogs, and error handling, to document types, icons, and installers.
+
+Section five, How to Use It. Seven steps on the Mac, from describing the tool to pasting back an error, then six on Windows, where you [extract](/ɪkstɹˈækt/) the zip first.
+
+Section six, Skills It Depends On. Fusion add-in installer is required, for the installers and the read me. Fusion palette add-in builds on this skill, and vibe dashboard can style a palette.
+
+Section seven, Programs It Depends On. Autodesk Fusion, which brings its own Python, plus optional Python, zip, and bash in Claude's workspace, and Terminal or PowerShell for the installers.
+
+Section eight, Capabilities and Limitations. It handles both kinds of tool, rich dialogs, and safe batches. But Claude can't run Fusion, some command names are undocumented, and native dialogs can't be themed.
+
+Section nine, Scheduled Tasks. None. The nightly skill library refresh only packs it into a zip.
+
+Section ten, Where It Runs. Swami runs it in the Claude desktop app linked to his Mac. The other surfaces should work too, but are untested.
+
+Section eleven, Gotchas. Eleven traps, from lost handlers and missing teardown to Part documents, centimeters, and icons that look alike.
+
+Section twelve, Other Requirements. Fusion on a Mac or on Windows ten or eleven. Code execution in Claude helps but isn't required, and no admin rights are needed.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

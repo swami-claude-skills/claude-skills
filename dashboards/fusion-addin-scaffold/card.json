@@ -1,0 +1,517 @@
+{
+  "skill": "fusion-addin-scaffold",
+  "title": "Fusion Add-in Scaffold",
+  "summary": "Builds correct, ready-to-run Autodesk Fusion Python add-ins and scripts (manifest, command definitions, event handlers, palettes, icons, installers and clean teardown) and debugs the usual reasons an add-in silently fails.",
+  "what_it_is": [
+    "A Claude skill for anything written against the Fusion Python API (`adsk.core`, `adsk.fusion`). It starts every add-in from tested templates that already obey four rules which, when broken, cause most \"my add-in does nothing\" reports: keep handler references alive, tear everything down in `stop()`, mind the document type, and wrap every entry point in try/except.",
+    "It covers two kinds of tool. **Productivity and UI tools** drive what's already there: buttons and dropdowns, built-in commands, selection, visibility, the browser tree, renaming, the timeline and the camera. **Geometry tools** create sketches, bodies, features and parameters. Six reference files hold the templates, the UI recipes, dialog inputs, error handling, document types and geometry recipes; installers come from the **fusion-addin-installer** skill.",
+    "It is the foundation layer: **fusion-palette-addin** builds Swami's house-spec palette tools on top of its rules."
+  ],
+  "why": "Fusion's API fails quietly. A garbage-collected handler, a missing teardown or a component call in the wrong document type gives no error, just a button that does nothing. Starting from templates that already avoid these saves the debugging.",
+  "what_it_does": [
+    {
+      "topic": "Script or Add-in",
+      "text": "Decides whether you need a run-once **script** or a resident **add-in** with `run()`, `stop()` and a manifest; when in doubt it builds an add-in."
+    },
+    {
+      "topic": "Templates",
+      "text": "Starts from one of six templates in `references/templates.md`: manifest, command-button (the default), simple-script, palette (HTML UI), event-only, and a command factory that builds many similar commands from one table. The palette template builds its page path from the add-in's own folder, so it loads the same way everywhere."
+    },
+    {
+      "topic": "UI Tools",
+      "text": "Uses `references/ui-navigation.md` to fire built-in commands (and find their IDs), read and set the selection, walk entities, show, hide or isolate them, place buttons in panels or dropdowns, rename in the browser, work the timeline, and move the camera."
+    },
+    {
+      "topic": "Geometry",
+      "text": "Uses `references/geometry-recipes.md` for sketches, extrudes, user parameters, fillets, patterns and booleans."
+    },
+    {
+      "topic": "Dialogs",
+      "text": "Uses `references/command-inputs.md` for message boxes and command dialogs: text, value, dropdown, checkbox, radio, slider, selection, groups, tabs and tables, live updates and validation."
+    },
+    {
+      "topic": "Error Handling",
+      "text": "Uses `references/error-handling.md`: expected versus unexpected errors, guard clauses, rolling back a half-finished change, collecting batch errors, and treating Cancel as a normal exit."
+    },
+    {
+      "topic": "Document Types",
+      "text": "Uses `references/document-types.md` to guard component creation: Part-type documents have no occurrence tree, so it works on the root component there."
+    },
+    {
+      "topic": "Icons and Shortcuts",
+      "text": "Adds 16, 32 and 64 px icons (or one SVG), checks several icons side by side so no two match, and tells you how to bind a keyboard shortcut."
+    },
+    {
+      "topic": "Installers",
+      "text": "Adds the double-click installers and `README.txt`, built with the fusion-addin-installer skill, unless you only want source code to read."
+    }
+  ],
+  "triggers": [
+    "\"A button that hides all sketches\"",
+    "\"My Fusion add-in loads but clicking the button does nothing\"",
+    "\"Write a Fusion script that makes a parametric box\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "Describe the tool or the bug. You don't need to say \"scaffold\" or \"add-in\"; any request aimed at the Fusion Python API works.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Clarify",
+      "step": "Claude settles script versus add-in, the name, and where the button goes, and asks if any is unclear.",
+      "who": "Claude, then Swami"
+    },
+    {
+      "topic": "Build",
+      "step": "Claude fills the matching template, applies the four rules, adds icons and installers, and sends the folder as a zip (or a code block for a small script).",
+      "who": "Claude"
+    },
+    {
+      "topic": "Install",
+      "step": "Unzip and double-click `install-macos.command` (right-click › Open the first time if Gatekeeper asks), or copy the folder into `~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/AddIns/`.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Run",
+      "step": "In Fusion: **Utilities › Add-Ins › Scripts and Add-Ins** (Shift+S), pick it under Add-Ins (or Scripts), click **Run**.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Shortcut",
+      "step": "If it has an icon: right-click its button › **Change Keyboard Shortcut** › press the keys.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Debug",
+      "step": "If something fails, paste the message box text back to Claude; every entry point reports a traceback instead of failing silently.",
+      "who": "Swami, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Ask and Build",
+      "step": "The same as on macOS; the code is the same on both platforms.",
+      "who": "Swami, then Claude"
+    },
+    {
+      "topic": "Extract",
+      "step": "Right-click the zip › **Extract All…** before running anything. The README.txt from fusion-addin-installer says so.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Install",
+      "step": "Double-click `install-windows.cmd`, or copy the folder into `%APPDATA%\\Autodesk\\Autodesk Fusion 360\\API\\AddIns\\` (`C:\\Users\\<name>\\AppData\\Roaming\\…`).",
+      "who": "Swami"
+    },
+    {
+      "topic": "SmartScreen",
+      "step": "If Windows shows \"Windows protected your PC\", click **More info › Run anyway**, once. Not yet tried on a Windows PC.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Run",
+      "step": "In Fusion: **Utilities › Add-Ins › Scripts and Add-Ins** (Shift+S), pick it, click **Run**.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Shortcut",
+      "step": "Right-click its button › **Change Keyboard Shortcut** › press the keys.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "fusion-palette-addin",
+      "need": "Related",
+      "why": "Builds Swami's house-spec HTML palette tools on top of this skill's rules; use it instead when the tool needs a dark-mode palette."
+    },
+    {
+      "name": "fusion-addin-installer",
+      "need": "Required",
+      "why": "Builds the installers and README.txt for every add-in this skill delivers (unless you only want source code)."
+    },
+    {
+      "name": "vibe-dashboard",
+      "need": "Related",
+      "why": "Its dark theme can style a palette's HTML. Fusion dashboards and documentation pages are out of scope here."
+    }
+  ],
+  "programs": [
+    {
+      "name": "Autodesk Fusion",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Runs the add-in or script with its own built-in Python.",
+      "install": "From autodesk.com; run it once so the AddIns folder exists.",
+      "install_windows": "From autodesk.com; the AddIns folder is under `%APPDATA%`."
+    },
+    {
+      "name": "Python 3",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Compiles the code to catch syntax errors and draws placeholder icons. Claude can't run Fusion itself.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "zip and bash",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Zips the folder for download and syntax-checks the macOS installer (`bash -n`).",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same."
+    },
+    {
+      "name": "Terminal",
+      "need": "Mac only",
+      "where": "Swami's Mac",
+      "why": "Runs `install-macos.command` on double-click.",
+      "install": "Built into macOS.",
+      "install_windows": "Not used; Windows uses PowerShell."
+    },
+    {
+      "name": "PowerShell",
+      "need": "Windows only",
+      "where": "The Windows PC",
+      "why": "Runs `install-windows.ps1`, launched by the `.cmd`.",
+      "install": "Not used on macOS.",
+      "install_windows": "Built into Windows 10 and 11."
+    },
+    {
+      "name": "A separate Python install",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Fusion ships its own Python; nothing is installed with pip on the computer.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Two Kinds of Tool",
+      "text": "Handles both UI and productivity tools and geometry tools, and tools that mix them."
+    },
+    {
+      "topic": "Rich Dialogs",
+      "text": "Builds native command dialogs with every input type, live updates and validation, or a message box when that's enough."
+    },
+    {
+      "topic": "Many Commands",
+      "text": "The command factory builds a whole family of similar commands (show, hide, isolate per entity type) from one table."
+    },
+    {
+      "topic": "Safe Batches",
+      "text": "Batch work reports which items failed instead of stopping at the first, and a failed multi-step change can be rolled back."
+    },
+    {
+      "topic": "Debugging",
+      "text": "Diagnoses add-ins that won't load, buttons that do nothing, duplicate buttons, and component creation failing in Part documents."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Can't Run Fusion",
+      "text": "Claude can compile and inspect the code but can't run it in Fusion; you test it live."
+    },
+    {
+      "topic": "Undocumented IDs",
+      "text": "Built-in command IDs and panel IDs aren't fully documented and change between versions. The skill shows how to discover them rather than guessing, and flags uncertain API names."
+    },
+    {
+      "topic": "Modal Commands",
+      "text": "Some built-in commands open their own dialog when executed and can't run headless; the operation then has to be rebuilt with the API."
+    },
+    {
+      "topic": "No Themed Dialogs",
+      "text": "Native command dialogs can't be themed; only HTML palettes can take the dark style."
+    },
+    {
+      "topic": "Out of Scope",
+      "text": "Not for Fusion dashboards or HTML deliverables, CAM post-processors, or other CAD programs."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill doesn't need, create or get run by a scheduled task. The nightly Skill Library refresh only packages it as a zip with Swami's other skills.",
+    "tasks": [
+      {
+        "name": "Skills dashboard nightly refresh",
+        "schedule": "Nightly, about 1:52 AM ET",
+        "what": "Rebuilds the downloadable zip of every skill, this one included, in the public claude-skills repo."
+      }
+    ]
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "Should work: code is written, compiled and zipped in Claude's workspace."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Swami's usual setup. Claude builds and sends the zip; installing and testing happen in Fusion on the Mac."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Not run on a Windows PC yet. Building is the same; install with `install-windows.cmd`."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Can write the code, but installing and testing need a computer with Fusion."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Can write the add-in straight into the AddIns folder."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. The skill is all text (SKILL.md plus references), so it should carry over; zipping needs code execution."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder with its references."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused (the references would then be lost); installing by chat drifts from the original."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Garbage-collected Handlers",
+      "text": "A handler not kept in the module-level `handlers` list is silently collected: the button appears but clicking does nothing."
+    },
+    {
+      "topic": "Missing Teardown",
+      "text": "Every control, command definition and palette added in `run()` must be deleted in `stop()`, or reloading causes \"identity already exists\" errors or duplicate buttons. Dropdowns need deeper teardown."
+    },
+    {
+      "topic": "Part Documents",
+      "text": "`addNewComponent()` fails in a Part-type document, which has no occurrence tree. Check the document type, or work on `rootComponent` directly."
+    },
+    {
+      "topic": "Silent Failures",
+      "text": "Fusion swallows unhandled exceptions. Every entry point needs try/except with `traceback.format_exc()` in a message box."
+    },
+    {
+      "topic": "Centimeters",
+      "text": "A value input's `.value` is always in centimeters (radians for angles), whatever the document units: \"50 mm\" reads as 5.0. Treating it as millimeters makes geometry ten times too big."
+    },
+    {
+      "topic": "Names Must Match",
+      "text": "The folder, `.py` and `.manifest` must share one name or Fusion won't list the add-in."
+    },
+    {
+      "topic": "No Icon, No Shortcut",
+      "text": "Fusion only offers Change Keyboard Shortcut on a command with an icon folder and a reachable button."
+    },
+    {
+      "topic": "Repeated Icons",
+      "text": "Each icon can look fine alone but match another in the toolbar; render them side by side at 16 px."
+    },
+    {
+      "topic": "Direct Modeling",
+      "text": "Some features fail in a direct-modeling (no history) document; check `designType`."
+    },
+    {
+      "topic": "Message Boxes in Loops",
+      "text": "Don't call `ui.messageBox` inside a loop; log with `app.log` and show one summary at the end."
+    },
+    {
+      "topic": "Windows: Extract First",
+      "text": "Run the installer from an extracted folder, not from inside the zip; SmartScreen may need More info › Run anyway. The README.txt covers both."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Fusion",
+      "text": "Autodesk Fusion installed and run at least once for the current user, on macOS or on Windows 10 or 11."
+    },
+    {
+      "topic": "Code Execution",
+      "text": "Optional but useful: code execution (\"Create and edit files\") lets Claude compile the code, draw icons and zip the folder."
+    },
+    {
+      "topic": "No Admin Rights",
+      "text": "Add-ins install into per-user folders; no administrator password is needed."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Add-in",
+      "topic": "Fusion API",
+      "match": "add-ins?",
+      "code": "",
+      "def": "A resident Python program with run() and stop() that Fusion loads and keeps running; it can add buttons and react to events."
+    },
+    {
+      "term": "Script",
+      "topic": "Fusion API",
+      "match": "scripts?",
+      "code": "",
+      "def": "A Python program that runs once, top to bottom, then exits."
+    },
+    {
+      "term": "Manifest",
+      "topic": "Fusion API",
+      "match": "manifest",
+      "code": ".manifest",
+      "def": "The JSON file Fusion reads to list an add-in: id, version, product, platforms and run-on-startup."
+    },
+    {
+      "term": "Event handler",
+      "topic": "Fusion API",
+      "match": "handlers?",
+      "code": "",
+      "def": "An object Fusion calls when something happens; it must stay referenced or it is garbage-collected."
+    },
+    {
+      "term": "Teardown",
+      "topic": "Fusion API",
+      "match": "teardown",
+      "code": "stop()",
+      "def": "Deleting every control, command definition and palette in stop()."
+    },
+    {
+      "term": "Command definition",
+      "topic": "Fusion API",
+      "match": "command definitions?",
+      "code": "",
+      "def": "Fusion's record of a command, which buttons point to; built-in commands have one too."
+    },
+    {
+      "term": "Command ID",
+      "topic": "Fusion API",
+      "match": "command IDs?",
+      "code": "",
+      "def": "The string that names a command, such as FusionFilletCommand; not fully documented, so the skill shows how to discover them."
+    },
+    {
+      "term": "Palette",
+      "topic": "Fusion UI",
+      "match": "palettes?",
+      "code": "",
+      "def": "An HTML panel inside Fusion, used when a native dialog isn't rich enough."
+    },
+    {
+      "term": "Command dialog",
+      "topic": "Fusion UI",
+      "match": "dialogs?",
+      "code": "",
+      "def": "Fusion's native input window, built from command inputs in commandCreated."
+    },
+    {
+      "term": "Dropdown",
+      "topic": "Fusion UI",
+      "match": "dropdowns?",
+      "code": "",
+      "def": "A menu that groups several related commands under one button in a panel."
+    },
+    {
+      "term": "Keyboard shortcut",
+      "topic": "Fusion UI",
+      "match": "keyboard shortcut|Change Keyboard Shortcut",
+      "code": "",
+      "def": "A hotkey the user binds in Fusion; only offered for commands with an icon and a button."
+    },
+    {
+      "term": "Root component",
+      "topic": "Documents",
+      "match": "root component|rootComponent",
+      "code": "rootComponent",
+      "def": "The top component of a design; safe to add geometry to in any document type."
+    },
+    {
+      "term": "Occurrence",
+      "topic": "Documents",
+      "match": "occurrences?",
+      "code": "",
+      "def": "A placed instance of a component in an assembly; Part-type documents have none."
+    },
+    {
+      "term": "Part document",
+      "topic": "Documents",
+      "match": "Part-type|Part documents?",
+      "code": "",
+      "def": "A flat, single-component document type in which new components can't be added."
+    },
+    {
+      "term": "Direct modeling",
+      "topic": "Documents",
+      "match": "direct-modeling|direct modeling",
+      "code": "",
+      "def": "A design with no timeline history; some features behave differently or aren't available."
+    },
+    {
+      "term": "Internal units",
+      "topic": "Documents",
+      "match": "centimeters",
+      "code": "",
+      "def": "The units the API always uses: centimeters for length and radians for angles."
+    },
+    {
+      "term": "Guard clause",
+      "topic": "Errors",
+      "match": "guard clauses?",
+      "code": "",
+      "def": "A check at the start of a command that stops with a clear message when a precondition isn't met."
+    },
+    {
+      "term": "Traceback",
+      "topic": "Errors",
+      "match": "traceback",
+      "code": "",
+      "def": "Python's error report showing where it failed; shown in a message box so failures aren't silent."
+    },
+    {
+      "term": "Command factory",
+      "topic": "Templates",
+      "match": "command factory",
+      "code": "",
+      "def": "The template that builds many similar commands from one table with one shared handler."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the Fusion add-in scaffold skill. It builds correct, ready to run add-ins and scripts for Autodesk Fusion in Python, and debugs the usual reasons an add-in silently does nothing",
+    "What It Is": "What the skill is: tested templates that follow four rules, for user interface tools and for geometry tools, and why Fusion's quiet failures make that worth it",
+    "What It Does": "Nine jobs, from choosing a script or an add-in, through six templates, user interface recipes, geometry, dialogs, and error handling, to document types, icons, and installers",
+    "How to Use It": "Seven steps on the Mac, from describing the tool to pasting back an error, then six on Windows, where you [extract](/ɪkstɹˈækt/) the zip first",
+    "Skills It Depends On": "Fusion add-in installer is required, for the installers and the read me. Fusion palette add-in builds on this skill, and vibe dashboard can style a palette",
+    "Programs It Depends On": "Autodesk Fusion, which brings its own Python, plus optional Python, zip, and bash in Claude's workspace, and Terminal or PowerShell for the installers",
+    "Capabilities and Limitations": "It handles both kinds of tool, rich dialogs, and safe batches. But Claude can't run Fusion, some command names are undocumented, and native dialogs can't be themed",
+    "Scheduled Tasks": "None. The nightly skill library refresh only packs it into a zip",
+    "Where It Runs": "Swami runs it in the Claude desktop app linked to his Mac. The other surfaces should work too, but are untested",
+    "Gotchas": "Eleven traps, from lost handlers and missing teardown to Part documents, centimeters, and icons that look alike",
+    "Other Requirements": "Fusion on a Mac or on Windows ten or eleven. Code execution in Claude helps but isn't required, and no admin rights are needed",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:30fb3053e7003c36",
+    "files": [
+      "SKILL.md",
+      "references/command-inputs.md",
+      "references/document-types.md",
+      "references/error-handling.md",
+      "references/geometry-recipes.md",
+      "references/templates.md",
+      "references/ui-navigation.md"
+    ],
+    "skill_updated": "Mon Nov 9, 2026",
+    "carded": "Mon Nov 9, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-scaffold.zip",
+    "draft_url": "https://claude.ai/artifact/Q3jsfc35Ee98qj5v6L1eHU",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-addin-scaffold/"
+  }
+}
