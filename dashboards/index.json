@@ -71,6 +71,14 @@
     "published": "2026-11-07",
     "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
   },
+  "skill-dashboard": {
+    "title": "Skill Dashboard",
+    "page": "dashboards/skill-dashboard/",
+    "fingerprint": "sha256:0f3ed19055ba2c19",
+    "skill_updated": "Mon Nov 9, 2026",
+    "published": "2026-11-09",
+    "draft_url": "https://claude.ai/artifact/G1Vs3fkxqU7dYUygNYfYYJ"
+  },
   "vector-bitmap-graphic-finder": {
     "title": "Vector & Bitmap Graphic Finder",
     "page": "dashboards/vector-bitmap-graphic-finder/",

@@ -1,0 +1,508 @@
+{
+  "skill": "skill-dashboard",
+  "title": "Skill Dashboard",
+  "summary": "Creates, updates, checks and publishes a skill sheet: a vibe-dashboard page that explains one of Swami's own Claude skills, built from a skill card with a fingerprint that shows when the page is out of date.",
+  "what_it_is": [
+    "Every one of Swami's own skills gets a **skill sheet**, a vibe-dashboard page in a fixed shape that explains what the skill is, how to use it on macOS and Windows, what it depends on, where it runs, and its gotchas. This skill makes those pages. Each one is rendered from a **skill card**, a JSON file holding the facts about the skill plus a **fingerprint** of its files.",
+    "The fingerprint is what keeps the pages honest: when any file in a skill changes, its fingerprint changes, so a later check (or the Skill Library's nightly refresh) can flag the page as out of date. Swami vets every page before it goes public. The skill only ever makes a private draft; nothing goes to GitHub until he says \"publish\" for that skill."
+  ],
+  "why": "Swami shares his skills with other people, including Windows users. A skill sheet tells them what a skill does and what it needs before they install it, and the fingerprint means a stale page is caught instead of quietly drifting from the skill it describes.",
+  "what_it_does": [
+    {
+      "topic": "Create",
+      "text": "Reads every file in the skill, fingerprints it, writes the card, builds the page, records the audio overview, checks it in a browser, and publishes a **private draft** artifact titled \"<Title> skill\"."
+    },
+    {
+      "topic": "Update",
+      "text": "Re-reads a skill that changed, updates only what the change affects (keeping Swami's edits and answers), and republishes the draft to the same link."
+    },
+    {
+      "topic": "Check",
+      "text": "Compares every card's fingerprint with the skill as it is now and replies with a table: fresh, out of date, no dashboard yet, or skill missing."
+    },
+    {
+      "topic": "Publish",
+      "text": "After Swami's go, marks the card published and commits the page, card and narration to `dashboards/<skill>/` in the public `claude-skills` repo, where GitHub Pages serves it."
+    },
+    {
+      "topic": "Fixed Sections",
+      "text": "Every sheet has the same 16 sections in the same order, from Dashboard Summary and Search to Where It Runs, Gotchas, Card and Freshness, Mind Map, Glossary and the skill's own SKILL.md word for word."
+    },
+    {
+      "topic": "Both Systems",
+      "text": "Every card covers macOS and Windows: Windows install notes for each program, Windows steps, and Windows gotchas and requirements."
+    },
+    {
+      "topic": "Open Questions",
+      "text": "Anything it could not confirm from the skill's files goes in the card's `confirm` list and shows on the draft until Swami answers. A sheet can't be published while that list is open."
+    },
+    {
+      "topic": "Registry",
+      "text": "Keeps `dashboards/index.json`, the list of published sheets with their fingerprints, which the Skill Library reads every night to show each sheet's link and an out-of-date flag."
+    },
+    {
+      "topic": "Privacy",
+      "text": "Runs vibe-dashboard's privacy scan on the page, card and narration before every publish and commit, so no one under NDA is ever named."
+    }
+  ],
+  "triggers": [
+    "\"Make a dashboard for youtube-transcript\"",
+    "\"Update the facebook-comments dashboard\"",
+    "\"Which skill dashboards are out of date?\"",
+    "\"Publish youtube-comments\" (after vetting the draft)"
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "In a Claude chat on the Mac (desktop app or web), name the skill and the mode, for example \"make a dashboard for youtube-comments\".",
+      "who": "Swami"
+    },
+    {
+      "topic": "Read and Card",
+      "step": "Loads vibe-dashboard, reads every file in the skill, fingerprints it and writes the skill card, with open questions in `confirm`.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Build",
+      "step": "Runs `build_skill_sheet.py`: fills the template, applies the table-fit, Search and Mind Map patches, and writes a narration draft.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Audio",
+      "step": "Audits the narration for noun and verb stress, fixes it in the card, and records the audio overview with the Kokoro voice.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Check",
+      "step": "Opens the page in a headless browser at 1000 and 1440 pixels wide: no console warnings, every summary row linked, no unused glossary term, tables fit. Runs the privacy scan.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Draft",
+      "step": "Publishes the page as a private artifact with `card.txt` and `narration.txt` beside it, and lists the open questions in chat.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Vet",
+      "step": "Opens the draft, answers the questions, and says \"publish <skill>\" when it's right.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Publish",
+      "step": "Folds in the answers, rebuilds, commits to the `claude-skills` repo, and verifies the push. The Skill Library shows the link after its next nightly run.",
+      "who": "Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Ask",
+      "step": "Same as on the Mac: in the Claude desktop app or claude.ai in Edge or Chrome, name the skill and the mode. Nothing runs on the PC itself.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Claude's Steps",
+      "step": "Identical to macOS steps 2 to 6 and 8: everything runs in Claude's workspace, on claude.ai and on GitHub.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Vet",
+      "step": "Open the draft in Edge or Chrome, answer the questions, and say \"publish <skill>\".",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Required",
+      "why": "Supplies the template, the table-fit, Search and Mind Map patches, the audio scripts and Pronunciation rules, and the privacy rules. The builder pulls its patches from vibe-dashboard's current SKILL.md, so every sheet follows its latest version."
+    },
+    {
+      "name": "artifact-sharing-audit",
+      "need": "Related",
+      "why": "Its scan uses the same fingerprint to flag out-of-date sheets, and it treats every skill-sheet draft as a page that should stay private."
+    }
+  ],
+  "programs": [
+    {
+      "name": "A web browser",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Vets each draft, and turns on GitHub Pages the first time.",
+      "install": "Safari, Chrome or Firefox.",
+      "install_windows": "Edge, Chrome or Firefox."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs `fingerprint.py`, `build_skill_sheet.py` and vibe-dashboard's patches.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "git",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Clones the `claude-skills` repo and pushes each published sheet.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same."
+    },
+    {
+      "name": "Playwright and Chromium",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Checks each page renders cleanly and its tables fit.",
+      "install": "Preinstalled in Claude's workspace.",
+      "install_windows": "Same."
+    },
+    {
+      "name": "Kokoro voice and ffmpeg",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Record the audio overview, through vibe-dashboard's audio scripts.",
+      "install": "vibe-dashboard's audio script fetches the voice the first time.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "GitHub Pages",
+      "need": "Required",
+      "where": "GitHub",
+      "why": "Serves the published sheets at swami-claude-skills.github.io.",
+      "install": "Turned on once in the repo's Settings › Pages (already done).",
+      "install_windows": "Same."
+    },
+    {
+      "name": "Terminal or PowerShell",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Nothing runs on Swami's computer except the browser.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Stays Current",
+      "text": "The builder takes vibe-dashboard's patches from its current SKILL.md, so a rebuild picks up the latest Search, Mind Map and table-fit behavior."
+    },
+    {
+      "topic": "Stale Pages Flagged",
+      "text": "Any change to any file in a skill changes its fingerprint, so check mode and the Skill Library's nightly refresh both catch an out-of-date sheet."
+    },
+    {
+      "topic": "Rebuildable Drafts",
+      "text": "Each draft carries its card and narration as published files, so a later session can rebuild it without starting over."
+    },
+    {
+      "topic": "Skill Links",
+      "text": "The Skill Library's \"How the Skills Connect\" section reads each published card's skill dependencies, with the reason for each link."
+    },
+    {
+      "topic": "Safe Publishing",
+      "text": "Nothing goes public without Swami's \"publish\", and the privacy scan runs before every commit."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "One At A Time",
+      "text": "One skill per run unless Swami asks for more."
+    },
+    {
+      "topic": "Swami's Skills Only",
+      "text": "Made for Swami's own skills (Customize › Skills › Yours) and his repo; it does not document Anthropic's built-in skills."
+    },
+    {
+      "topic": "No Refresh Button",
+      "text": "Skill sheets have no owner-only audio refresh button, because the public copy lives on GitHub Pages, where it can't work. Update mode re-records the audio instead."
+    },
+    {
+      "topic": "Untested Claims",
+      "text": "It never invents results: anything nobody has tried, such as a skill on Windows or in another AI, is marked Untested."
+    },
+    {
+      "topic": "Sync Lag",
+      "text": "After Swami uploads a changed skill, Claude's synced copy can lag by up to about half an hour, so a fresh fingerprint may still show the old version."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None of its own. The Skill Library's nightly refresh reads this skill's registry to show each sheet's link and out-of-date flag.",
+    "tasks": [
+      {
+        "name": "Skills dashboard nightly refresh",
+        "schedule": "Every night at 1:52 AM ET",
+        "what": "Rebuilds the Skill Library. Its Dashboard column links each published sheet from `dashboards/index.json` and flags it out of date when the skill's fingerprint has changed."
+      }
+    ]
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Yes",
+      "notes": "Every published sheet so far was made and published from cloud sessions. Needs artifacts, code execution with network access, and GitHub access to the `claude-skills` repo."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Swami runs it this way: his project threads on the Mac made and published every sheet so far. Nothing runs on the Mac itself."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Should work the same; nothing runs on the PC itself."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Asking from the phone should work; vetting a draft is easier on a bigger screen."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Can build the page; publishing drafts needs the Artifact tool, which Claude Code may not have."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. With code execution and vibe-dashboard installed it could build the HTML page, but not claude.ai drafts or the GitHub publish."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped folder plus vibe-dashboard. Same limits: a page file at best, no drafts or publishing."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused; installing by chat drifts, and the scripts in its scripts folder are easy to lose."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Duplicate Drafts",
+      "text": "Before creating a draft, check `dashboards/index.json` and the artifact list for one that already exists; a second draft of the same skill causes confusion about which to publish."
+    },
+    {
+      "topic": "Braces In Cards",
+      "text": "Card text must not contain double curly braces: the builder treats them as unfilled template placeholders and stops."
+    },
+    {
+      "topic": "Capturing Groups",
+      "text": "Glossary `match` patterns must use non-capturing groups such as `(?:es)?`. A capturing group breaks the page's term matcher, so the build stops on one."
+    },
+    {
+      "topic": "File Paths",
+      "text": "Files published beside a draft must come from the scratchpad or working directory, or the publish is refused."
+    },
+    {
+      "topic": "Checking Pages",
+      "text": "github.io can be blocked from Claude's workspace, so check a published sheet through raw.githubusercontent.com instead."
+    },
+    {
+      "topic": "Capability Warning",
+      "text": "Publishing a draft warns that the page uses `mcp` without declaring it. That's the audio player's unused refresh code; sheets declare no capabilities, so ignore it."
+    },
+    {
+      "topic": "Stress Marks",
+      "text": "Fix wrong noun or verb stress in the card's `spoken` block, not just the narration file, or the next rebuild brings the mistake back."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "GitHub",
+      "text": "Claude's GitHub access with push rights to `swami-claude-skills/claude-skills`, and GitHub Pages turned on for it."
+    },
+    {
+      "topic": "Capabilities",
+      "text": "Code execution with network access (GitHub, and the voice model the first time), and artifacts."
+    },
+    {
+      "topic": "Memory",
+      "text": "Swami's memory naming the people under NDA, for the privacy scan."
+    },
+    {
+      "topic": "Computer",
+      "text": "Any Mac (macOS) or Windows 10 or 11 PC with a browser, to vet drafts. Nothing is installed on it."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Skill sheet",
+      "topic": "Pages",
+      "match": "skill sheets?|sheets?",
+      "code": "",
+      "def": "A vibe-dashboard page in a fixed shape that explains one of Swami's skills."
+    },
+    {
+      "term": "Skill card",
+      "topic": "Pages",
+      "match": "skill cards?|cards?",
+      "code": "card.txt|card.json",
+      "def": "The JSON file holding the facts about a skill and its fingerprint; the sheet is rendered from it."
+    },
+    {
+      "term": "Draft",
+      "topic": "Pages",
+      "match": "drafts?",
+      "code": "",
+      "def": "A private artifact holding a sheet that Swami hasn't vetted yet."
+    },
+    {
+      "term": "Vet",
+      "topic": "Pages",
+      "match": "vets?|vetting|vetted",
+      "code": "",
+      "def": "Swami's review of a draft before he says \"publish\"."
+    },
+    {
+      "term": "Fingerprint",
+      "topic": "Freshness",
+      "match": "fingerprints?",
+      "code": "fingerprint.py",
+      "def": "A short hash of every file in a skill; it changes whenever any file changes, which marks the sheet out of date."
+    },
+    {
+      "term": "Out of date",
+      "topic": "Freshness",
+      "match": "out[- ]of[- ]date",
+      "code": "",
+      "def": "A sheet whose skill has changed since the sheet was carded or published."
+    },
+    {
+      "term": "Registry",
+      "topic": "Freshness",
+      "match": "registry",
+      "code": "dashboards/index.json",
+      "def": "The list of published sheets in the claude-skills repo, with each sheet's fingerprint and page."
+    },
+    {
+      "term": "Confirm list",
+      "topic": "Freshness",
+      "match": "confirm",
+      "code": "",
+      "def": "The card's open questions for Swami; a sheet can't be published until it is empty."
+    },
+    {
+      "term": "Skill Library",
+      "topic": "Publishing",
+      "match": "Skill Library",
+      "code": "",
+      "def": "Swami's page listing all his skills with downloads; it links each published sheet."
+    },
+    {
+      "term": "GitHub Pages",
+      "topic": "Publishing",
+      "match": "GitHub Pages",
+      "code": "",
+      "def": "GitHub's free web hosting, which serves the public copies of the sheets."
+    },
+    {
+      "term": "claude-skills repo",
+      "topic": "Publishing",
+      "match": "claude-skills",
+      "code": "",
+      "def": "Swami's public GitHub repo holding the skill zips and the published sheets."
+    },
+    {
+      "term": "Artifact",
+      "topic": "Publishing",
+      "match": "artifacts?",
+      "code": "",
+      "def": "A page Claude publishes on claude.ai, private by default."
+    },
+    {
+      "term": "Privacy scan",
+      "topic": "Publishing",
+      "match": "privacy scan",
+      "code": "",
+      "def": "A check for any name or term of a person under NDA, run before every publish and commit."
+    },
+    {
+      "term": "vibe-dashboard",
+      "topic": "Building",
+      "match": "vibe-dashboard",
+      "code": "",
+      "def": "Swami's skill for his dark-theme dashboards; it supplies the template, patches and audio for every sheet."
+    },
+    {
+      "term": "build_skill_sheet.py",
+      "topic": "Building",
+      "match": "build_skill_sheet\\.py",
+      "code": "build_skill_sheet.py",
+      "def": "The script that renders a card into a sheet and applies vibe-dashboard's patches."
+    },
+    {
+      "term": "Patch",
+      "topic": "Building",
+      "match": "patches|patch",
+      "code": "",
+      "def": "A vibe-dashboard script that adds a feature to a page: table-fit, Search or Mind Map."
+    },
+    {
+      "term": "Headless browser",
+      "topic": "Building",
+      "match": "headless browser",
+      "code": "",
+      "def": "A browser with no window (Playwright and Chromium) that Claude uses to check each page."
+    },
+    {
+      "term": "Audio overview",
+      "topic": "Audio",
+      "match": "audio overview|audio",
+      "code": "",
+      "def": "The spoken tour of each sheet, about three minutes, played under the title."
+    },
+    {
+      "term": "Kokoro",
+      "topic": "Audio",
+      "match": "Kokoro",
+      "code": "",
+      "def": "The offline text-to-speech voice that records the audio overview."
+    },
+    {
+      "term": "Noun and verb stress",
+      "topic": "Audio",
+      "match": "stress",
+      "code": "",
+      "def": "Words like record or update stressed differently as nouns and verbs; the audit catches the voice's mistakes."
+    },
+    {
+      "term": "Untested",
+      "topic": "Ratings",
+      "match": "Untested",
+      "code": "",
+      "def": "The rating for anything nobody has tried yet, such as a skill on Windows or in another AI."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the skill dashboard skill. It creates, [updates](/ʌpdˈeɪts/), checks and publishes a skill sheet: a vibe dashboard page explaining one of Swami's own skills, built from a skill card with a fingerprint that shows when the page is out of date",
+    "What It Is": "Every one of Swami's skills gets a sheet in a fixed shape, rendered from a card. The card's fingerprint changes whenever the skill does, and nothing goes public until Swami says publish",
+    "What It Does": "Nine jobs: create, [update](/ʌpdˈeɪt/), check and publish, the fixed sections, both Mac and Windows, open questions, the registry, and the privacy scan",
+    "How to Use It": "Eight steps: ask, then Claude writes the card, builds, [records](/ɹᵻkˈɔːɹdz/), checks and publishes a private draft. Swami vets it and says publish. On Windows the steps are the same",
+    "Skills It Depends On": "Vibe dashboard is required for the template, patches and audio. Artifact sharing audit is related, because it uses the same fingerprint",
+    "Programs It Depends On": "Only a browser on your computer. Python, git, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice run in Claude's workspace, and GitHub Pages serves the published sheets",
+    "Capabilities and Limitations": "It stays current with vibe dashboard, flags stale pages, and keeps drafts rebuildable. But it works one skill at a time, only on Swami's skills, and never claims what nobody has tried",
+    "Scheduled Tasks": "None of its own. The skill library's nightly refresh reads its registry to link each sheet and flag stale ones",
+    "Where It Runs": "It runs in Claude's cloud sessions and in the desktop app on Swami's Mac, where every sheet so far was made. The other surfaces are untested",
+    "Gotchas": "Seven traps, from duplicate drafts, curly braces and capturing groups in cards to file paths, checking published pages, the capability warning, and fixing stress in the card",
+    "Other Requirements": "GitHub access to the claude skills repo, code execution with network access, Swami's memory of who is under NDA, and any Mac or Windows computer with a browser",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint. There are no open questions"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:0f3ed19055ba2c19",
+    "files": [
+      "SKILL.md",
+      "scripts/build_skill_sheet.py",
+      "scripts/fingerprint.py"
+    ],
+    "skill_updated": "Mon Nov 9, 2026",
+    "carded": "Mon Nov 9, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/skill-dashboard.zip",
+    "draft_url": "https://claude.ai/artifact/G1Vs3fkxqU7dYUygNYfYYJ",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/skill-dashboard/"
+  }
+}
