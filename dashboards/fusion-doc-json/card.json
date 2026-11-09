@@ -1,0 +1,450 @@
+{
+  "skill": "fusion-doc-json",
+  "title": "Fusion Doc to JSON",
+  "summary": "Builds Swami's Fusion Doc to JSON page: a browser tool that turns a zip of a saved Autodesk Fusion help page, plus its URL, into operation, tabs, sections and settings JSON for other dashboards.",
+  "what_it_is": [
+    "A Claude skill that builds one **tool page**, not a report. The page is a vibe-dashboard with a Dashboard Summary, **Search**, **Input**, **Output**, a **JSON Format** table, a **Mind Map** and a **Glossary**, plus an audio overview. You drop in a zip of a saved Autodesk Fusion product-documentation page, confirm the page URL, and the page writes structured JSON: `operation > tabs > sections > settings`.",
+    "Everything runs in the viewer's browser; nothing is uploaded anywhere. The JSON feeds Swami's other Fusion dashboards, mainly the **fusion-cam-settings** skill, which matches each exported CAM setting to its Autodesk description. A published copy already exists; its byline shows its version, so Claude points Swami to it when it is current and rebuilds it to the same link when it isn't."
+  ],
+  "why": "Autodesk's help pages explain every setting of a Fusion command, but only as a web page. Turning a page into JSON once lets other dashboards quote the official description next to each setting without copying text by hand.",
+  "what_it_does": [
+    {
+      "topic": "Builds the Page",
+      "text": "Runs its own `build_page.py` straight on the vibe-dashboard template. It sets the sections, fills the Glossary, sets five categories (overview, input, output, format, reference), injects the converter script, and applies vibe-dashboard's table-fit, Search and Mind Map patches."
+    },
+    {
+      "topic": "Reads the Zip",
+      "text": "A built-in zip reader (no libraries) opens the upload in the browser, skips `__MACOSX/` and `._` files, and picks the `.html` that has a matching `_files` folder."
+    },
+    {
+      "topic": "Finds the URL",
+      "text": "Takes the product documentation URL from the Input field, or else from the saved file's \"saved from url\" line or its canonical link."
+    },
+    {
+      "topic": "Parses Tabs and Settings",
+      "text": "Headings ending in \"tab settings\" start a tab. Headings that match the editable list of dialog group names start a section. Every other heading becomes a setting, with its description, notes, options (`Name - description` bullets), details, images and captions."
+    },
+    {
+      "topic": "Guesses Controls",
+      "text": "Sets `controlGuess` for each setting (dropdown, checkbox, selection, number or unknown) from its description."
+    },
+    {
+      "topic": "Images",
+      "text": "Records each image by its file name, flags images the zip lacks, and can embed them as data URIs when that box is ticked."
+    },
+    {
+      "topic": "Output",
+      "text": "Shows counts, a structure preview (tab, section, settings) and the JSON, with copy and download buttons. Download needs the artifact's downloads capability; without it the button hides and copy still works."
+    },
+    {
+      "topic": "JSON Format",
+      "text": "A table on the page lists every field the JSON holds, level by level, from the operation down to each setting's options and images."
+    },
+    {
+      "topic": "Search, Mind Map, Glossary, Audio",
+      "text": "Like every vibe-dashboard, the page has a Search section, a Mind Map, a 15-term Glossary and a spoken audio overview."
+    },
+    {
+      "topic": "JSON from Chat",
+      "text": "If Swami sends a zip in chat and wants the JSON now, Claude runs the page headlessly on it and sends `<operation>-settings.json`."
+    }
+  ],
+  "triggers": [
+    "\"Build the Fusion Doc to JSON page\"",
+    "\"Turn this saved Fusion help page into JSON\" (with a zip)"
+  ],
+  "how_to_use": [
+    {
+      "topic": "Open the Help Page",
+      "step": "Open the Fusion help page for the command or toolpath (for example Adaptive Clearing) in any browser that can save a complete page: Chrome, Edge, Firefox, or Comet, which Swami uses.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Save It",
+      "step": "Use **File › Save Page As… › Webpage, Complete**. That writes an `.html` file and a `_files` folder of images.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Zip It",
+      "step": "In Finder, select the `.html` file and the `_files` folder, then right-click › **Compress 2 Items**.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Open the Tool",
+      "step": "Open the published Fusion Doc to JSON page and check the version in its byline. If it's out of date or you need it rebuilt, ask Claude, which builds it, records the audio, tests it, and republishes it to the same link with the downloads capability.",
+      "who": "Swami, or Claude"
+    },
+    {
+      "topic": "Convert",
+      "step": "Drop the zip into Input, check the URL, and edit the dialog group names if a group is missing. The page converts as soon as the zip loads.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Check the Preview",
+      "step": "In Output, look over the structure preview. If settings sit in the wrong group, edit the group names and convert again.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Take the JSON",
+      "step": "Copy or download the JSON and give it to the next dashboard, such as fusion-cam-settings.",
+      "who": "Swami"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Save It",
+      "step": "In Edge, Chrome, Firefox or Comet, press **Ctrl+S** and choose **Webpage, Complete**. Files land in `C:\\Users\\<name>\\Downloads` by default.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Zip It",
+      "step": "In File Explorer, select the `.html` file and the `_files` folder, then right-click › **Compress to ZIP file** (Windows 11) or **Send to › Compressed (zipped) folder** (Windows 10).",
+      "who": "Swami"
+    },
+    {
+      "topic": "Same Tool",
+      "step": "Open the same published page in Edge or Chrome; Input, Output, copy and download work the same as on the Mac.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Required",
+      "why": "Supplies the page template (`assets/template.html`), the Search, Mind Map and table-fit patches, and the audio overview tools."
+    },
+    {
+      "name": "fusion-cam-settings",
+      "need": "Related",
+      "why": "Takes this page's JSON as its Doc JSON input, to put Autodesk's description beside each CAM setting."
+    },
+    {
+      "name": "fusion-doc",
+      "need": "Related",
+      "why": "Builds a documentation dashboard for one Fusion command from structured JSON and its help-page URL."
+    }
+  ],
+  "programs": [
+    {
+      "name": "A web browser",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Saves the help page as Webpage, Complete, and runs the tool page.",
+      "install": "Chrome, Edge, Firefox or Comet for saving the page (not Safari); any current browser runs the tool.",
+      "install_windows": "Edge (built in), Chrome, Firefox or Comet."
+    },
+    {
+      "name": "A zip tool",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Zips the saved `.html` with its `_files` folder.",
+      "install": "Built into Finder (Compress).",
+      "install_windows": "Built into File Explorer (Compress to ZIP file, or Send to › Compressed folder)."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs `build_page.py` to build the page.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Playwright and Chromium",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Tests the page on a zip before publishing, and runs it headlessly when Swami wants the JSON straight from chat.",
+      "install": "Preinstalled in Claude's workspace.",
+      "install_windows": "Same."
+    },
+    {
+      "name": "Kokoro voice",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Records the page's audio overview, through vibe-dashboard's audio scripts.",
+      "install": "vibe-dashboard's audio script fetches it the first time.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Autodesk Fusion",
+      "need": "Not needed",
+      "where": "—",
+      "why": "The tool reads Autodesk's help website, not Fusion itself.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Private",
+      "text": "Converts entirely in the browser; the zip never leaves the computer."
+    },
+    {
+      "topic": "Any Help Page",
+      "text": "Works on any Fusion help page saved as Webpage, Complete; tested on the Parallel Finishing page (5 tabs, 14 sections, 74 settings, 67 images)."
+    },
+    {
+      "topic": "Adjustable Groups",
+      "text": "The dialog group-name list is editable, so a wrong grouping can be fixed and converted again on the spot."
+    },
+    {
+      "topic": "Reusable",
+      "text": "The published page is a lasting tool; it doesn't need rebuilding for each operation."
+    },
+    {
+      "topic": "Easy to Find Things",
+      "text": "Search, the Mind Map and the Glossary make the page's instructions and JSON fields quick to find."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Groups Are Guessed",
+      "text": "The help page doesn't say which dialog group a setting sits in, so sections come only from headings that match the group-name list. For example, Parallel's Leads and Transitions settings land in Linking."
+    },
+    {
+      "topic": "No Dialog Values",
+      "text": "Example values shown only in screenshots aren't extracted."
+    },
+    {
+      "topic": "Control Types",
+      "text": "`controlGuess` is a guess from the description text."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill doesn't need, create or get run by a scheduled task. Its page is backed up nightly like every other artifact, and the nightly Skill Library refresh packages the skill as a zip.",
+    "tasks": [
+      {
+        "name": "Vibe dashboards — nightly GitHub backup",
+        "schedule": "Nightly, about 4:07 AM ET",
+        "what": "Saves every artifact created or changed that day, the Fusion Doc to JSON page included, to the private vibe-dashboards repo."
+      }
+    ]
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "Should build and publish here: needs code execution and artifacts with the downloads capability."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Swami has run it on his MacBook Pro (2019) with macOS Tahoe. Files can also come straight from a folder on the Mac."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Builds the same way."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Can rebuild the page, but saving and zipping a help page needs a computer."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Can build the HTML file; publishing it as an artifact, and its download button, need the Claude app."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. Needs code execution and vibe-dashboard installed for the template; the result is an HTML file, and its download button stays hidden outside Claude (copy still works)."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder plus vibe-dashboard. Needs code execution to run the build script."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused; installing by chat drifts, and the long embedded script is easy to lose."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Webpage, Complete",
+      "text": "Save the page as **Webpage, Complete**, not HTML only, or the `_files` folder of images is missing. Safari has no such option (it saves a web archive), so use Chrome, Edge, Firefox or Comet."
+    },
+    {
+      "topic": "Zip Both",
+      "text": "The zip must hold the `.html` file and its `_files` folder together."
+    },
+    {
+      "topic": "Missing Groups",
+      "text": "If settings land in the wrong section, add the missing group name to the list in Input and convert again."
+    },
+    {
+      "topic": "No URL",
+      "text": "If neither the field nor the saved file gives a URL, the status line warns; add it and convert again."
+    },
+    {
+      "topic": "Download Button",
+      "text": "The download button shows only when the page is published with the downloads capability; otherwise use copy."
+    },
+    {
+      "topic": "Check the Version",
+      "text": "The tool page's byline shows its version (v1.1.0 after this update). If your saved link shows an older one, ask Claude to republish it."
+    },
+    {
+      "topic": "Old Browsers",
+      "text": "Unzipping needs `DecompressionStream`; a current Chrome, Edge, Safari or Firefox has it."
+    },
+    {
+      "topic": "Windows Downloads",
+      "text": "On Windows the saved page lands in `C:\\Users\\<name>\\Downloads` unless you choose another folder."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Input",
+      "text": "A zip of one Fusion help page saved as Webpage, Complete, and ideally its URL."
+    },
+    {
+      "topic": "Claude Settings",
+      "text": "Code execution (\"Create and edit files\") and artifacts, to build and publish the page."
+    },
+    {
+      "topic": "Computer",
+      "text": "A Mac (tested on macOS Tahoe), or a PC with Windows 10 or 11, with a browser that can save a complete page."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Fusion help page",
+      "topic": "Inputs",
+      "match": "help pages?",
+      "code": "",
+      "def": "Autodesk's product-documentation web page for one Fusion command or toolpath."
+    },
+    {
+      "term": "Webpage, Complete",
+      "topic": "Inputs",
+      "match": "Webpage, Complete",
+      "code": "",
+      "def": "The browser save option that writes the page's .html plus a _files folder of its images."
+    },
+    {
+      "term": "_files folder",
+      "topic": "Inputs",
+      "match": "_files",
+      "code": "_files",
+      "def": "The folder of images the browser saves next to the .html file."
+    },
+    {
+      "term": "Zip",
+      "topic": "Inputs",
+      "match": "zips?",
+      "code": "",
+      "def": "One compressed file holding the saved .html and its _files folder."
+    },
+    {
+      "term": "Product documentation URL",
+      "topic": "Inputs",
+      "match": "URL",
+      "code": "",
+      "def": "The web address of the help page, stored in the JSON so other dashboards can link to it."
+    },
+    {
+      "term": "Dialog group names",
+      "topic": "Parser",
+      "match": "group names?",
+      "code": "",
+      "def": "The editable list of group headings that start a new section in the JSON."
+    },
+    {
+      "term": "Tab",
+      "topic": "Parser",
+      "match": "tabs?",
+      "code": "",
+      "def": "A page of the Fusion dialog; a heading ending in \"tab settings\" starts one."
+    },
+    {
+      "term": "Section",
+      "topic": "Parser",
+      "match": "sections?",
+      "code": "",
+      "def": "A dialog group inside a tab, such as Feed and Speed or Passes."
+    },
+    {
+      "term": "Setting",
+      "topic": "Parser",
+      "match": "settings?",
+      "code": "",
+      "def": "One control in the dialog, with its description, options, notes and images."
+    },
+    {
+      "term": "controlGuess",
+      "topic": "Parser",
+      "match": "controlGuess",
+      "code": "controlGuess",
+      "def": "The parser's guess at a setting's control type: dropdown, checkbox, selection, number or unknown."
+    },
+    {
+      "term": "Data URI",
+      "topic": "Output",
+      "match": "data URIs?",
+      "code": "",
+      "def": "An image written into the JSON as text, so the JSON works without the zip."
+    },
+    {
+      "term": "Structure preview",
+      "topic": "Output",
+      "match": "structure preview",
+      "code": "",
+      "def": "The tab, section and settings outline shown in Output for a quick check."
+    },
+    {
+      "term": "Downloads capability",
+      "topic": "Output",
+      "match": "downloads capability",
+      "code": "",
+      "def": "The artifact permission that lets the page save the JSON as a file."
+    },
+    {
+      "term": "build_page.py",
+      "topic": "Builder",
+      "match": "build_page",
+      "code": "build_page.py",
+      "def": "The skill's Python script that turns the vibe-dashboard template into the tool page and applies vibe-dashboard's patches."
+    },
+    {
+      "term": "DecompressionStream",
+      "topic": "Builder",
+      "match": "DecompressionStream",
+      "code": "DecompressionStream",
+      "def": "The browser feature the page uses to unzip the upload without libraries."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the Fusion doc to JSON skill. It builds a browser tool that turns a saved Autodesk Fusion help page into JSON for other dashboards",
+    "What It Is": "What the skill is: one tool page, with input and output, a JSON format table, search, a mind map, a glossary and audio, that converts entirely in your browser",
+    "What It Does": "Ten jobs, from building the page and reading the zip to parsing tabs, sections and settings, guessing control types, handling images, the output buttons, and the page's search, mind map, glossary and audio",
+    "How to Use It": "Seven steps on the Mac, from saving the help page as webpage complete in a browser such as Comet and zipping it, to converting, checking the preview, and taking the JSON. Then three Windows steps",
+    "Skills It Depends On": "Vibe dashboard is required for the template. Fusion cam settings and Fusion doc are related, because they use the JSON",
+    "Programs It Depends On": "A browser and a zip tool on your computer, plus Python, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice in Claude's workspace. Fusion itself isn't needed",
+    "Capabilities and Limitations": "It's private, works on any help page, lets you fix groupings on the spot, and is easy to search. But groups are guessed, dialog values aren't extracted, and control types are guesses",
+    "Scheduled Tasks": "None. Its page is simply backed up each night with all the others",
+    "Where It Runs": "Swami has run it in the desktop app linked to his MacBook Pro on macOS Tahoe. The other surfaces should work too, but are still untested",
+    "Gotchas": "Eight traps, from saving the wrong page type, Safari included, and zipping only one file to missing groups, the download button, and checking the tool's version",
+    "Other Requirements": "A zip of one help page, code execution and artifacts in Claude, and a Mac or Windows computer with a browser that can save a complete page",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint. There are no open questions"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:f5222bea31ecc3e7",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Mon Nov 9, 2026",
+    "carded": "Mon Nov 9, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-doc-json.zip",
+    "draft_url": "https://claude.ai/artifact/7TGERnroJdfGRKAsqfHHYK",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-doc-json/"
+  }
+}

@@ -31,6 +31,14 @@
     "published": "2026-11-09",
     "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek"
   },
+  "fusion-doc-json": {
+    "title": "Fusion Doc to JSON",
+    "page": "dashboards/fusion-doc-json/",
+    "fingerprint": "sha256:f5222bea31ecc3e7",
+    "skill_updated": "Mon Nov 9, 2026",
+    "published": "2026-11-09",
+    "draft_url": "https://claude.ai/artifact/7TGERnroJdfGRKAsqfHHYK"
+  },
   "fusion-palette-addin": {
     "title": "Fusion Palette Add-in",
     "page": "dashboards/fusion-palette-addin/",

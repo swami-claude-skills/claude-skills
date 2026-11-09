@@ -1,0 +1,33 @@
+This page is the skill sheet for the Fusion doc to JSON skill. It builds a browser tool that turns a saved Autodesk Fusion help page into JSON for other dashboards
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is: one tool page, with input and output, a JSON format table, search, a mind map, a glossary and audio, that converts entirely in your browser.
+
+Section four, What It Does. Ten jobs, from building the page and reading the zip to parsing tabs, sections and settings, guessing control types, handling images, the output buttons, and the page's search, mind map, glossary and audio.
+
+Section five, How to Use It. Seven steps on the Mac, from saving the help page as webpage complete in a browser such as Comet and zipping it, to converting, checking the preview, and taking the JSON. Then three Windows steps.
+
+Section six, Skills It Depends On. Vibe dashboard is required for the template. Fusion cam settings and Fusion doc are related, because they use the JSON.
+
+Section seven, Programs It Depends On. A browser and a zip tool on your computer, plus Python, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice in Claude's workspace. Fusion itself isn't needed.
+
+Section eight, Capabilities and Limitations. It's private, works on any help page, lets you fix groupings on the spot, and is easy to search. But groups are guessed, dialog values aren't extracted, and control types are guesses.
+
+Section nine, Scheduled Tasks. None. Its page is simply backed up each night with all the others.
+
+Section ten, Where It Runs. Swami has run it in the desktop app linked to his MacBook Pro on macOS Tahoe. The other surfaces should work too, but are still untested.
+
+Section eleven, Gotchas. Eight traps, from saving the wrong page type, Safari included, and zipping only one file to missing groups, the download button, and checking the tool's version.
+
+Section twelve, Other Requirements. A zip of one help page, code execution and artifacts in Claude, and a Mac or Windows computer with a browser that can save a complete page.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint. There are no open questions.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
