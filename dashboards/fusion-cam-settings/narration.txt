@@ -1,0 +1,33 @@
+This page is the skill sheet for the Fusion cam settings skill. It turns one Fusion cam operation's settings file, as CSV or JSON, plus a copy of its Autodesk documentation, into a dashboard that explains every setting
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is: Claude works out every value for your cutter, and a builder lays out the page on the current dashboard template, so a toolpath is easy to check before cutting.
+
+Section four, What It Does. Ten jobs, from working out expressions and a setup at a glance, through tab sections and documentation lines, to changes, review notes, the full list, search, a mind map, a glossary, audio, and references.
+
+Section five, How to Use It. Eight steps, from exporting the settings as CSV or JSON and making the documentation file, through building and recording the audio, to checking and editing the page. On Windows the steps are the same.
+
+Section six, Skills It Depends On. Vibe dashboard is required for the template. Fusion doc to JSON is optional, for the documentation file, and Fusion doc is related.
+
+Section seven, Programs It Depends On. Autodesk Fusion and a browser on your computer, plus Python, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice in Claude's workspace.
+
+Section eight, Capabilities and Limitations. It works for any operation and shows real numbers beside Autodesk's own words. But it covers one operation at a time, knows only what the export carries, and doesn't say how to [export](/ɛkspˈɔːɹt/) the settings from Fusion.
+
+Section nine, Scheduled Tasks. None. Its pages are simply backed up each night with all the others.
+
+Section ten, Where It Runs. Swami has run it in the desktop app linked to his Mac. The other surfaces should work too, but are still untested.
+
+Section eleven, Gotchas. Eight traps, from a tool name that contradicts its size and missing library values to unresolved rows and glossary terms the page never uses.
+
+Section twelve, Other Requirements. The settings file and ideally the documentation file, code execution and artifacts in Claude, and Fusion on a Mac or on Windows.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint. There are no open questions.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

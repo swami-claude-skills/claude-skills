@@ -23,6 +23,14 @@
     "published": "2026-11-09",
     "draft_url": "https://claude.ai/artifact/Q3jsfc35Ee98qj5v6L1eHU"
   },
+  "fusion-cam-settings": {
+    "title": "Fusion CAM Settings",
+    "page": "dashboards/fusion-cam-settings/",
+    "fingerprint": "sha256:99b291fe3574952f",
+    "skill_updated": "Mon Nov 9, 2026",
+    "published": "2026-11-09",
+    "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek"
+  },
   "fusion-palette-addin": {
     "title": "Fusion Palette Add-in",
     "page": "dashboards/fusion-palette-addin/",

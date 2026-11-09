@@ -1,0 +1,484 @@
+{
+  "skill": "fusion-cam-settings",
+  "title": "Fusion CAM Settings",
+  "summary": "Turns one Autodesk Fusion CAM operation's settings export (CSV or JSON), plus a JSON of its Autodesk documentation, into a vibe-dashboard page that explains every setting: the value, what it works out to for this tool, whether it was changed, and what the docs say.",
+  "what_it_is": [
+    "A Claude skill that builds a **Fusion CAM settings dashboard** for one toolpath operation (2D Offset Roughing, 2D Pocket, Adaptive, Contour, Drill, Parallel and so on). Swami uploads the operation's settings as a CSV (columns `Tab,Group,Parameter,Value,Default`) or as JSON with the same keys, and a **Fusion Doc JSON** of that operation's Autodesk documentation page, made with the fusion-doc-json skill's page.",
+    "Claude writes a `notes.json` with the thinking: every Fusion expression worked out for this tool (`tool_diameter*.5` becomes `0.1875 in`), a Setup at a Glance table, advisory review notes and a glossary. The skill's own Python builder then lays out the page on the current vibe-dashboard template: Search, one section per dialog tab, Changed from Default, Review Notes, the Full Parameter List, a Mind Map, the Glossary, References and the export verbatim. Claude adds the audio overview last. The reference build is the 2D Offset Roughing dashboard."
+  ],
+  "why": "A CAM operation's dialog hides dozens of settings behind expressions and defaults. One page that shows each value as a real number for this cutter, flags what was changed, and quotes Autodesk's own description makes a toolpath easy to check before cutting.",
+  "what_it_does": [
+    {
+      "topic": "Resolve Expressions",
+      "text": "Works out every Fusion expression for the tool (diameter, corner radius, spindle speed, feeds), reads `;` as a comma in functions, and marks settings switched off by a parent as (inactive). Values the export can't supply, such as flute count or library stepover, are flagged, never invented."
+    },
+    {
+      "topic": "Setup at a Glance",
+      "text": "A 10 to 14 row table of the key settings resolved to numbers (tool, speed and SFM, feeds, chip load, stepdown, stepover, entry, heights, stock to leave, direction, coolant), plus a Math used callout."
+    },
+    {
+      "topic": "Tab Sections",
+      "text": "One section per dialog tab, in export order, with Parameter, Value, Resolved and Status columns. The Heights tab also gets a height stack table."
+    },
+    {
+      "topic": "Doc Lines",
+      "text": "Matches each exported row to its Autodesk doc setting and shows the doc's first sentence under the name, plus the chosen option's description (for example Helix)."
+    },
+    {
+      "topic": "Changed from Default",
+      "text": "Lists every setting the export marks as not default, shown as CHANGED in pink."
+    },
+    {
+      "topic": "Review Notes",
+      "text": "Four to eight advisory notes, most important first: tool name versus diameter, missing values, no stock to leave on roughing, feeds versus chip load, Both Ways, leads, ramp versus plunge, colliding heights."
+    },
+    {
+      "topic": "Full Parameter List",
+      "text": "Every row, sortable, plus a table of settings that are in the documentation but not in the export."
+    },
+    {
+      "topic": "References and Source",
+      "text": "Links to the Autodesk doc page and related pages, and reproduces the export file verbatim."
+    },
+    {
+      "topic": "Search, Mind Map, Glossary, Audio",
+      "text": "Adds vibe-dashboard's Search section, Mind Map and fitted tables, a Glossary of the CAM terms on the page, and a spoken audio overview, like every other vibe-dashboard."
+    },
+    {
+      "topic": "Without Docs",
+      "text": "If Swami says to go ahead without the Doc JSON, it builds the page without doc lines, the docs-only table and References."
+    }
+  ],
+  "triggers": [
+    "Uploading a Fusion toolpath settings CSV or JSON and asking for a dashboard",
+    "\"Make a CAM settings dashboard for this Adaptive operation\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Export Settings",
+      "step": "Export the operation's settings from Fusion as a CSV with columns `Tab,Group,Parameter,Value,Default`, or as JSON with those same keys (a list of rows). Either works.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Doc JSON",
+      "step": "Save the operation's Autodesk documentation page and turn it into JSON with the Fusion Doc to JSON page (fusion-doc-json skill).",
+      "who": "Swami"
+    },
+    {
+      "topic": "Upload",
+      "step": "Upload both files to Claude and ask for the dashboard. If one is missing, Claude asks for it once.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Notes",
+      "step": "Claude reads both files, notes the tool, speeds and feeds, and writes `notes.json`: the resolved values, the glance table, the review notes and the glossary.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Build",
+      "step": "Claude runs the builder on the current vibe-dashboard template. It adds Search, the Mind Map and table fitting itself. Claude adds any row it reports as UNRESOLVED, or any glossary term it can't find, to the notes and rebuilds until none are left.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Audio",
+      "step": "Claude writes the narration from the finished page, checks the stressed syllables, and records the audio overview.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Check and Publish",
+      "step": "Claude opens the page in a headless browser at two widths, checks for errors, tables that overflow and unlinked summary rows, runs the privacy check, publishes it as an artifact, and replies with the top review notes and anything the export left out.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Edit",
+      "step": "Ask for changes. Claude edits `notes.json` or the builder and rebuilds; the HTML is never hand-edited.",
+      "who": "Swami, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Same Steps",
+      "step": "Building happens in Claude's workspace and the page opens in any browser, so the steps are the same on Windows.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Export and Save",
+      "step": "Export the settings (CSV or JSON) from Fusion and save the doc page in Edge or Chrome; files land in `C:\\Users\\<name>\\Downloads` by default.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Upload",
+      "step": "Upload both files to Claude from File Explorer.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Required",
+      "why": "Supplies the page template (`assets/template.html`), the Search, Mind Map and table-fit patches, and the audio overview tools the builder and Claude use."
+    },
+    {
+      "name": "fusion-doc-json",
+      "need": "Optional",
+      "why": "Its Fusion Doc to JSON page makes the documentation JSON. Without it the page has no doc lines or References."
+    },
+    {
+      "name": "fusion-doc",
+      "need": "Related",
+      "why": "Builds a documentation page for one Fusion command from the same kind of JSON."
+    }
+  ],
+  "programs": [
+    {
+      "name": "Autodesk Fusion",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Source of the operation's settings export.",
+      "install": "From autodesk.com.",
+      "install_windows": "From autodesk.com."
+    },
+    {
+      "name": "A web browser",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Saves the Autodesk doc page, runs the Fusion Doc to JSON page, and opens the dashboard.",
+      "install": "Safari, Chrome or Firefox.",
+      "install_windows": "Edge, Chrome or Firefox."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs `build_cam_dashboard.py`.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Playwright and Chromium",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Loads the page headlessly at two widths to check it renders without errors or overflowing tables.",
+      "install": "Preinstalled in Claude's workspace.",
+      "install_windows": "Same."
+    },
+    {
+      "name": "Kokoro voice",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Records the audio overview, through vibe-dashboard's audio scripts.",
+      "install": "vibe-dashboard's audio script fetches it the first time.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Excel or a spreadsheet app",
+      "need": "Not needed",
+      "where": "—",
+      "why": "The export goes straight to Claude; it never needs opening.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Any Operation",
+      "text": "Works for any CAM operation whose settings export with the five columns, as CSV or JSON."
+    },
+    {
+      "topic": "Real Numbers",
+      "text": "Shows each expression as a number for this cutter, with units and the formula."
+    },
+    {
+      "topic": "Docs Beside Values",
+      "text": "Puts Autodesk's own description of each setting, and of the chosen option, next to the value."
+    },
+    {
+      "topic": "Honest Gaps",
+      "text": "Flags values the export doesn't carry instead of guessing, and lists documented settings the export left out."
+    },
+    {
+      "topic": "Repeatable",
+      "text": "The builder gives every operation the same layout, so dashboards for different toolpaths read alike."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "One Operation",
+      "text": "One dashboard per operation; it doesn't compare operations or cover a whole setup."
+    },
+    {
+      "topic": "Export Only",
+      "text": "Only knows what the export carries; tool-library values such as flute count, stepover or ramp angle stay unknown unless Swami supplies them."
+    },
+    {
+      "topic": "Advice, Not Verification",
+      "text": "Review notes are observations to check, not a simulation or a guarantee the toolpath is safe."
+    },
+    {
+      "topic": "Name Matching",
+      "text": "Doc matching relies on names; when the export and the doc use different wording, a setting goes unmatched and is listed as docs-only."
+    },
+    {
+      "topic": "Export Method",
+      "text": "The skill takes the settings as CSV or JSON but doesn't say how to export them from Fusion."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill doesn't need, create or get run by a scheduled task. Its pages are backed up nightly like every other artifact, and the nightly Skill Library refresh packages the skill as a zip.",
+    "tasks": [
+      {
+        "name": "Vibe dashboards — nightly GitHub backup",
+        "schedule": "Nightly, about 4:07 AM ET",
+        "what": "Saves every artifact created or changed that day, CAM dashboards included, to the private vibe-dashboards repo."
+      }
+    ]
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "Should work: needs uploads, code execution and artifacts."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Swami has run it here. Files can also come straight from a folder on the Mac."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Builds the same way."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Can build if the settings and doc files are uploaded from the phone; exporting them needs a computer."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Can build the HTML file; publishing as an artifact needs the Claude app."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. Needs code execution and the vibe-dashboard skill installed for its template; the result is an HTML file, not an artifact."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder plus vibe-dashboard. Needs code execution to run the builder."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused; installing by chat drifts, and the long builder script is easy to lose."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Tool Name vs Diameter",
+      "text": "A tool's name can contradict its real diameter (named 1/4 in, defined 0.375 in). The skill checks and raises it first."
+    },
+    {
+      "topic": "Missing Library Values",
+      "text": "Flute count, `tool_stepover`, `tool_rampAngle` and similar aren't in the export; the page says so instead of inventing them."
+    },
+    {
+      "topic": "Semicolons",
+      "text": "Fusion's export writes function arguments with `;` (`Math.min(a; b)`); they are read as commas."
+    },
+    {
+      "topic": "Unresolved Rows",
+      "text": "The builder prints every expression row it can't turn into a number; each must be added to `notes.resolved` before publishing."
+    },
+    {
+      "topic": "Repeated Group Names",
+      "text": "If a group name appears in two tabs, its `resolved` keys need the tab too (`Tab|Group|Parameter`)."
+    },
+    {
+      "topic": "Don't Hand-edit",
+      "text": "Edits go into `notes.json` or the builder and the page is rebuilt; hand edits to the HTML are lost on the next build."
+    },
+    {
+      "topic": "Glossary Terms",
+      "text": "Every glossary term must appear in the page body; the builder warns about any it can't find, and Claude rewords them before publishing."
+    },
+    {
+      "topic": "Windows Downloads",
+      "text": "On Windows the exported settings file and saved doc page land in `C:\\Users\\<name>\\Downloads` unless you choose another folder."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Inputs",
+      "text": "The operation's settings export (CSV or JSON) with the five columns, and ideally its Fusion Doc JSON."
+    },
+    {
+      "topic": "Claude Settings",
+      "text": "Code execution (\"Create and edit files\"), file uploads and artifacts."
+    },
+    {
+      "topic": "Computer",
+      "text": "Fusion and a browser on macOS, or on Windows 10 or 11, to export the settings and make the doc JSON."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "CAM operation",
+      "topic": "Fusion CAM",
+      "match": "CAM operation|operations?",
+      "code": "",
+      "def": "One toolpath in Fusion's Manufacture workspace, such as 2D Pocket or Adaptive, with its own settings dialog."
+    },
+    {
+      "term": "Settings export",
+      "topic": "Inputs",
+      "match": "settings export|CSV",
+      "code": "",
+      "def": "The operation's settings as a CSV or JSON file with Tab, Group, Parameter, Value and Default columns."
+    },
+    {
+      "term": "Fusion Doc JSON",
+      "topic": "Inputs",
+      "match": "Doc JSON|doc JSON",
+      "code": "",
+      "def": "Autodesk's documentation page for the operation, turned into operation > tabs > sections > settings JSON."
+    },
+    {
+      "term": "notes.json",
+      "topic": "Builder",
+      "match": "notes",
+      "code": "notes.json",
+      "def": "Claude's notes for the page: resolved values, the glance table, review notes and optional text."
+    },
+    {
+      "term": "Builder",
+      "topic": "Builder",
+      "match": "builder",
+      "code": "build_cam_dashboard.py",
+      "def": "The skill's Python script that lays out the dashboard from the settings export, doc JSON and notes, and applies vibe-dashboard's patches."
+    },
+    {
+      "term": "Expression",
+      "topic": "Fusion CAM",
+      "match": "expressions?",
+      "code": "",
+      "def": "A formula in a setting, such as tool_diameter*.5, that Fusion evaluates for the current tool."
+    },
+    {
+      "term": "Resolved value",
+      "topic": "Builder",
+      "match": "resolved",
+      "code": "",
+      "def": "An exported value turned into a real number with units for this tool."
+    },
+    {
+      "term": "Unresolved",
+      "topic": "Builder",
+      "match": "UNRESOLVED|unresolved",
+      "code": "",
+      "def": "A row the builder couldn't turn into a number; it must be added to the notes."
+    },
+    {
+      "term": "Inactive",
+      "topic": "Fusion CAM",
+      "match": "inactive",
+      "code": "",
+      "def": "A setting that a switched-off parent setting disables, such as Lead-In radius when Lead-In is off."
+    },
+    {
+      "term": "Default",
+      "topic": "Fusion CAM",
+      "match": "default",
+      "code": "",
+      "def": "Fusion's out-of-the-box value; the export marks each row Yes (default), No (changed) or N/A."
+    },
+    {
+      "term": "Doc line",
+      "topic": "Builder",
+      "match": "doc lines?",
+      "code": "",
+      "def": "The grey first sentence of Autodesk's description shown under each parameter name."
+    },
+    {
+      "term": "SFM",
+      "topic": "Machining",
+      "match": "SFM",
+      "code": "",
+      "def": "Surface feet per minute: how fast the cutting edge moves; π × diameter × rpm ÷ 12."
+    },
+    {
+      "term": "Chip load",
+      "topic": "Machining",
+      "match": "chip load",
+      "code": "",
+      "def": "Material removed per tooth per revolution: feed ÷ (rpm × flutes)."
+    },
+    {
+      "term": "Stepdown",
+      "topic": "Machining",
+      "match": "stepdowns?",
+      "code": "",
+      "def": "How deep each pass cuts."
+    },
+    {
+      "term": "Stepover",
+      "topic": "Machining",
+      "match": "stepovers?",
+      "code": "",
+      "def": "How far sideways each pass moves."
+    },
+    {
+      "term": "Stock to leave",
+      "topic": "Machining",
+      "match": "stock to leave",
+      "code": "",
+      "def": "Material a roughing pass leaves for a later finishing pass."
+    },
+    {
+      "term": "Ramp",
+      "topic": "Machining",
+      "match": "ramps?",
+      "code": "",
+      "def": "Entering the material on an angle or helix instead of plunging straight down."
+    },
+    {
+      "term": "Both Ways",
+      "topic": "Machining",
+      "match": "Both Ways",
+      "code": "",
+      "def": "Cutting in both directions, mixing climb and conventional milling."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the Fusion cam settings skill. It turns one Fusion cam operation's settings file, as CSV or JSON, plus a copy of its Autodesk documentation, into a dashboard that explains every setting",
+    "What It Is": "What the skill is: Claude works out every value for your cutter, and a builder lays out the page on the current dashboard template, so a toolpath is easy to check before cutting",
+    "What It Does": "Ten jobs, from working out expressions and a setup at a glance, through tab sections and documentation lines, to changes, review notes, the full list, search, a mind map, a glossary, audio, and references",
+    "How to Use It": "Eight steps, from exporting the settings as CSV or JSON and making the documentation file, through building and recording the audio, to checking and editing the page. On Windows the steps are the same",
+    "Skills It Depends On": "Vibe dashboard is required for the template. Fusion doc to JSON is optional, for the documentation file, and Fusion doc is related",
+    "Programs It Depends On": "Autodesk Fusion and a browser on your computer, plus Python, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice in Claude's workspace",
+    "Capabilities and Limitations": "It works for any operation and shows real numbers beside Autodesk's own words. But it covers one operation at a time, knows only what the export carries, and doesn't say how to [export](/ɛkspˈɔːɹt/) the settings from Fusion",
+    "Scheduled Tasks": "None. Its pages are simply backed up each night with all the others",
+    "Where It Runs": "Swami has run it in the desktop app linked to his Mac. The other surfaces should work too, but are still untested",
+    "Gotchas": "Eight traps, from a tool name that contradicts its size and missing library values to unresolved rows and glossary terms the page never uses",
+    "Other Requirements": "The settings file and ideally the documentation file, code execution and artifacts in Claude, and Fusion on a Mac or on Windows",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint. There are no open questions"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:99b291fe3574952f",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Mon Nov 9, 2026",
+    "carded": "Mon Nov 9, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-cam-settings.zip",
+    "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-cam-settings/"
+  }
+}
