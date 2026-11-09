@@ -1,0 +1,33 @@
+This page is the skill sheet for the artifact sharing audit skill. It checks how each page tied to Swami's skills is shared against who should see it, rescans his skills for problems, and refreshes his private skill maintenance dashboard with both
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. A housekeeping skill. Claude reads how each page is shared, compares it with how it should be, and scans every skill for staleness. Claude can't change sharing; Swami does that from each page's share menu.
+
+Section four, What It Does. Ten jobs, from the sharing check and its one rule to new pages, the history, the skill scan, known items, the dashboard, the chat report, the update now button and the full audit.
+
+Section five, How to Use It. Eight steps: ask in a chat or click update now, then Claude checks sharing, rescans, rebuilds and reports, and Swami fixes each mismatch from the share menu. On Windows the steps are the same.
+
+Section six, Skills It Depends On. Vibe dashboard is required for the template and the audio. Skill dashboard is related, because the scan flags out of date skill sheets.
+
+Section seven, Programs It Depends On. Only a browser on your computer. Python, git, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice all run in Claude's workspace.
+
+Section eight, Capabilities and Limitations. Fresh reads, cheap parallel checks, a repeatable scan and one click updates. But Claude can't change sharing, the listing tops out at two hundred pages, and only skill pages are checked unless you ask.
+
+Section nine, Scheduled Tasks. One on demand task, skill maintenance update, which the update now button starts.
+
+Section ten, Where It Runs. It runs in Claude's cloud sessions, where the update task last succeeded. The other surfaces are untested, and other AIs can't reach Claude's pages.
+
+Section eleven, Gotchas. Seven traps, from owner only parts still being in the page source and shared drafts, to cache files, how sharing is read, and keeping the button's permission.
+
+Section twelve, Other Requirements. Swami's own Claude account, code execution with network access, the Claude Code Remote connector, his memory of who is under NDA, and any Mac or Windows computer with a browser.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint. There are no open questions.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
