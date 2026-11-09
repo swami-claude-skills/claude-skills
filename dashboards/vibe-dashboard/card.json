@@ -532,8 +532,8 @@
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
-    "card_version": 1,
-    "fingerprint": "sha256:0e98e02b56c20f24",
+    "card_version": 2,
+    "fingerprint": "sha256:ef2d833d47edeabb",
     "files": [
       "SKILL.md",
       "assets/audio-player.html",
@@ -544,8 +544,8 @@
       "scripts/audio_overview.py",
       "scripts/search_patch.py"
     ],
-    "skill_updated": "Sun Nov 8, 2026",
-    "carded": "Sun Nov 8, 2026",
+    "skill_updated": "Mon Nov 9, 2026",
+    "carded": "Mon Nov 9, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-dashboard.zip",
     "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx",

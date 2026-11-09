@@ -90,9 +90,9 @@
   "vibe-dashboard": {
     "title": "Vibe Dashboard",
     "page": "dashboards/vibe-dashboard/",
-    "fingerprint": "sha256:0e98e02b56c20f24",
-    "skill_updated": "Sun Nov 8, 2026",
-    "published": "2026-11-08",
+    "fingerprint": "ef2d833d47edeabb",
+    "skill_updated": "Mon Nov 9, 2026",
+    "published": "2026-11-09",
     "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx"
   },
   "vibe-promptmaker": {
