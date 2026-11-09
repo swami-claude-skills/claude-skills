@@ -7,11 +7,19 @@
     "published": "2026-11-08",
     "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
   },
+  "fusion-addin-installer": {
+    "title": "Fusion Add-in Installer",
+    "page": "dashboards/fusion-addin-installer/",
+    "fingerprint": "sha256:3ef4d006505e4b7f",
+    "skill_updated": "Mon Nov 9, 2026",
+    "published": "2026-11-09",
+    "draft_url": "https://claude.ai/artifact/EXB9S9KWE2d4zjoxMTJfKD"
+  },
   "fusion-palette-addin": {
     "title": "Fusion Palette Add-in",
     "page": "dashboards/fusion-palette-addin/",
-    "fingerprint": "sha256:fc3ed485bd7f5b6d",
-    "skill_updated": "Sat Nov 7, 2026",
+    "fingerprint": "sha256:31f741071943c1c5",
+    "skill_updated": "Mon Nov 9, 2026",
     "published": "2026-11-09",
     "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq"
   },

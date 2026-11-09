@@ -1,0 +1,517 @@
+{
+  "skill": "fusion-addin-installer",
+  "title": "Fusion Add-in Installer",
+  "summary": "Makes three double-click installers (install-macos.command, install-windows.cmd and install-windows.ps1) plus a README.txt, so an Autodesk Fusion Python add-in installs into Fusion's AddIns folder on macOS or Windows.",
+  "what_it_is": [
+    "A Claude skill that packages an existing Autodesk Fusion add-in so anyone can install it by double-clicking a file, with no admin rights, no system changes and no extra software. The three installers sit **inside** the add-in folder; the whole folder is zipped and shared.",
+    "It has one file, its SKILL.md, which holds the installer and README templates, six rules that are not optional, notes on the executable bit, Gatekeeper, SmartScreen and the Windows execution policy, and a packaging checklist. The **fusion-palette-addin** skill uses it for every house-spec tool."
+  ],
+  "why": "Hand-copying into Fusion's hidden AddIns folder is where non-technical users give up. A double-click installer that wipes the old copy, skips caches and pauses to show the result makes every reinstall clean and repeatable.",
+  "what_it_does": [
+    {
+      "topic": "macOS Installer",
+      "text": "Writes `install-macos.command`: finds its own folder, checks Fusion's AddIns folder exists, deletes the old copy, copies the add-in with `cp -R`, removes the installers, `.DS_Store` and every `__pycache__`, then waits for Return."
+    },
+    {
+      "topic": "Windows Launcher",
+      "text": "Writes `install-windows.cmd`, which only runs the PowerShell installer with `-ExecutionPolicy Bypass` for that one process, so nothing on the PC changes."
+    },
+    {
+      "topic": "Windows Installer",
+      "text": "Writes `install-windows.ps1`: checks `%APPDATA%\\Autodesk\\Autodesk Fusion 360\\API\\AddIns` exists, deletes the old copy, copies everything except the installers, removes every `__pycache__` and `.DS_Store` (subfolders too), then waits for Enter."
+    },
+    {
+      "topic": "README",
+      "text": "Writes a plain-text `README.txt` with the add-in's name and version, the install steps for macOS (Gatekeeper) and Windows (Extract All, SmartScreen), how to run it in Fusion, how to update it, and how to remove it. It travels with the zip, and the installers don't copy it into Fusion."
+    },
+    {
+      "topic": "One Name",
+      "text": "Sets `ADDIN_NAME` once at the top of each installer, matching the folder, the `.py` and the `.manifest`."
+    },
+    {
+      "topic": "Executable Zip",
+      "text": "Zips with the `zip` command, or with Python using a helper that sets the executable bit, then confirms it with `unzip -Z`."
+    },
+    {
+      "topic": "Closing Message",
+      "text": "Ends both installers with the same closing message: where to find the add-in in Fusion, plus anything true of this add-in (where its button lands, that the listed version updates after a restart, what survives reinstalls). The handoff also tells Windows users to Extract All first and how to get past SmartScreen."
+    },
+    {
+      "topic": "Checklist",
+      "text": "Checks the names match, the `.command` is executable in the zip, `README.txt` is there with the Gatekeeper and Windows steps, no caches, `.pyc` or zero-byte files are in it, and the manifest version matches the add-in's."
+    }
+  ],
+  "triggers": [
+    "\"Make this add-in installable\"",
+    "\"How do I install this add-in on another computer?\"",
+    "\"Give me a zip someone else can double-click to install\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "Ask Claude for installers for an add-in, or let fusion-palette-addin call this skill while it builds a tool.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Build",
+      "step": "Claude adds the three installers to the add-in folder with `ADDIN_NAME` set, runs the packaging checklist and sends `ToolName.zip`.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Unzip",
+      "step": "Double-click the zip in Finder.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Read Me",
+      "step": "Open `README.txt` in the unzipped folder for the steps below; it's written for anyone you share the zip with.",
+      "who": "Anyone installing"
+    },
+    {
+      "topic": "Install",
+      "step": "Double-click `install-macos.command`. The first time, Gatekeeper may say it's from an unidentified developer: right-click › **Open** › **Open**, once.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Read the Result",
+      "step": "Terminal shows the from and to folders (`~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/AddIns/ToolName`) and \"Done\", then waits for Return.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Run",
+      "step": "In Fusion: **Utilities › Add-Ins › Scripts and Add-Ins** (Shift+S), select the add-in under Add-Ins, click **Run**.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Reinstall",
+      "step": "To update, unzip the new version and double-click the installer again. It replaces the old copy; keyboard shortcuts stay.",
+      "who": "Swami"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Ask and Build",
+      "step": "The same as on macOS; the zip is built in Claude's workspace.",
+      "who": "Swami, then Claude"
+    },
+    {
+      "topic": "Read Me",
+      "step": "After extracting, `README.txt` has these Windows steps too.",
+      "who": "Anyone installing"
+    },
+    {
+      "topic": "Extract",
+      "step": "In File Explorer, right-click the zip › **Extract All…**. Don't run the installer from inside the zip; Windows would run it from a temporary folder and copy the wrong files. The handoff message says so.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Install",
+      "step": "Double-click `install-windows.cmd` (not the `.ps1`). PowerShell opens and copies the add-in to `C:\\Users\\<name>\\AppData\\Roaming\\Autodesk\\Autodesk Fusion 360\\API\\AddIns\\ToolName`.",
+      "who": "Swami"
+    },
+    {
+      "topic": "SmartScreen",
+      "step": "If Windows shows \"Windows protected your PC\", click **More info › Run anyway**, once. The handoff message says so; untested on a Windows PC so far.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Read the Result",
+      "step": "The window shows \"Done\" in green and waits for Enter. A yellow \"AddIns folder not found\" means Fusion hasn't been set up for this Windows user.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Run",
+      "step": "In Fusion: **Utilities › Add-Ins › Scripts and Add-Ins** (Shift+S), select the add-in, click **Run**.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "fusion-palette-addin",
+      "need": "Related",
+      "why": "Calls this skill to build the installers for every house-spec palette tool."
+    },
+    {
+      "name": "fusion-addin-scaffold",
+      "need": "Related",
+      "why": "Builds the add-in code. It carries its own copy of similar installer templates in `references/installers.md`."
+    }
+  ],
+  "programs": [
+    {
+      "name": "Autodesk Fusion",
+      "need": "Required",
+      "where": "The computer the add-in is installed on",
+      "why": "Must be installed and set up for the current user, so the AddIns folder exists.",
+      "install": "From autodesk.com.",
+      "install_windows": "From autodesk.com."
+    },
+    {
+      "name": "Terminal and bash",
+      "need": "Mac only",
+      "where": "The Mac",
+      "why": "Opens and runs `install-macos.command` on double-click.",
+      "install": "Built into macOS.",
+      "install_windows": "Not used; Windows uses PowerShell."
+    },
+    {
+      "name": "PowerShell",
+      "need": "Windows only",
+      "where": "The Windows PC",
+      "why": "Runs `install-windows.ps1`, launched by the `.cmd`.",
+      "install": "Not used on macOS.",
+      "install_windows": "Windows PowerShell 5.1 is built into Windows 10 and 11; nothing to install."
+    },
+    {
+      "name": "zip and unzip",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "`zip` keeps the `.command` executable; `unzip -Z` confirms it.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Python 3",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Only when zipping with Python, using the helper that sets the executable bit.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same."
+    },
+    {
+      "name": "rsync",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Older installers used it, but it isn't on every Mac; these use `cp -R`.",
+      "install": "—",
+      "install_windows": "—"
+    },
+    {
+      "name": "Admin rights or an MSI/PKG tool",
+      "need": "Not needed",
+      "where": "—",
+      "why": "The installers copy into per-user folders, so no password, signing or installer package is involved.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Both Platforms",
+      "text": "One zip installs on macOS and Windows, with the same message on both."
+    },
+    {
+      "topic": "Clean Reinstall",
+      "text": "Each run wipes the old copy first, so renamed or deleted files from an older version can't linger."
+    },
+    {
+      "topic": "No Admin Rights",
+      "text": "Copies into per-user folders and changes no system setting, including the PowerShell execution policy."
+    },
+    {
+      "topic": "Works Anywhere",
+      "text": "Each script finds its own folder, so it works wherever the zip is unpacked."
+    },
+    {
+      "topic": "Clear Failure",
+      "text": "If Fusion's AddIns folder is missing it says so and stops, instead of creating folders in the wrong place."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Not Signed",
+      "text": "Plain scripts, not signed or notarized packages: Gatekeeper asks once on a Mac, and SmartScreen may ask on Windows."
+    },
+    {
+      "topic": "Doesn't Start It",
+      "text": "It installs but doesn't run the add-in; you click Run in Scripts and Add-Ins once (after that, `runOnStartup` loads it)."
+    },
+    {
+      "topic": "Fusion Only",
+      "text": "Not for other software, and not for MSI, PKG or notarized installers."
+    },
+    {
+      "topic": "Not the Add-in Itself",
+      "text": "It doesn't write the add-in's code or UI; that's fusion-addin-scaffold or fusion-palette-addin."
+    },
+    {
+      "topic": "No Uninstaller",
+      "text": "There is no uninstall script; the README says how to remove an add-in (stop it in Fusion and delete its folder from AddIns)."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill doesn't need, create or get run by a scheduled task. The nightly Skill Library refresh only packages it as a zip with Swami's other skills.",
+    "tasks": [
+      {
+        "name": "Skills dashboard nightly refresh",
+        "schedule": "Nightly, about 1:52 AM ET",
+        "what": "Rebuilds the downloadable zip of every skill, this one included, in the public claude-skills repo."
+      }
+    ]
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "Should work: the installers are written and zipped in Claude's workspace. Needs code execution."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Swami's usual setup. Claude builds the zip; the installer then runs on the Mac."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Not run on a Windows PC yet. Building is the same; run `install-windows.cmd` on the PC."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Can build the zip, but installing needs a Mac or PC with Fusion."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Can write the installers straight into the add-in folder on the Mac."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. The templates are plain text, so it can fill them in; zipping with the executable bit needs code execution."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder (just SKILL.md). Without code execution, zip on the Mac in Finder (Compress keeps the bit)."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused; installing by chat drifts from the original."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Names Must Match",
+      "text": "The folder, `.py`, `.manifest` and `ADDIN_NAME` must all be the same, or Fusion won't list the add-in."
+    },
+    {
+      "topic": "Lost Executable Bit",
+      "text": "Python's `zipfile` saves the `.command` without the executable bit, so double-clicking does nothing. Use the `zip` command or the helper; recovery is `chmod +x install-macos.command`."
+    },
+    {
+      "topic": "Stale Caches",
+      "text": "Old Python cache folders (__pycache__) or .pyc files from another Python version can stop an add-in loading with no useful error; the installers skip them, along with Finder's .DS_Store files."
+    },
+    {
+      "topic": "Copying Over the Top",
+      "text": "Copying onto an old install leaves orphaned files, so a renamed module keeps working from its old copy. The installers delete the old folder first."
+    },
+    {
+      "topic": "Self-nesting",
+      "text": "Installers that copy themselves nest another copy on each reinstall; these exclude themselves."
+    },
+    {
+      "topic": "Gatekeeper",
+      "text": "macOS puts downloaded files in quarantine, so the first double-click may say \"unidentified developer\": right-click › Open › Open, once. Never disable Gatekeeper."
+    },
+    {
+      "topic": "Blocked Before It Runs",
+      "text": "Gatekeeper and SmartScreen stop the installer before it can show any message, so the way past them has to be written outside it, in `README.txt`."
+    },
+    {
+      "topic": "Fusion 360 in the Path",
+      "text": "The folder is still called \"Autodesk Fusion 360\" even though the product is now just Fusion."
+    },
+    {
+      "topic": "Version After Restart",
+      "text": "The version shown in Scripts and Add-Ins is read when Fusion starts, so it may lag until a restart."
+    },
+    {
+      "topic": "Empty Files",
+      "text": "A truncated write leaves a zero-byte file, and `py_compile` passes on it; the checklist checks every file's size."
+    },
+    {
+      "topic": "Windows: Extract First",
+      "text": "Run the installer from an extracted folder, not from inside the zip. If SmartScreen appears, More info › Run anyway. The handoff message covers both."
+    },
+    {
+      "topic": "Windows: .cmd, Not .ps1",
+      "text": "Double-click the `.cmd`. Never run `Set-ExecutionPolicy`; the `.cmd` bypasses the policy for one run only."
+    },
+    {
+      "topic": "Caches in Subfolders",
+      "text": "A `__pycache__` can sit in a subfolder of the add-in, not just at the top. Both installers now remove it everywhere after copying (the PowerShell one gained this on Nov 9, 2026)."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Fusion",
+      "text": "Autodesk Fusion installed and set up for the current user on macOS, or on Windows 10 or 11."
+    },
+    {
+      "topic": "An Add-in",
+      "text": "An existing add-in folder whose `.py` and `.manifest` share the folder's name."
+    },
+    {
+      "topic": "Code Execution",
+      "text": "Claude needs code execution (\"Create and edit files\") to zip with the executable bit and run the checklist."
+    },
+    {
+      "topic": "No Admin Rights",
+      "text": "Nothing needs an administrator password on either platform."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Add-in",
+      "topic": "Fusion",
+      "match": "add-ins?",
+      "code": "",
+      "def": "A Python program Fusion loads from its AddIns folder; it can start with Fusion and add buttons."
+    },
+    {
+      "term": "AddIns folder",
+      "topic": "Fusion",
+      "match": "AddIns",
+      "code": "",
+      "def": "The per-user folder Fusion loads add-ins from, still under \"Autodesk Fusion 360\" on both platforms."
+    },
+    {
+      "term": "Manifest",
+      "topic": "Fusion",
+      "match": "manifest",
+      "code": ".manifest",
+      "def": "The JSON file next to the .py that tells Fusion the add-in's id, version and platforms."
+    },
+    {
+      "term": "ADDIN_NAME",
+      "topic": "Installer",
+      "match": "ADDIN_NAME",
+      "code": "ADDIN_NAME",
+      "def": "The one variable at the top of each installer that names the add-in folder to install."
+    },
+    {
+      "term": ".command file",
+      "topic": "Installer",
+      "match": "install-macos",
+      "code": "install-macos.command",
+      "def": "A shell script macOS opens in Terminal when you double-click it."
+    },
+    {
+      "term": "Launcher",
+      "topic": "Installer",
+      "match": "launcher|launches",
+      "code": "install-windows.cmd",
+      "def": "The .cmd file whose only job is to start the PowerShell installer."
+    },
+    {
+      "term": "Closing message",
+      "topic": "Installer",
+      "match": "closing message",
+      "code": "",
+      "def": "The lines both installers print after \"Done\": how to run the add-in and anything true of it."
+    },
+    {
+      "term": "Executable bit",
+      "topic": "Packaging",
+      "match": "executable",
+      "code": "chmod +x",
+      "def": "The file permission that lets a .command run on double-click; Python's zipfile drops it."
+    },
+    {
+      "term": "__pycache__",
+      "topic": "Packaging",
+      "match": "__pycache__|pyc",
+      "code": "__pycache__",
+      "def": "Python's compiled-file cache; a stale copy from another Python version can stop an add-in loading."
+    },
+    {
+      "term": ".DS_Store",
+      "topic": "Packaging",
+      "match": "DS_Store",
+      "code": ".DS_Store",
+      "def": "A hidden Finder settings file macOS adds to folders; the installers skip it."
+    },
+    {
+      "term": "Zero-byte file",
+      "topic": "Packaging",
+      "match": "zero-byte",
+      "code": "",
+      "def": "An empty file left by a truncated write; the checklist rejects it."
+    },
+    {
+      "term": "Gatekeeper",
+      "topic": "Security",
+      "match": "Gatekeeper",
+      "code": "",
+      "def": "macOS protection that blocks unsigned downloaded files until you right-click › Open once."
+    },
+    {
+      "term": "Quarantine",
+      "topic": "Security",
+      "match": "quarantine",
+      "code": "",
+      "def": "The mark macOS puts on downloaded files, which triggers Gatekeeper."
+    },
+    {
+      "term": "SmartScreen",
+      "topic": "Security",
+      "match": "SmartScreen",
+      "code": "",
+      "def": "Windows protection that may warn before running a downloaded file; More info › Run anyway."
+    },
+    {
+      "term": "Execution policy",
+      "topic": "Security",
+      "match": "execution policy|ExecutionPolicy",
+      "code": "",
+      "def": "The PowerShell setting that blocks .ps1 files; the .cmd bypasses it for one process only."
+    },
+    {
+      "term": "Notarized",
+      "topic": "Security",
+      "match": "notarized",
+      "code": "",
+      "def": "Signed and checked by Apple; these installers are not, which is why Gatekeeper asks."
+    },
+    {
+      "term": "README.txt",
+      "topic": "Installer",
+      "match": "README",
+      "code": "README.txt",
+      "def": "The plain-text install guide in the zip, for whoever receives it; the installers don't copy it into Fusion."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the Fusion add-in installer skill. It makes three double click installers and a read me file, so an Autodesk Fusion add-in installs into Fusion's add-ins folder, on the Mac or on Windows",
+    "What It Is": "What the skill is, and why a double click installer that wipes the old copy and pauses to show the result beats hand copying into a hidden folder",
+    "What It Does": "Eight jobs: the Mac installer, the Windows launcher and installer, a read me for whoever gets the zip, one shared add-in name, a zip that keeps the Mac installer runnable, the closing message, and a packaging checklist",
+    "How to Use It": "Eight steps on the Mac, from asking for installers to reinstalling a new version, then seven on Windows, where you [extract](/ɪkstɹˈækt/) the zip first and run the launcher. The read me in the zip has the same steps",
+    "Skills It Depends On": "None required. Fusion palette add-in calls it for every house spec tool, and Fusion add-in scaffold carries similar templates",
+    "Programs It Depends On": "Autodesk Fusion, Terminal on the Mac or PowerShell on Windows, and zip in Claude's workspace. No admin rights and no installer packages",
+    "Capabilities and Limitations": "One zip installs cleanly on both platforms without admin rights. But the installers aren't signed, don't start the add-in, and there's no uninstaller",
+    "Scheduled Tasks": "None. The nightly skill library refresh only packs it into a zip",
+    "Where It Runs": "Swami runs it in the Claude desktop app linked to his Mac. It hasn't been run on a Windows PC yet, and the other surfaces are untested",
+    "Gotchas": "Thirteen traps, from mismatched names and a lost executable bit to stale caches, Gatekeeper, and two on Windows",
+    "Other Requirements": "Fusion set up for the current user, an add-in folder with matching names, and code execution in Claude",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:3ef4d006505e4b7f",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Mon Nov 9, 2026",
+    "carded": "Mon Nov 9, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-installer.zip",
+    "draft_url": "https://claude.ai/artifact/EXB9S9KWE2d4zjoxMTJfKD",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-addin-installer/"
+  }
+}

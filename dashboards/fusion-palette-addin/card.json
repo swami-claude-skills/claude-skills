@@ -5,7 +5,7 @@
   "what_it_is": [
     "A Claude skill that turns a short request (\"make me a Fusion tool that ...\") into a complete, installable Autodesk Fusion add-in. Every tool Swami commissions has the same shape: a **non-modal HTML palette** that stays open while he works, a dark theme, collapsible sections, a title like `ToolName (v1.0.0)`, a toolbar icon, room for a keyboard shortcut, visible error reporting, a **Reset to defaults** control, and double-click installers for both platforms.",
     "It covers the palette and packaging layer. The Fusion Python API rules underneath (persistent handler references, full teardown in `stop()`, document-type awareness, top-level try/except) come from the **fusion-addin-scaffold** skill, and the installers come from the **fusion-addin-installer** skill. It starts from Swami's request template, whose three blanks are the add-in name, its location(s) and a description.",
-    "Version 1.1.0 (Nov 7, 2026) brought the manifest in line with Autodesk's documented spec (`autodeskProduct` = `Fusion360`, a fresh GUID for `id`) and moved installer building to fusion-addin-installer."
+    "Version 1.1.0 (Nov 7, 2026) brought the manifest in line with Autodesk's documented spec (`autodeskProduct` = `Fusion360`, a fresh GUID for `id`) and moved installer building to fusion-addin-installer. Version 1.2.0 (Nov 9, 2026) made preflight check those two manifest fields, fixed the manifest template, removed the old bundled installers, added Windows install notes to the handoff, and added the `README.txt` from fusion-addin-installer to the deliverable."
   ],
   "why": "Swami builds many small Fusion tools. A fixed house spec means none of them ships without the version in the title, the reset, the error strip or an installer, and every tool looks and behaves the same in the toolbar.",
   "what_it_does": [
@@ -23,7 +23,7 @@
     },
     {
       "topic": "Manifest",
-      "text": "Writes `ToolName.manifest` with `autodeskProduct` set to `Fusion360`, a freshly generated GUID as `id`, the same version as the `.py`, and `runOnStartup` on."
+      "text": "Writes `ToolName.manifest` from the template, which already says `Fusion360`, replacing its GUID placeholder with a freshly generated GUID and keeping the version equal to the `.py` and `runOnStartup` on."
     },
     {
       "topic": "Icon",
@@ -35,15 +35,15 @@
     },
     {
       "topic": "Installers",
-      "text": "Adds `install-macos.command`, `install-windows.cmd` and `install-windows.ps1`, built with the fusion-addin-installer skill."
+      "text": "Adds `install-macos.command`, `install-windows.cmd`, `install-windows.ps1` and a `README.txt` with the install steps, built with the fusion-addin-installer skill."
     },
     {
       "topic": "Preflight",
-      "text": "Runs `scripts/preflight.py`: compiles the `.py`, syntax-checks the macOS installer, checks the folder, `.py` and `.manifest` names match, finds leftover template placeholders and checks the versions agree. Claude then checks the two manifest fields by hand."
+      "text": "Runs `scripts/preflight.py`: compiles the `.py`, syntax-checks the macOS installer, checks the folder, `.py` and `.manifest` names match, finds leftover template placeholders, checks the versions agree, and checks the manifest's `autodeskProduct` is `Fusion360` and its `id` is a GUID."
     },
     {
       "topic": "Delivery",
-      "text": "Zips the folder with the `zip` command (which keeps the installer executable), sends it, and says the version, where the button lands, how to install, and how to set a keyboard shortcut."
+      "text": "Zips the folder with the `zip` command (which keeps the installer executable), sends it, and says the version, where the button lands, how to install on macOS and Windows (Gatekeeper, Extract All, SmartScreen), and how to set a keyboard shortcut."
     }
   ],
   "triggers": [
@@ -101,7 +101,7 @@
     },
     {
       "topic": "Extract",
-      "step": "In File Explorer, right-click the zip › **Extract All…**. Don't run the installer from inside the zip; Windows would run it from a temporary folder.",
+      "step": "In File Explorer, right-click the zip › **Extract All…**. Don't run the installer from inside the zip; Windows would run it from a temporary folder. The handoff message says so.",
       "who": "Swami"
     },
     {
@@ -111,7 +111,7 @@
     },
     {
       "topic": "SmartScreen",
-      "step": "If Windows shows \"Windows protected your PC\", click **More info › Run anyway**. Untested: the skill doesn't mention this.",
+      "step": "If Windows shows \"Windows protected your PC\", click **More info › Run anyway**, once. The handoff message says so.",
       "who": "Swami"
     },
     {
@@ -134,7 +134,7 @@
     {
       "name": "fusion-addin-installer",
       "need": "Required",
-      "why": "Builds the three installers. The old installers in this skill's `assets/` are kept only for reference."
+      "why": "Builds the three installers. This skill no longer bundles installers of its own."
     },
     {
       "name": "vibe-dashboard",
@@ -195,7 +195,7 @@
       "name": "rsync",
       "need": "Not needed",
       "where": "—",
-      "why": "Only the old reference installer in `assets/` used it; the installers that ship don't.",
+      "why": "Older bundled installers used it; they were removed in 1.2.0, and the installers from fusion-addin-installer don't need it.",
       "install": "—",
       "install_windows": "—"
     },
@@ -249,7 +249,7 @@
     },
     {
       "topic": "Unsigned Installers",
-      "text": "The installers are plain scripts, not signed or notarized packages, so Gatekeeper (and possibly SmartScreen) asks once."
+      "text": "The installers are plain scripts, not signed or notarized packages, so Gatekeeper asks once on a Mac and SmartScreen may ask on Windows."
     }
   ],
   "scheduled_tasks": {
@@ -266,12 +266,12 @@
     {
       "where": "Claude app, cloud session (web, desktop, mobile)",
       "status": "Untested",
-      "notes": "Should work: everything is built and checked in Claude's workspace and the zip is sent with SendUserFile. Needs code execution."
+      "notes": "Should work the same as the Mac-linked desktop app, since everything is built in Claude's workspace. Needs code execution."
     },
     {
       "where": "Claude desktop app linked to the Mac",
-      "status": "Untested",
-      "notes": "Builds the same way. Installing and testing still happen in Fusion on the Mac."
+      "status": "Yes",
+      "notes": "Swami's usual setup. Claude builds and sends the zip; installing and testing happen in Fusion on the Mac."
     },
     {
       "where": "Claude desktop app linked to a Windows PC",
@@ -353,7 +353,7 @@
     },
     {
       "topic": "Windows: Extract First",
-      "text": "Run the installer from an extracted folder, not from inside the zip. If SmartScreen appears, More info › Run anyway (untested)."
+      "text": "Run the installer from an extracted folder, not from inside the zip. If SmartScreen appears, More info › Run anyway. The handoff message covers both."
     },
     {
       "topic": "Windows: Execution Policy",
@@ -541,20 +541,17 @@
     "Programs It Depends On": "Autodesk Fusion on your computer, plus Python, Pillow, zip, and bash in Claude's workspace. Terminal runs the Mac installer and PowerShell the Windows one",
     "Capabilities and Limitations": "It delivers a whole checked package that stays open while you work and keeps its settings. But Claude can't test it inside Fusion, and you set the keyboard shortcut yourself",
     "Scheduled Tasks": "None. The nightly skill library refresh only packs it into a zip",
-    "Where It Runs": "It should work in any Claude session with code execution, but every surface is still marked untested",
+    "Where It Runs": "Swami runs it in the Claude desktop app linked to his Mac. The other surfaces should work too, but are untested",
     "Gotchas": "Fourteen traps, from mismatched names and forgotten version bumps to lost handlers, half [resets](/ɹˈiːsɛts/), Gatekeeper, and Windows execution policy",
     "Other Requirements": "Fusion on a Mac or on Windows ten or eleven, code execution in Claude, and the two companion skills. No admin rights are needed",
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
     "card_version": 1,
-    "fingerprint": "sha256:fc3ed485bd7f5b6d",
+    "fingerprint": "sha256:31f741071943c1c5",
     "files": [
       "SKILL.md",
       "assets/addin_template.py",
-      "assets/install-macos.command",
-      "assets/install-windows.cmd",
-      "assets/install-windows.ps1",
       "assets/manifest.json",
       "assets/palette_template.html",
       "references/palette-bridge.md",
@@ -566,7 +563,7 @@
       "scripts/make_icons.py",
       "scripts/preflight.py"
     ],
-    "skill_updated": "Sat Nov 7, 2026",
+    "skill_updated": "Mon Nov 9, 2026",
     "carded": "Mon Nov 9, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-palette-addin.zip",

@@ -1,0 +1,33 @@
+This page is the skill sheet for the Fusion add-in installer skill. It makes three double click installers and a read me file, so an Autodesk Fusion add-in installs into Fusion's add-ins folder, on the Mac or on Windows
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is, and why a double click installer that wipes the old copy and pauses to show the result beats hand copying into a hidden folder.
+
+Section four, What It Does. Eight jobs: the Mac installer, the Windows launcher and installer, a read me for whoever gets the zip, one shared add-in name, a zip that keeps the Mac installer runnable, the closing message, and a packaging checklist.
+
+Section five, How to Use It. Eight steps on the Mac, from asking for installers to reinstalling a new version, then seven on Windows, where you [extract](/ɪkstɹˈækt/) the zip first and run the launcher. The read me in the zip has the same steps.
+
+Section six, Skills It Depends On. None required. Fusion palette add-in calls it for every house spec tool, and Fusion add-in scaffold carries similar templates.
+
+Section seven, Programs It Depends On. Autodesk Fusion, Terminal on the Mac or PowerShell on Windows, and zip in Claude's workspace. No admin rights and no installer packages.
+
+Section eight, Capabilities and Limitations. One zip installs cleanly on both platforms without admin rights. But the installers aren't signed, don't start the add-in, and there's no uninstaller.
+
+Section nine, Scheduled Tasks. None. The nightly skill library refresh only packs it into a zip.
+
+Section ten, Where It Runs. Swami runs it in the Claude desktop app linked to his Mac. It hasn't been run on a Windows PC yet, and the other surfaces are untested.
+
+Section eleven, Gotchas. Thirteen traps, from mismatched names and a lost executable bit to stale caches, Gatekeeper, and two on Windows.
+
+Section twelve, Other Requirements. Fusion set up for the current user, an add-in folder with matching names, and code execution in Claude.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

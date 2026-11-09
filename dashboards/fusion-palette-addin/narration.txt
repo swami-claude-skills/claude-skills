@@ -18,7 +18,7 @@ Section eight, Capabilities and Limitations. It delivers a whole checked package
 
 Section nine, Scheduled Tasks. None. The nightly skill library refresh only packs it into a zip.
 
-Section ten, Where It Runs. It should work in any Claude session with code execution, but every surface is still marked untested.
+Section ten, Where It Runs. Swami runs it in the Claude desktop app linked to his Mac. The other surfaces should work too, but are untested.
 
 Section eleven, Gotchas. Fourteen traps, from mismatched names and forgotten version bumps to lost handlers, half [resets](/ɹˈiːsɛts/), Gatekeeper, and Windows execution policy.
 
