@@ -1,0 +1,434 @@
+{
+  "skill": "fusion-doc",
+  "title": "Fusion Doc",
+  "summary": "Builds Swami's Fusion Doc dashboard: a vibe-dashboard page documenting every parameter of one Autodesk Fusion command or toolpath, from a tab, group and parameter JSON plus its Autodesk help-page URL, with an Input section that can load another command in the browser.",
+  "what_it_is": [
+    "A Claude skill that builds a **reference dashboard** for one Fusion command or CAM toolpath dialog, such as 2D Offset Roughing, Adaptive Clearing or Extrude. It starts from a **parameter JSON** (tabs, then groups, then parameter names, in dialog order) and the URL of the command's Autodesk product-documentation page. Swami makes that JSON with a command in the **Autodesk Assistant** AI inside Fusion.",
+    "Claude researches the help page and writes a `notes.json` with a plain-language description and a tip for every parameter, plus a glossary. The skill's build script embeds both JSON files in the page, and the page **renders itself in the browser**. That is what lets its **Input** section load a different JSON or URL and rebuild every data-driven section, with descriptions carried over wherever names match. Like every vibe-dashboard, it also has Search, a Mind Map, a Glossary and an audio overview."
+  ],
+  "why": "A Fusion dialog can hold a hundred settings spread over several tabs. One page that lists every parameter where it lives, explains it, and links to Autodesk's own reference makes a command much faster to learn and to look things up in.",
+  "what_it_does": [
+    {
+      "topic": "Asks First",
+      "text": "Run with no inputs, it builds nothing and asks for the parameter JSON and the help-page URL."
+    },
+    {
+      "topic": "Normalises Input",
+      "text": "Converts a JSON of another shape to `operation` plus `tabs`, and says how. Given only a URL, it tries to read the page and builds the JSON from its headings, showing it before building."
+    },
+    {
+      "topic": "Writes Notes",
+      "text": "Writes what each parameter does and a tip, a description for each group, and an intro, cross-reference, focus and use-when line for each tab, usually plus a step-by-step setup workflow section."
+    },
+    {
+      "topic": "Parameter Map",
+      "text": "A Parameter Map at a Glance section with a tabs table and a table of every group and its parameters."
+    },
+    {
+      "topic": "Hierarchy Tree",
+      "text": "A collapsible tree of command, tab, group and parameter, with sticky level buttons, jump links to each table row, and hover tooltips."
+    },
+    {
+      "topic": "Tab Sections",
+      "text": "One section per dialog tab, with a table per group. A uniform tab, where every group has the same few fields (like Heights), gets one table instead."
+    },
+    {
+      "topic": "Input Section",
+      "text": "Lets a viewer load another parameter JSON (file or paste) and URL; the page saves it in that browser and rebuilds. \"reset to original\" goes back to the built-in JSON."
+    },
+    {
+      "topic": "References and Source",
+      "text": "Links to the Autodesk help page and any other sources, and shows the parameter JSON verbatim."
+    },
+    {
+      "topic": "Search, Mind Map, Glossary, Audio",
+      "text": "Adds vibe-dashboard's Search section, Mind Map, table fitting and a Glossary, plus a spoken audio overview that hides itself when another command is loaded through Input."
+    },
+    {
+      "topic": "Checks",
+      "text": "Tests the page in a headless browser at two widths: no page errors or colour clashes, every tree link lands on a table row, tables fit, summary rows link, and every glossary term is used."
+    }
+  ],
+  "triggers": [
+    "\"/fusion-doc\" (with or without files)",
+    "Uploading a tab, group and parameter JSON with a help.autodesk.com link"
+  ],
+  "how_to_use": [
+    {
+      "topic": "Get the JSON",
+      "step": "Run your command in the **Autodesk Assistant** inside Fusion to get the dialog's tabs, groups and parameter names as JSON, for example `{\"operation\": \"Adaptive Clearing\", \"tabs\": {\"Tool\": {\"Feed & Speed\": [\"Spindle Speed\"]}}}`.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Get the URL",
+      "step": "Copy the command's Autodesk help-page link from your browser.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Ask",
+      "step": "Run `/fusion-doc` and attach or paste the JSON and the link. With nothing attached, Claude asks for both and waits.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Research and Notes",
+      "step": "Claude reads the help page and writes the notes: every parameter, group and tab, a setup workflow, and a glossary.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Build and Check",
+      "step": "Claude builds the page, records the audio overview, checks it in a headless browser, and publishes it as an artifact.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Use the Input",
+      "step": "To view another command with the same page, load its JSON and URL in the Input section. The page remembers it in your browser until you reset.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Edit",
+      "step": "Ask for changes. Claude edits the notes or JSON and rebuilds; the HTML is never hand-edited.",
+      "who": "Swami, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Same Steps",
+      "step": "Building happens in Claude's workspace and the page opens in any browser, so the steps are the same on Windows.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Files",
+      "step": "Run the same Autodesk Assistant command in Fusion on Windows, and attach the JSON from File Explorer; downloads land in `C:\\Users\\<name>\\Downloads` by default.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Required",
+      "why": "Supplies the page template (`assets/template.html`), the Search, Mind Map and table-fit patches, and the audio overview tools."
+    },
+    {
+      "name": "fusion-doc-json",
+      "need": "Related",
+      "why": "Makes JSON from a saved Autodesk help page, but in a different shape (operation, tabs, sections, settings with descriptions)."
+    },
+    {
+      "name": "fusion-cam-settings",
+      "need": "Related",
+      "why": "Builds a dashboard of one CAM operation's actual settings values, rather than a reference of every parameter."
+    }
+  ],
+  "programs": [
+    {
+      "name": "A web browser",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Copies the help-page link and opens the dashboard.",
+      "install": "Safari, Chrome, Firefox or Comet.",
+      "install_windows": "Edge, Chrome or Firefox."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs `fusion_doc_build.py`.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Playwright and Chromium",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Checks the page renders and every tree link resolves, and makes a rendered copy to write the narration from.",
+      "install": "Preinstalled in Claude's workspace.",
+      "install_windows": "Same."
+    },
+    {
+      "name": "Kokoro voice",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Records the audio overview, through vibe-dashboard's audio scripts.",
+      "install": "vibe-dashboard's audio script fetches it the first time.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Autodesk Fusion with Autodesk Assistant",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Its in-app Autodesk Assistant AI produces the parameter JSON.",
+      "install": "From autodesk.com; Autodesk Assistant is built into Fusion.",
+      "install_windows": "Same, from autodesk.com."
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Any Command",
+      "text": "Documents any Fusion command or toolpath dialog, from design features to CAM operations."
+    },
+    {
+      "topic": "Every Parameter",
+      "text": "Gives every parameter a description and a tip, in dialog order."
+    },
+    {
+      "topic": "Reusable Page",
+      "text": "The Input section turns one published page into a viewer for other commands' JSON, with no rebuild."
+    },
+    {
+      "topic": "Easy Navigation",
+      "text": "The hierarchy tree jumps straight to any tab, group or parameter row."
+    },
+    {
+      "topic": "Easy to Find Things",
+      "text": "Search, the Mind Map and the Glossary make every parameter quick to find."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Thin Help Pages",
+      "text": "help.autodesk.com pages are script-heavy and can come back thin; then the notes rely on general Fusion knowledge and say so."
+    },
+    {
+      "topic": "Loaded Commands",
+      "text": "A command loaded through Input only gets descriptions where names match the original; extras and the custom intro are hidden."
+    },
+    {
+      "topic": "Browser Memory",
+      "text": "What Input loads is remembered only in that browser."
+    },
+    {
+      "topic": "JSON Command Undocumented",
+      "text": "The Autodesk Assistant command that makes the parameter JSON isn't written down in the skill yet."
+    },
+    {
+      "topic": "Audio for One Command",
+      "text": "The audio describes the original command, so it hides when another command is loaded through Input."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill doesn't need, create or get run by a scheduled task. Its pages are backed up nightly like every other artifact, and the nightly Skill Library refresh packages the skill as a zip.",
+    "tasks": [
+      {
+        "name": "Vibe dashboards — nightly GitHub backup",
+        "schedule": "Nightly, about 4:07 AM ET",
+        "what": "Saves every artifact created or changed that day, Fusion Doc pages included, to the private vibe-dashboards repo."
+      }
+    ]
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "Should work: needs uploads, web fetch, code execution and artifacts."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "Swami has run it here. The JSON can also come straight from a folder on the Mac."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Builds the same way."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Can build if the JSON is attached from the phone."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Can build the HTML file; publishing it as an artifact needs the Claude app."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. Needs code execution and vibe-dashboard installed for its template; the result is an HTML file, not an artifact."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder plus vibe-dashboard. Needs code execution to run the build script."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused; installing by chat drifts, and the long build script is easy to lose."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Narration Source",
+      "text": "The sections are drawn in the browser, so the narration outline comes from a rendered copy of the page, made with a short Playwright command in the skill."
+    },
+    {
+      "topic": "Glossary Matches",
+      "text": "Glossary terms must appear in descriptions, tips or intros; parameter and group names never link, so they don't count."
+    },
+    {
+      "topic": "No Inputs",
+      "text": "Run with nothing attached, it must ask and wait, never build an example page."
+    },
+    {
+      "topic": "JSON Shape",
+      "text": "Every group must be a non-empty list of parameter names; anything else is rejected, in the build and in the Input section."
+    },
+    {
+      "topic": "Uniform Tabs",
+      "text": "A tab whose groups all share the same four or fewer fields becomes one table, so notes for it take a typical value, not a description and tip."
+    },
+    {
+      "topic": "Fresh Template",
+      "text": "Always rebuild from a fresh template copy; the script refuses a copy it already built."
+    },
+    {
+      "topic": "Don't Hand-edit",
+      "text": "Sections are rendered from the embedded JSON at load time, so hand edits to the HTML are lost. Recover the JSON from the published page if the scratchpad is gone."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Inputs",
+      "text": "A tab, group and parameter JSON for the command (from Autodesk Assistant in Fusion), and ideally its help.autodesk.com URL."
+    },
+    {
+      "topic": "Claude Settings",
+      "text": "Code execution (\"Create and edit files\"), web fetch, file uploads and artifacts."
+    },
+    {
+      "topic": "Computer",
+      "text": "Any Mac, or a PC with Windows 10 or 11, with a current browser."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Parameter JSON",
+      "topic": "Inputs",
+      "match": "parameter JSON",
+      "code": "",
+      "def": "The command's tabs, groups and parameter names, in dialog order."
+    },
+    {
+      "term": "Help page",
+      "topic": "Inputs",
+      "match": "help pages?|help\\.autodesk\\.com",
+      "code": "",
+      "def": "Autodesk's product-documentation page for the command."
+    },
+    {
+      "term": "Command",
+      "topic": "Fusion",
+      "match": "commands?",
+      "code": "",
+      "def": "One Fusion tool or CAM toolpath with its own settings dialog."
+    },
+    {
+      "term": "Tab",
+      "topic": "Fusion",
+      "match": "tabs?",
+      "code": "",
+      "def": "One page of the command's dialog."
+    },
+    {
+      "term": "Group",
+      "topic": "Fusion",
+      "match": "groups?",
+      "code": "",
+      "def": "A labelled block of settings inside a tab."
+    },
+    {
+      "term": "Parameter",
+      "topic": "Fusion",
+      "match": "parameters?",
+      "code": "",
+      "def": "One setting in the dialog."
+    },
+    {
+      "term": "notes.json",
+      "topic": "Build",
+      "match": "notes",
+      "code": "notes.json",
+      "def": "Claude's descriptions, tips, intros and extra sections for the page."
+    },
+    {
+      "term": "Build script",
+      "topic": "Build",
+      "match": "build script",
+      "code": "fusion_doc_build.py",
+      "def": "The skill's Python script that turns the vibe-dashboard template into the self-rendering page and applies vibe-dashboard's patches."
+    },
+    {
+      "term": "Hierarchy tree",
+      "topic": "Page",
+      "match": "hierarchy tree|tree",
+      "code": "",
+      "def": "The collapsible command, tab, group and parameter outline with jump links."
+    },
+    {
+      "term": "Uniform tab",
+      "topic": "Page",
+      "match": "uniform tab",
+      "code": "",
+      "def": "A tab whose groups all share the same few fields, shown as one table."
+    },
+    {
+      "term": "Input section",
+      "topic": "Page",
+      "match": "Input section|Input",
+      "code": "",
+      "def": "The part of the page that loads another JSON or URL and rebuilds."
+    },
+    {
+      "term": "Browser storage",
+      "topic": "Page",
+      "match": "remembered|remembers",
+      "code": "",
+      "def": "Where the page keeps what Input loaded, in that browser only."
+    },
+    {
+      "term": "Workflow section",
+      "topic": "Page",
+      "match": "workflow",
+      "code": "",
+      "def": "An extra section with step-by-step setup order for the command."
+    },
+    {
+      "term": "Autodesk Assistant",
+      "topic": "Fusion",
+      "match": "Autodesk Assistant",
+      "code": "",
+      "def": "The AI built into Fusion; Swami uses it to produce the parameter JSON."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the Fusion doc skill. It builds a reference dashboard for every parameter of one Fusion command, from a list of its tabs, groups and parameters, made with Autodesk Assistant, plus its Autodesk help page",
+    "What It Is": "What the skill is: Claude writes a description and a tip for every parameter, and the page draws itself in your browser, so its input section can load another command. It also has search, a mind map, a glossary and audio",
+    "What It Does": "Ten jobs, from asking for inputs and writing notes to the parameter map, the hierarchy tree, tab sections, the input section, references, search and audio, and checks",
+    "How to Use It": "Seven steps, from getting the JSON from Autodesk Assistant and the help page link to [research](/ɹˈiːsɜːtʃ/), building, using the input section, and edits. On Windows the steps are the same",
+    "Skills It Depends On": "Vibe dashboard is required for the template. Fusion doc to JSON and Fusion cam settings are related",
+    "Programs It Depends On": "Fusion with Autodesk Assistant and a browser on your computer, plus Python, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice in Claude's workspace",
+    "Capabilities and Limitations": "It covers any command and every parameter, one page can view other commands, and it's easy to search. But help pages can come back thin, the Assistant command isn't written down yet, and the audio only fits the original command",
+    "Scheduled Tasks": "None. Its pages are simply backed up each night with all the others",
+    "Where It Runs": "Swami has run it in the desktop app linked to his Mac. The other surfaces should work too, but are still untested",
+    "Gotchas": "Seven traps, from writing the narration from a rendered copy and where glossary terms must appear to the input JSON's shape and uniform tabs",
+    "Other Requirements": "The parameter JSON and ideally the help page link, code execution, web fetch and artifacts in Claude, and any Mac or Windows computer",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint. There are no open questions"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:ab41ed2760fb128a",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Mon Nov 9, 2026",
+    "carded": "Mon Nov 9, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-doc.zip",
+    "draft_url": "https://claude.ai/artifact/FAmU8YFsHPRg6nZyE9vASk",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-doc/"
+  }
+}

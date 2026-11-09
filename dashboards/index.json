@@ -31,6 +31,14 @@
     "published": "2026-11-09",
     "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek"
   },
+  "fusion-doc": {
+    "title": "Fusion Doc",
+    "page": "dashboards/fusion-doc/",
+    "fingerprint": "sha256:ab41ed2760fb128a",
+    "skill_updated": "Mon Nov 9, 2026",
+    "published": "2026-11-09",
+    "draft_url": "https://claude.ai/artifact/FAmU8YFsHPRg6nZyE9vASk"
+  },
   "fusion-doc-json": {
     "title": "Fusion Doc to JSON",
     "page": "dashboards/fusion-doc-json/",

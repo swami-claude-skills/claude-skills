@@ -1,0 +1,33 @@
+This page is the skill sheet for the Fusion doc skill. It builds a reference dashboard for every parameter of one Fusion command, from a list of its tabs, groups and parameters, made with Autodesk Assistant, plus its Autodesk help page
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is: Claude writes a description and a tip for every parameter, and the page draws itself in your browser, so its input section can load another command. It also has search, a mind map, a glossary and audio.
+
+Section four, What It Does. Ten jobs, from asking for inputs and writing notes to the parameter map, the hierarchy tree, tab sections, the input section, references, search and audio, and checks.
+
+Section five, How to Use It. Seven steps, from getting the JSON from Autodesk Assistant and the help page link to [research](/ɹˈiːsɜːtʃ/), building, using the input section, and edits. On Windows the steps are the same.
+
+Section six, Skills It Depends On. Vibe dashboard is required for the template. Fusion doc to JSON and Fusion cam settings are related.
+
+Section seven, Programs It Depends On. Fusion with Autodesk Assistant and a browser on your computer, plus Python, a headless browser and the [Kokoro](/kˈoʊkoʊɹoʊ/) voice in Claude's workspace.
+
+Section eight, Capabilities and Limitations. It covers any command and every parameter, one page can view other commands, and it's easy to search. But help pages can come back thin, the Assistant command isn't written down yet, and the audio only fits the original command.
+
+Section nine, Scheduled Tasks. None. Its pages are simply backed up each night with all the others.
+
+Section ten, Where It Runs. Swami has run it in the desktop app linked to his Mac. The other surfaces should work too, but are still untested.
+
+Section eleven, Gotchas. Seven traps, from writing the narration from a rendered copy and where glossary terms must appear to the input JSON's shape and uniform tabs.
+
+Section twelve, Other Requirements. The parameter JSON and ideally the help page link, code execution, web fetch and artifacts in Claude, and any Mac or Windows computer.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint. There are no open questions.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
