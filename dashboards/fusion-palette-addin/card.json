@@ -1,0 +1,576 @@
+{
+  "skill": "fusion-palette-addin",
+  "title": "Fusion Palette Add-in",
+  "summary": "Builds an Autodesk Fusion add-in to Swami's house spec: a dockable dark-mode HTML palette with collapsible sections, a versioned title, an icon, saved settings with a reset, and double-click installers for macOS and Windows.",
+  "what_it_is": [
+    "A Claude skill that turns a short request (\"make me a Fusion tool that ...\") into a complete, installable Autodesk Fusion add-in. Every tool Swami commissions has the same shape: a **non-modal HTML palette** that stays open while he works, a dark theme, collapsible sections, a title like `ToolName (v1.0.0)`, a toolbar icon, room for a keyboard shortcut, visible error reporting, a **Reset to defaults** control, and double-click installers for both platforms.",
+    "It covers the palette and packaging layer. The Fusion Python API rules underneath (persistent handler references, full teardown in `stop()`, document-type awareness, top-level try/except) come from the **fusion-addin-scaffold** skill, and the installers come from the **fusion-addin-installer** skill. It starts from Swami's request template, whose three blanks are the add-in name, its location(s) and a description.",
+    "Version 1.1.0 (Nov 7, 2026) brought the manifest in line with Autodesk's documented spec (`autodeskProduct` = `Fusion360`, a fresh GUID for `id`) and moved installer building to fusion-addin-installer."
+  ],
+  "why": "Swami builds many small Fusion tools. A fixed house spec means none of them ships without the version in the title, the reset, the error strip or an installer, and every tool looks and behaves the same in the toolbar.",
+  "what_it_does": [
+    {
+      "topic": "Intake",
+      "text": "Asks only for the three things it can't guess: the add-in name, where the button goes (default DESIGN › Utilities › Add-Ins, several places allowed) and what the tool does. Everything else gets a house default."
+    },
+    {
+      "topic": "Add-in Code",
+      "text": "Writes `ToolName.py` from `assets/addin_template.py`: the versioned title, buttons in one or more panels, the palette lifecycle, the JS↔Python bridge, settings load and save, reset, and teardown."
+    },
+    {
+      "topic": "Palette UI",
+      "text": "Writes `palette.html` from `assets/palette_template.html`: the house dark theme (`#0d0d0f` / `#00e5ff`) for a 380 px docked panel, collapsible sections closed on first open, an error strip at the top, and a footer with the version and Reset."
+    },
+    {
+      "topic": "Manifest",
+      "text": "Writes `ToolName.manifest` with `autodeskProduct` set to `Fusion360`, a freshly generated GUID as `id`, the same version as the `.py`, and `runOnStartup` on."
+    },
+    {
+      "topic": "Icon",
+      "text": "Draws a 16, 32 and 64 px toolbar icon with `scripts/make_icons.py`. The icon is what makes Fusion offer **Change Keyboard Shortcut**."
+    },
+    {
+      "topic": "Settings and Reset",
+      "text": "Keeps settings in a per-user JSON file outside the add-in folder, so reinstalling keeps them. Reset restores every option and every bit of UI state, after a confirmation."
+    },
+    {
+      "topic": "Installers",
+      "text": "Adds `install-macos.command`, `install-windows.cmd` and `install-windows.ps1`, built with the fusion-addin-installer skill."
+    },
+    {
+      "topic": "Preflight",
+      "text": "Runs `scripts/preflight.py`: compiles the `.py`, syntax-checks the macOS installer, checks the folder, `.py` and `.manifest` names match, finds leftover template placeholders and checks the versions agree. Claude then checks the two manifest fields by hand."
+    },
+    {
+      "topic": "Delivery",
+      "text": "Zips the folder with the `zip` command (which keeps the installer executable), sends it, and says the version, where the button lands, how to install, and how to set a keyboard shortcut."
+    }
+  ],
+  "triggers": [
+    "\"Make me a Fusion tool that ...\"",
+    "Swami's add-in request template with [INSERT ADD-IN NAME HERE] / [INSERT LOCATION/S HERE] / [INSERT DESCRIPTION HERE] filled in",
+    "\"I need a dockable dark-mode panel in Fusion that remembers my settings\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "Ask for a Fusion tool, or paste the add-in request template with its three blanks filled in.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Answer Blanks",
+      "step": "If the name, location or description is missing, Claude asks with a multiple-choice question. Everything else uses house defaults (v1.0.0, docked right, sections collapsed, icon, reset, both installers).",
+      "who": "Claude, then Swami"
+    },
+    {
+      "topic": "Build",
+      "step": "Claude builds the folder (`ToolName.py`, `.manifest`, `palette.html`, icons, installers), runs preflight, checks the manifest, and sends `ToolName.zip`.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Unzip",
+      "step": "Double-click the zip in Finder to unzip it.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Install",
+      "step": "Double-click `install-macos.command`. The first time, Gatekeeper may block it: right-click › **Open** › **Open**. Terminal shows where it copied the add-in (`~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/AddIns/ToolName`) and waits for Return.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Run",
+      "step": "In Fusion: **Utilities › Add-Ins › Scripts and Add-Ins** (Shift+S), pick the tool under Add-Ins, click **Run**. The button appears where you asked; click it to open or hide the palette.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Shortcut",
+      "step": "Right-click the toolbar button › **Change Keyboard Shortcut** › press the keys. The shortcut is per-user and survives reinstalls.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Iterate",
+      "step": "Ask for changes. Claude bumps the version on every rebuild, so the palette title shows whether the reinstall took.",
+      "who": "Swami, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Ask and Build",
+      "step": "The same as on macOS: ask, answer any blanks, and Claude sends `ToolName.zip`. Building happens in Claude's workspace, so nothing runs on the PC yet.",
+      "who": "Swami, then Claude"
+    },
+    {
+      "topic": "Extract",
+      "step": "In File Explorer, right-click the zip › **Extract All…**. Don't run the installer from inside the zip; Windows would run it from a temporary folder.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Install",
+      "step": "Double-click `install-windows.cmd`. It runs `install-windows.ps1` in PowerShell with the execution policy bypassed for that one run (no system change), copies the add-in to `%APPDATA%\\Autodesk\\Autodesk Fusion 360\\API\\AddIns\\ToolName` (`C:\\Users\\<name>\\AppData\\Roaming\\…`) and waits for Enter.",
+      "who": "Swami"
+    },
+    {
+      "topic": "SmartScreen",
+      "step": "If Windows shows \"Windows protected your PC\", click **More info › Run anyway**. Untested: the skill doesn't mention this.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Run",
+      "step": "In Fusion: **Utilities › Add-Ins › Scripts and Add-Ins** (Shift+S), pick the tool, click **Run**.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Shortcut",
+      "step": "Right-click the toolbar button › **Change Keyboard Shortcut** › press the keys (Ctrl-based combinations on Windows).",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "fusion-addin-scaffold",
+      "need": "Required",
+      "why": "Holds the Fusion Python API rules the palette relies on. Claude reads its SKILL.md plus `references/ui-navigation.md` and `references/error-handling.md`."
+    },
+    {
+      "name": "fusion-addin-installer",
+      "need": "Required",
+      "why": "Builds the three installers. The old installers in this skill's `assets/` are kept only for reference."
+    },
+    {
+      "name": "vibe-dashboard",
+      "need": "Related",
+      "why": "Used instead when Swami wants install documentation or a write-up of the tool. The palette borrows its colors."
+    }
+  ],
+  "programs": [
+    {
+      "name": "Autodesk Fusion",
+      "need": "Required",
+      "where": "Swami's computer",
+      "why": "Runs the add-in. Fusion ships its own Python, so nothing else is installed on the computer.",
+      "install": "From autodesk.com; sign in with an Autodesk account. Fusion must have run once so its AddIns folder exists.",
+      "install_windows": "Same download from autodesk.com. The AddIns folder is under `%APPDATA%`."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs `preflight.py`, `make_icons.py` and `py_compile`, and makes the GUID.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Pillow (PIL)",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Draws the toolbar icons in `make_icons.py`.",
+      "install": "Usually present; otherwise `pip install pillow` in the workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "zip and bash",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "`zip` packs the folder and keeps the `.command` executable; `bash -n` checks the macOS installer.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Same; nothing to install on the PC."
+    },
+    {
+      "name": "Terminal",
+      "need": "Mac only",
+      "where": "Swami's Mac",
+      "why": "Opens when you double-click `install-macos.command`.",
+      "install": "Built into macOS.",
+      "install_windows": "Not used; Windows uses PowerShell."
+    },
+    {
+      "name": "PowerShell",
+      "need": "Windows only",
+      "where": "The Windows PC",
+      "why": "Runs `install-windows.ps1`, launched by `install-windows.cmd`.",
+      "install": "Not used on macOS.",
+      "install_windows": "Built into Windows 10 and 11 (Windows PowerShell 5.1); nothing to install."
+    },
+    {
+      "name": "rsync",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Only the old reference installer in `assets/` used it; the installers that ship don't.",
+      "install": "—",
+      "install_windows": "—"
+    },
+    {
+      "name": "A separate Python install",
+      "need": "Not needed",
+      "where": "—",
+      "why": "The add-in runs inside Fusion's own Python.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Whole Package",
+      "text": "One request gives a working add-in folder: code, manifest, palette, icons and both installers, checked and zipped."
+    },
+    {
+      "topic": "Stays Open",
+      "text": "The palette is non-modal and dockable, so it stays open while you work in Fusion; the button toggles it."
+    },
+    {
+      "topic": "Many Places",
+      "text": "One tool can put its button in several workspaces or panels."
+    },
+    {
+      "topic": "Survives Reinstalls",
+      "text": "Settings and the keyboard shortcut stay when the add-in is reinstalled, and new settings in later versions appear with their defaults."
+    },
+    {
+      "topic": "Visible Errors",
+      "text": "Python errors show in the palette's error strip instead of failing silently."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Can't Test in Fusion",
+      "text": "Claude can't run Fusion. The code is compiled and checked, but Swami tests it live."
+    },
+    {
+      "topic": "No Hotkey Binding",
+      "text": "The add-in can't set its own keyboard shortcut; Swami sets it once in Fusion."
+    },
+    {
+      "topic": "Panel IDs",
+      "text": "Fusion's workspace and panel IDs aren't fully documented and change between releases. For an uncertain location the skill ships a snippet that lists the live IDs instead of guessing."
+    },
+    {
+      "topic": "Not for Everything",
+      "text": "Not for one-shot scripts, plain native-dialog add-ins, or API debugging with no HTML UI (use fusion-addin-scaffold), and not for documentation pages (use vibe-dashboard)."
+    },
+    {
+      "topic": "Unsigned Installers",
+      "text": "The installers are plain scripts, not signed or notarized packages, so Gatekeeper (and possibly SmartScreen) asks once."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. The skill doesn't need, create or get run by a scheduled task. The nightly Skill Library refresh only packages it as a zip with Swami's other skills.",
+    "tasks": [
+      {
+        "name": "Skills dashboard nightly refresh",
+        "schedule": "Nightly, about 1:52 AM ET",
+        "what": "Rebuilds the downloadable zip of every skill, this one included, in the public claude-skills repo."
+      }
+    ]
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "Should work: everything is built and checked in Claude's workspace and the zip is sent with SendUserFile. Needs code execution."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Untested",
+      "notes": "Builds the same way. Installing and testing still happen in Fusion on the Mac."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Builds the same way; install with `install-windows.cmd`."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Can build and send the zip, but installing and testing need a Mac or PC with Fusion."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Would build the folder on the Mac itself; the installer or a copy into the AddIns folder still applies."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. Needs code execution for preflight, icons and zip, and the fusion-addin-scaffold and fusion-addin-installer skills installed too."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder, plus the two Fusion skills it relies on. Needs code execution to check and zip."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused; installing by chat drifts from the original, and the assets and scripts would be lost."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Names Must Match",
+      "text": "The folder, `.py` and `.manifest` must share one name or Fusion won't list the add-in. Renaming later touches about ten files, so the name is asked for first."
+    },
+    {
+      "topic": "Version Not Bumped",
+      "text": "Every rebuild must bump the version (the `VERSION` constant and the manifest). An unchanged title after a reinstall makes it impossible to tell whether the new copy loaded."
+    },
+    {
+      "topic": "Version Shown at Startup",
+      "text": "The version listed in Scripts and Add-Ins is read when Fusion starts, so it can lag until a restart; the palette title is current."
+    },
+    {
+      "topic": "Garbage-collected Handlers",
+      "text": "Event handlers must be kept in a list, or Fusion drops them and the palette stops responding."
+    },
+    {
+      "topic": "Duplicate Palette",
+      "text": "A reload that skipped teardown leaves the old palette alive; the code reuses it by ID instead of adding a second."
+    },
+    {
+      "topic": "Relative Path",
+      "text": "A bare `palette.html` path loads inconsistently; the palette URL is built from the add-in's own folder."
+    },
+    {
+      "topic": "Light Scrollbars",
+      "text": "Without `color-scheme: dark`, scrollbars and form controls render light on Windows."
+    },
+    {
+      "topic": "No Network",
+      "text": "The palette may have no internet, so no Google Fonts or CDN scripts; it uses system fonts."
+    },
+    {
+      "topic": "Half a Reset",
+      "text": "Any new saved value must be added to `DEFAULTS` in the same edit, or Reset will look like it worked but leave it behind."
+    },
+    {
+      "topic": "Lost Executable Bit",
+      "text": "Python's `zipfile` drops the executable bit and the `.command` does nothing; the skill zips with the `zip` command. Recovery: `chmod +x install-macos.command`."
+    },
+    {
+      "topic": "Gatekeeper",
+      "text": "On a Mac the first double-click may say the file is from an unidentified developer: right-click › Open › Open, once."
+    },
+    {
+      "topic": "Windows: Extract First",
+      "text": "Run the installer from an extracted folder, not from inside the zip. If SmartScreen appears, More info › Run anyway (untested)."
+    },
+    {
+      "topic": "Windows: Execution Policy",
+      "text": "Double-click the `.cmd`, not the `.ps1`. Never change the machine's policy with `Set-ExecutionPolicy`; the `.cmd` bypasses it for one run."
+    },
+    {
+      "topic": "Document Surgery",
+      "text": "If a document change misbehaves when run straight from the palette's message handler, it's moved into a command definition instead."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Fusion",
+      "text": "Autodesk Fusion installed and run at least once for the current user, on macOS or on Windows 10 or 11."
+    },
+    {
+      "topic": "Code Execution",
+      "text": "Claude needs code execution (\"Create and edit files\") to build, check and zip the add-in."
+    },
+    {
+      "topic": "Companion Skills",
+      "text": "The fusion-addin-scaffold and fusion-addin-installer skills installed alongside this one."
+    },
+    {
+      "topic": "No Admin Rights",
+      "text": "The installers copy into per-user folders, so no administrator password is needed on either platform."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Palette",
+      "topic": "Fusion UI",
+      "match": "palettes?",
+      "code": "",
+      "def": "A panel in Fusion that shows an HTML page; it can float or dock beside the canvas."
+    },
+    {
+      "term": "Non-modal",
+      "topic": "Fusion UI",
+      "match": "non-modal",
+      "code": "",
+      "def": "A window that stays open while you keep working in Fusion, unlike a dialog that blocks until closed."
+    },
+    {
+      "term": "Dockable",
+      "topic": "Fusion UI",
+      "match": "dockable|docked",
+      "code": "",
+      "def": "Able to attach to the side of the Fusion window; house tools dock right at about 380 px wide."
+    },
+    {
+      "term": "Add-in",
+      "topic": "Fusion API",
+      "match": "add-ins?",
+      "code": "",
+      "def": "A Python program Fusion loads with run() and unloads with stop(); it can start with Fusion and add buttons."
+    },
+    {
+      "term": "AddIns folder",
+      "topic": "Fusion API",
+      "match": "AddIns",
+      "code": "",
+      "def": "The per-user folder Fusion loads add-ins from, still under \"Autodesk Fusion 360\" on both platforms."
+    },
+    {
+      "term": "Manifest",
+      "topic": "Fusion API",
+      "match": "manifest",
+      "code": ".manifest",
+      "def": "The JSON file next to the .py that tells Fusion the add-in's id, version, product and platforms."
+    },
+    {
+      "term": "GUID",
+      "topic": "Fusion API",
+      "match": "GUID",
+      "code": "",
+      "def": "A globally unique ID; every add-in's manifest id must be its own fresh one."
+    },
+    {
+      "term": "Teardown",
+      "topic": "Fusion API",
+      "match": "teardown",
+      "code": "stop()",
+      "def": "Removing every button, the command definition and the palette in stop(), so a reload starts clean."
+    },
+    {
+      "term": "Event handler",
+      "topic": "Fusion API",
+      "match": "handlers?",
+      "code": "",
+      "def": "An object Fusion calls when something happens; it must be kept referenced or it is garbage-collected."
+    },
+    {
+      "term": "Command definition",
+      "topic": "Fusion API",
+      "match": "command definition",
+      "code": "",
+      "def": "Fusion's record of a command, which buttons point to; it carries the icon and tooltip."
+    },
+    {
+      "term": "JS↔Python bridge",
+      "topic": "Bridge",
+      "match": "bridge",
+      "code": "fusionSendData",
+      "def": "The message channel between palette.html and the add-in; every message is a JSON string, in both directions."
+    },
+    {
+      "term": "Error strip",
+      "topic": "Palette UI",
+      "match": "error strip",
+      "code": "",
+      "def": "A red bar at the top of the palette where Python errors appear."
+    },
+    {
+      "term": "House spec",
+      "topic": "Palette UI",
+      "match": "house spec|house default",
+      "code": "",
+      "def": "Swami's fixed set of features every Fusion tool must have."
+    },
+    {
+      "term": "DEFAULTS",
+      "topic": "Settings",
+      "match": "DEFAULTS",
+      "code": "DEFAULTS",
+      "def": "The dict in the .py that is both the factory settings and the list of every saved value."
+    },
+    {
+      "term": "Reset to defaults",
+      "topic": "Settings",
+      "match": "Reset",
+      "code": "",
+      "def": "The control that restores DEFAULTS, options and UI state alike, after a confirmation."
+    },
+    {
+      "term": "Preflight",
+      "topic": "Packaging",
+      "match": "preflight",
+      "code": "preflight.py",
+      "def": "The script that checks a built add-in before delivery: compile, installer syntax, names, placeholders and version."
+    },
+    {
+      "term": "Executable bit",
+      "topic": "Packaging",
+      "match": "executable",
+      "code": "chmod +x",
+      "def": "The file permission that lets a .command run on double-click; Python's zipfile drops it."
+    },
+    {
+      "term": "Gatekeeper",
+      "topic": "Packaging",
+      "match": "Gatekeeper",
+      "code": "",
+      "def": "macOS protection that blocks unsigned downloaded files until you right-click › Open once."
+    },
+    {
+      "term": "SmartScreen",
+      "topic": "Packaging",
+      "match": "SmartScreen",
+      "code": "",
+      "def": "Windows protection that may warn before running a downloaded file; More info › Run anyway."
+    },
+    {
+      "term": "Execution policy",
+      "topic": "Packaging",
+      "match": "execution policy",
+      "code": "",
+      "def": "The PowerShell setting that blocks .ps1 files; the .cmd bypasses it for one run only."
+    },
+    {
+      "term": "Keyboard shortcut",
+      "topic": "Fusion UI",
+      "match": "keyboard shortcut|Change Keyboard Shortcut",
+      "code": "",
+      "def": "A hotkey Swami assigns in Fusion; only offered for commands that have an icon and a button."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This page is the skill sheet for the Fusion palette add-in skill. It builds an Autodesk Fusion add-in to Swami's house spec: a dockable dark panel with a version in its title, saved settings with a [reset](/ɹˈiːsɛt/), and installers for the Mac and for Windows",
+    "What It Is": "What the skill is, and why one fixed house spec means no tool ships without its version, its [reset](/ɹˈiːsɛt/), its error strip, or its installer",
+    "What It Does": "Nine jobs, from asking for the name, location, and idea, through the code, the palette, the manifest, and the icon, to settings, installers, a [preflight](/pɹˈiːflaɪt/) check, and the zip",
+    "How to Use It": "Eight steps on the Mac, from asking for the tool to setting its keyboard shortcut, then six steps on Windows, where you [extract](/ɪkstɹˈækt/) the zip first",
+    "Skills It Depends On": "Two required skills: Fusion add-in scaffold for the Python rules, and Fusion add-in installer for the installers. Vibe dashboard is related, for write-ups",
+    "Programs It Depends On": "Autodesk Fusion on your computer, plus Python, Pillow, zip, and bash in Claude's workspace. Terminal runs the Mac installer and PowerShell the Windows one",
+    "Capabilities and Limitations": "It delivers a whole checked package that stays open while you work and keeps its settings. But Claude can't test it inside Fusion, and you set the keyboard shortcut yourself",
+    "Scheduled Tasks": "None. The nightly skill library refresh only packs it into a zip",
+    "Where It Runs": "It should work in any Claude session with code execution, but every surface is still marked untested",
+    "Gotchas": "Fourteen traps, from mismatched names and forgotten version bumps to lost handlers, half [resets](/ɹˈiːsɛts/), Gatekeeper, and Windows execution policy",
+    "Other Requirements": "Fusion on a Mac or on Windows ten or eleven, code execution in Claude, and the two companion skills. No admin rights are needed",
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:fc3ed485bd7f5b6d",
+    "files": [
+      "SKILL.md",
+      "assets/addin_template.py",
+      "assets/install-macos.command",
+      "assets/install-windows.cmd",
+      "assets/install-windows.ps1",
+      "assets/manifest.json",
+      "assets/palette_template.html",
+      "references/palette-bridge.md",
+      "references/palette-ui.md",
+      "references/settings-reset.md",
+      "resources/command/16x16.png",
+      "resources/command/32x32.png",
+      "resources/command/64x64.png",
+      "scripts/make_icons.py",
+      "scripts/preflight.py"
+    ],
+    "skill_updated": "Sat Nov 7, 2026",
+    "carded": "Mon Nov 9, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-palette-addin.zip",
+    "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-palette-addin/"
+  }
+}

@@ -7,6 +7,14 @@
     "published": "2026-11-08",
     "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
   },
+  "fusion-palette-addin": {
+    "title": "Fusion Palette Add-in",
+    "page": "dashboards/fusion-palette-addin/",
+    "fingerprint": "sha256:fc3ed485bd7f5b6d",
+    "skill_updated": "Sat Nov 7, 2026",
+    "published": "2026-11-09",
+    "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq"
+  },
   "makerworld-reviews": {
     "title": "MakerWorld Reviews",
     "page": "dashboards/makerworld-reviews/",
