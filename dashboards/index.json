@@ -1,12 +1,4 @@
 {
-  "artifact-sharing-audit": {
-    "title": "Artifact Sharing Audit",
-    "page": "dashboards/artifact-sharing-audit/",
-    "fingerprint": "sha256:ef47d6161db6a9aa",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
-    "draft_url": "https://claude.ai/artifact/6qrhdU6ZWuFRquQVR3L9fL"
-  },
   "facebook-comments": {
     "title": "Facebook Comments",
     "page": "dashboards/facebook-comments/",
@@ -70,14 +62,6 @@
     "skill_updated": "Sat Nov 7, 2026",
     "published": "2026-11-07",
     "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
-  },
-  "skill-dashboard": {
-    "title": "Skill Dashboard",
-    "page": "dashboards/skill-dashboard/",
-    "fingerprint": "sha256:0f3ed19055ba2c19",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
-    "draft_url": "https://claude.ai/artifact/G1Vs3fkxqU7dYUygNYfYYJ"
   },
   "vector-bitmap-graphic-finder": {
     "title": "Vector & Bitmap Graphic Finder",

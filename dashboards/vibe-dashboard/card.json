@@ -151,11 +151,6 @@
       "why": "Builds its review dashboards with this skill."
     },
     {
-      "name": "skill-dashboard",
-      "need": "Related",
-      "why": "Builds every skill sheet, this one included, on this skill's template, patches, and audio."
-    },
-    {
       "name": "vibe-promptmaker",
       "need": "Related",
       "why": "Same design system, for input forms that output prompt text."
