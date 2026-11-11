@@ -1,4 +1,4 @@
-This page is the skill sheet for the vector and bitmap graphic finder skill. It builds and edits Swami's graphic finder: a vibe dashboard with a lyve AI tool that finds vector and bitmap graphics for three D cad, three D printing, CNC, laser, and plasma.
+This page is the skill sheet for the vector and bitmap graphic finder skill. It opens, builds, and edits Swami's graphic finder: a vibe dashboard with a lyve AI tool that finds vector and bitmap graphics, and three D relief height maps, for three D cad, three D printing, CNC, laser, and plasma.
 
 Section one, Dashboard Summary. A short intro and a table of every section.
 
@@ -6,15 +6,15 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. What the skill is, and why it exists: makers need a clean vector or a sharp bitmap, and the finder turns a plain description into ranked sources.
 
-Section four, What It Does. Eight things, from the lyve finder, its filters, and its hand off buttons, through the reference sections and three D printing tips, to the script that rebuilds the page.
+Section four, What It Does. Ten things, from opening the finder with no rebuild, through the lyve finder, its filters, and its hand off buttons, to three D relief height maps, the reference sections, three D printing tips, and the script that rebuilds the page.
 
-Section five, How to Use It. Eight steps, from asking for a change to using the finder. On Windows the steps are the same, with notes on uploads and downloads.
+Section five, How to Use It. Nine steps, from opening the finder or asking for a change to using it. On Windows the steps are the same, with notes on uploads and downloads.
 
 Section six, Skills It Depends On. The vibe dashboard skill, which sets the design, and the artifact capabilities skill, only for a new copy.
 
 Section seven, Programs It Depends On. Python, the Kokoro voice, ffmpeg, and Playwright in Claude's workspace, plus a web browser. No API key is needed.
 
-Section eight, Capabilities and Limitations. It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, and lyve search works only on the published page.
+Section eight, Capabilities and Limitations. It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, lyve search works only on the published page, and some relief sites still need a browser test.
 
 Section nine, Scheduled Tasks. None of its own. The audio refresh task and the nightly GitHub backup both touch the page.
 

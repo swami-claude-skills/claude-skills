@@ -66,9 +66,9 @@
   "vector-bitmap-graphic-finder": {
     "title": "Vector & Bitmap Graphic Finder",
     "page": "dashboards/vector-bitmap-graphic-finder/",
-    "fingerprint": "sha256:3c132a0d6870a611",
-    "skill_updated": "Sun Nov 8, 2026",
-    "published": "2026-11-08",
+    "fingerprint": "sha256:bc52023de75f035f",
+    "skill_updated": "Wed Nov 11, 2026",
+    "published": "2026-11-11",
     "draft_url": "https://claude.ai/artifact/EPQj1yqnwomXi6zF8XTe6B"
   },
   "vibe-dashboard": {

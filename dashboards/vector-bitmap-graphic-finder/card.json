@@ -1,28 +1,37 @@
 {
  "skill": "vector-bitmap-graphic-finder",
  "title": "Vector & Bitmap Graphic Finder",
- "summary": "Builds and edits Swami's Vector & Bitmap Graphic Finder: a vibe dashboard with a live AI tool that finds SVG, DXF, PNG, and other graphics for 3D CAD, 3D printing, CNC, laser, and plasma.",
+ "summary": "Opens, builds, and edits Swami's Vector & Bitmap Graphic Finder: a vibe dashboard with a live AI tool that finds SVG, DXF, PNG, 3D relief heightmaps, and other graphics for 3D CAD, 3D printing, CNC, laser, and plasma.",
  "what_it_is": [
-  "A Claude skill for one specific page: the **Vector & Bitmap Graphic Finder**, published as a Claude artifact. The page is a full vibe dashboard (same design, Search section, Mind Map, Glossary, and audio overview) with a live tool inside it. You describe a graphic, paste an image link, or drop an image, and Claude suggests where to find it as a vector or bitmap file.",
-  "Around the tool, the page explains search operators, what makes a good vector or bitmap, file types, how to vectorize a bitmap (with a table of tracing tools such as Potrace, Inkscape, and Vector Magic), and the finder's limits. The skill tells Claude where the page's build sources live, how to rebuild it, and which parts of the live tool must never be changed."
+  "A Claude skill for one specific page: the **Vector & Bitmap Graphic Finder**, published as a Claude artifact. The page is a full vibe dashboard (same design, Search section, Mind Map, Glossary, and audio overview) with a live tool inside it. You describe a graphic, paste an image link, or drop an image, and Claude suggests where to find it as a vector or bitmap file, or as a 3D relief heightmap or relief model.",
+  "Around the tool, the page explains search operators, what makes a good vector or bitmap, file types, 3D relief heightmaps and depthmaps, how to vectorize a bitmap (with a table of tracing tools such as Potrace, Inkscape, and Vector Magic), and the finder's limits. The skill tells Claude where the page's build sources live, how to rebuild it, and which parts of the live tool must never be changed.",
+  "Called on its own, with no change asked, the skill simply opens the live finder so you can use it."
  ],
  "why": "Makers who cut, carve, or print a design need a clean vector (SVG or DXF) or a high-quality bitmap. The finder turns a plain description into ranked sources and hand-off searches, and the reference sections explain what to look for and how to convert what you find.",
  "what_it_does": [
+  {
+   "topic": "Open the finder",
+   "text": "Called as /vector-bitmap-graphic-finder with no change asked, it opens the live finder and gives you its link instead of rebuilding anything."
+  },
   {
    "topic": "Live finder",
    "text": "Takes a description, an image URL, or an uploaded image and asks Claude for ranked source links, shown in a sortable results table (Source, Type, Cost, CAD notes, Link)."
   },
   {
    "topic": "Filters",
-   "text": "File-type chips (SVG, DXF, PNG, JPG, GIF, WEBP) and style chips (Free only, Silhouette, Black & white, Color, Clipart), all on by default."
+   "text": "File-type chips (SVG, DXF, PNG, JPG, GIF, WEBP) and style chips (Free only, Silhouette, Black & white, Color, Clipart), all on by default, plus 3D Relief chips (Heightmap, Depthmap, and Relief STL) that start off."
   },
   {
    "topic": "Hand-offs",
-   "text": "One-click searches on Google, Bing, Brave, and DuckDuckGo, and on the SVGrepo, FreeSVG, and Freepik vector sites, built from your description and filters."
+   "text": "One-click searches on Google, Bing, Brave, and DuckDuckGo, on the SVGrepo, FreeSVG, and Freepik vector sites, and on the 3D relief sites yeggi, STLFinder, and ambientCG, plus a Make a relief button that opens the Image to Relief Generator."
+  },
+  {
+   "topic": "3D relief",
+   "text": "Finds grayscale heightmaps and depthmaps (white is high) for CNC 3D carving, laser 3D engraving, and lithophanes, and ready-made relief STL models, as separate filters and separate result types."
   },
   {
    "topic": "Reference sections",
-   "text": "Sections on search operators, what makes a good vector or bitmap, file types, vectorizing a bitmap, and the finder's limits and caveats."
+   "text": "Sections on search operators, what makes a good vector or bitmap, file types, 3D relief heightmaps and depthmaps, vectorizing a bitmap, and the finder's limits and caveats."
   },
   {
    "topic": "3D printing tips",
@@ -30,7 +39,7 @@
   },
   {
    "topic": "Vibe dashboard parts",
-   "text": "Dashboard Summary, Search, Mind Map, a 31-term Glossary, and a spoken audio overview, all from the vibe-dashboard skill."
+   "text": "Dashboard Summary, Search, Mind Map, a 36-term Glossary, and a spoken audio overview, all from the vibe-dashboard skill."
   },
   {
    "topic": "Script-built",
@@ -42,11 +51,18 @@
   }
  ],
  "triggers": [
+  "\"/vector-bitmap-graphic-finder\" or \"open the graphic finder\"",
+  "\"Find a lion heightmap for my CNC\" (opens the finder; turn on the 3D Relief filters)",
   "\"Add Vector Magic to the vectorize table in the graphic finder\"",
   "\"Add a glossary term to the graphic finder\"",
   "\"Make a copy of the graphic finder\" / \"build a similar finder for …\""
  ],
  "how_to_use": [
+  {
+   "topic": "Open",
+   "step": "Call /vector-bitmap-graphic-finder with no change, or ask Claude to open the finder: Claude opens the live page and gives you its link, with no rebuild.",
+   "who": "Swami"
+  },
   {
    "topic": "Ask",
    "step": "Tell Claude the change you want to the finder (a new tool row, glossary term, section text), or ask for a copy.",
@@ -214,6 +230,10 @@
   {
    "topic": "One page",
    "text": "The skill is built around one artifact and its published sources; a new copy needs its own permissions and audio wiring."
+  },
+  {
+   "topic": "Relief sites",
+   "text": "The 3D relief row has yeggi, STLFinder, and ambientCG. yeggi's search link hasn't been confirmed yet, and Etsy and CGTrader wait until their links are tested in a real browser."
   }
  ],
  "scheduled_tasks": {
@@ -439,18 +459,25 @@
    "match": "artifacts?",
    "code": "",
    "def": "A web page Claude publishes on claude.ai; it starts private."
+  },
+  {
+   "term": "Heightmap",
+   "topic": "Finder",
+   "match": "heightmaps?|depthmaps?",
+   "code": "",
+   "def": "A grayscale image where brightness is height, usually white high and black low, used to carve, engrave, or print a 3D relief."
   }
  ],
  "confirm": [],
  "spoken": {
-  "_intro": "This page is the skill sheet for the vector and bitmap graphic finder skill. It builds and edits Swami's graphic finder: a vibe dashboard with a lyve AI tool that finds vector and bitmap graphics for three D cad, three D printing, CNC, laser, and plasma.",
+  "_intro": "This page is the skill sheet for the vector and bitmap graphic finder skill. It opens, builds, and edits Swami's graphic finder: a vibe dashboard with a lyve AI tool that finds vector and bitmap graphics, and three D relief height maps, for three D cad, three D printing, CNC, laser, and plasma.",
   "Dashboard Summary": "A short intro and a table of every section",
   "What It Is": "What the skill is, and why it exists: makers need a clean vector or a sharp bitmap, and the finder turns a plain description into ranked sources",
-  "What It Does": "Eight things, from the lyve finder, its filters, and its hand off buttons, through the reference sections and three D printing tips, to the script that rebuilds the page",
-  "How to Use It": "Eight steps, from asking for a change to using the finder. On Windows the steps are the same, with notes on uploads and downloads",
+  "What It Does": "Ten things, from opening the finder with no rebuild, through the lyve finder, its filters, and its hand off buttons, to three D relief height maps, the reference sections, three D printing tips, and the script that rebuilds the page",
+  "How to Use It": "Nine steps, from opening the finder or asking for a change to using it. On Windows the steps are the same, with notes on uploads and downloads",
   "Skills It Depends On": "The vibe dashboard skill, which sets the design, and the artifact capabilities skill, only for a new copy",
   "Programs It Depends On": "Python, the Kokoro voice, ffmpeg, and Playwright in Claude's workspace, plus a web browser. No API key is needed",
-  "Capabilities and Limitations": "It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, and lyve search works only on the published page",
+  "Capabilities and Limitations": "It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, lyve search works only on the published page, and some relief sites still need a browser test",
   "Scheduled Tasks": "None of its own. The audio refresh task and the nightly GitHub backup both touch the page",
   "Where It Runs": "It works in any Claude app session. Windows and mobile are untested. In other assistants it works partly: the main finder button needs Claude, but the search engine buttons still work",
   "Gotchas": "Eight traps, from a capital S that links to the wrong section, to the stress check, to the audio player that a rebuild drops",
@@ -459,13 +486,13 @@
  },
  "meta": {
   "card_version": 1,
-  "fingerprint": "sha256:3c132a0d6870a611",
+  "fingerprint": "sha256:bc52023de75f035f",
   "files": [
    "SKILL.md",
    "assets/template.html"
   ],
-  "skill_updated": "Sun Nov 8, 2026",
-  "carded": "Sun Nov 8, 2026",
+  "skill_updated": "Wed Nov 11, 2026",
+  "carded": "Wed Nov 11, 2026",
   "status": "published",
   "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vector-bitmap-graphic-finder.zip",
   "draft_url": "https://claude.ai/artifact/EPQj1yqnwomXi6zF8XTe6B",
