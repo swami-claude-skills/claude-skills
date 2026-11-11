@@ -62,8 +62,8 @@
       "who": "Swami"
     },
     {
-      "topic": "Or let Claude",
-      "step": "When the chat is linked to the Mac with a shell, Claude runs `ytx -n \"URL\"` itself and reads the files; skip the next step.",
+      "topic": "Linked computer",
+      "step": "When the chat is linked to your computer, Claude can read the files from your `~/yt` folder once you grant access, instead of an upload. It never runs ytx there: that shell is a sandboxed workspace, not your Mac.",
       "who": "Claude"
     },
     {
@@ -268,13 +268,13 @@
     },
     {
       "where": "Claude desktop app linked to the Mac",
-      "status": "Untested",
-      "notes": "When a shell on the Mac is available, Claude can run `ytx -n` itself and read the folder, so there's nothing to upload. Not tried yet; Swami runs ytx himself."
+      "status": "Partial",
+      "notes": "Claude can read the files from your `~/yt` folder once you grant it access, so there's no upload step. It can't run ytx or yt-dlp there: the linked computer's shell is a sandboxed workspace that sees only connected folders, not your Mac's Terminal. You still run ytx yourself."
     },
     {
       "where": "Claude desktop app linked to a Windows PC",
       "status": "Untested",
-      "notes": "Claude could run ytx.ps1 through the linked PC; ytx.ps1 itself hasn't run on a real PC yet."
+      "notes": "Claude could read the files from your connected `yt` folder, but can't run ytx.ps1 through the linked PC's sandboxed shell; you run it. ytx.ps1 itself hasn't run on a real PC yet."
     },
     {
       "where": "Claude mobile app",
@@ -312,6 +312,18 @@
     {
       "topic": "Cloud can't reach",
       "text": "Claude's cloud workspace can't reach youtube.com, so it can't download anything itself."
+    },
+    {
+      "topic": "Linked shell",
+      "text": "A chat linked to your computer gets a sandboxed workspace there, not your Mac's Terminal. It has no ytx and usually can't reach YouTube, so you always run ytx yourself."
+    },
+    {
+      "topic": "Missing comments",
+      "text": "A `~/yt/<video-id>/` folder from a run without `-c` has no comments. Run `ytx -c URL` again instead of letting Claude look for another route."
+    },
+    {
+      "topic": "Browser only if asked",
+      "text": "Claude must ask before switching to the app's browser for anything; for comments the browser route is partial."
     },
     {
       "topic": "yt-dlp failed",
@@ -369,7 +381,7 @@
     },
     {
       "topic": "File upload",
-      "text": "Upload `transcript.md` and the `.info.json` (or a zip) unless Claude runs ytx through a linked Mac."
+      "text": "Upload `transcript.md` and the `.info.json` (or a zip), unless the chat is linked and Claude reads them from your `~/yt` folder."
     },
     {
       "topic": "Internet on the computer",
@@ -526,7 +538,7 @@
       "topic": "Output",
       "match": "linked to the Mac|linked Mac",
       "code": "",
-      "def": "A chat connected to Swami's Mac through the Claude desktop app, letting Claude run ytx there itself."
+      "def": "A chat connected to Swami's Mac through the Claude desktop app. Claude can read files from folders he connects, but its shell there is a sandboxed workspace, so it can't run ytx."
     }
   ],
   "confirm": [],
@@ -535,19 +547,19 @@
     "Dashboard Summary": "A short intro and a table of every section",
     "What It Is": "What the skill is, and why it exists: Claude's cloud workspace can't reach YouTube, and YouTube refused transcripts in the Claude app's browser, so YTX runs on Swami's own computer. Since version one point two, both versions of YTX come inside the skill",
     "What It Does": "Nine things it handles: the linked transcript, asking YouTube for just one caption track, a plain text copy, the chapter list, comments, a chapter by chapter summary, a dashboard in the current vibe dashboard format, care with other people's videos, and a Windows version",
-    "How to Use It": "What to ask for, then seven steps on the Mac: ask, run YTX from the Desktop icon, or let Claude run it on a linked Mac, [upload](/ʌplˈoʊd/) the files, and get the summary and dashboard. A second table gives six steps on Windows, starting with a one time install",
+    "How to Use It": "What to ask for, then seven steps on the Mac: ask, run YTX from the Desktop icon, [upload](/ʌplˈoʊd/) the files, or let Claude read them from a linked computer, and get the summary and dashboard. A second table gives six steps on Windows, starting with a one time install",
     "Skills It Depends On": "The vibe dashboard skill for dashboards and the YouTube comments skill for comments, plus the built in browser as a last resort for chapters only. MakerWorld reviews and Facebook comments are related siblings",
     "Programs It Depends On": "YTX and why-tee-dee-ell-pee on the computer, Python on the Mac, Terminal or PowerShell, and optionally Deno and Python in Claude's workspace. A web browser is not needed. Each program has Mac and Windows notes",
     "Capabilities and Limitations": "It gives clickable times with no API key, for any length of video. But it needs a computer, needs captions, quotes auto-captions with care, summarizes other people's videos instead of copying them, and the Windows version is untested",
     "Scheduled Tasks": "None. The skill runs only when asked",
-    "Where It Runs": "It works in any Claude app session when Swami [uploads](/ʌplˈoʊdz/) the files. A linked Mac or Windows PC, Claude Code, and other assistants are untested; Swami tests in Claude only",
-    "Gotchas": "Thirteen traps, from YouTube refusing the app's browser, to outdated why-tee-dee-ell-pee, the four twenty-nine error, typing commands in Terminal rather than the chat, missing captions, never searching the whole home folder, and links with an ampersand on Windows",
+    "Where It Runs": "It works in any Claude app session when Swami [uploads](/ʌplˈoʊdz/) the files. In a chat linked to the Mac, Claude can read the files but can't run YTX, so that's partial. A linked Windows PC, Claude Code, and other assistants are untested; Swami tests in Claude only",
+    "Gotchas": "Sixteen traps, from YouTube refusing the app's browser, a linked computer's shell not being the Mac, outdated why-tee-dee-ell-pee, the four twenty-nine error, typing commands in Terminal rather than the chat, missing captions or comments, and links with an ampersand on Windows",
     "Other Requirements": "A Mac or a Windows ten or eleven PC with YTX installed, an admin password once on the Mac, a way to [upload](/ʌplˈoʊd/) the files, internet on the computer, and code execution for dashboards",
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
-    "card_version": 2,
-    "fingerprint": "sha256:cab3eecc88ea6ec7",
+    "card_version": 3,
+    "fingerprint": "sha256:cee3c071ff1fcbe4",
     "files": [
       "SKILL.md",
       "scripts/ytx",

@@ -90,17 +90,17 @@
   "youtube-comments": {
     "title": "YouTube Comments",
     "page": "dashboards/youtube-comments/",
-    "fingerprint": "sha256:f7525ca010d646fe",
-    "skill_updated": "Sat Nov 7, 2026",
-    "published": "2026-11-07",
+    "fingerprint": "sha256:adbfe50de229dd73",
+    "skill_updated": "Tue Nov 10, 2026",
+    "published": "2026-11-11",
     "draft_url": "https://claude.ai/artifact/D9nX5ELyD12Qvd52DAY89p"
   },
   "youtube-transcript": {
     "title": "YouTube Transcript",
     "page": "dashboards/youtube-transcript/",
-    "fingerprint": "sha256:cab3eecc88ea6ec7",
+    "fingerprint": "sha256:cee3c071ff1fcbe4",
     "skill_updated": "Tue Nov 10, 2026",
-    "published": "2026-11-10",
+    "published": "2026-11-11",
     "draft_url": "https://claude.ai/artifact/T9Bmgn8JhtQPyTc8Z24Rg2"
   }
 }

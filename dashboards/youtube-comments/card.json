@@ -38,7 +38,7 @@
     },
     {
       "topic": "Fallback",
-      "text": "When yt-dlp is not an option, a browser-console script loads and expands the comments for copying (partial: reply nesting is flattened)."
+      "text": "Only with Swami's OK, and only when yt-dlp and ytx can't run: a browser-console script loads and expands the comments for copying (partial: reply nesting is flattened)."
     }
   ],
   "triggers": [
@@ -58,12 +58,12 @@
     },
     {
       "topic": "Extract",
-      "step": "Quickest: `ytx -c \"VIDEO_URL\"`, or copy the link, double-click **YouTube Transcript** on the Desktop, and answer y for comments. Or paste Claude's yt-dlp commands (folder `~/yt/SHORTNAME`, `--skip-download --write-comments --write-info-json`). It may sit quiet for a minute or more.",
-      "who": "Swami (or Claude, through a linked Mac shell)"
+      "step": "Quickest: `ytx -c \"VIDEO_URL\"`, or copy the link, double-click **YouTube Transcript** on the Desktop, and answer y for comments. Or paste Claude's yt-dlp commands (folder `~/yt/SHORTNAME`, `--skip-download --write-comments --write-info-json`). It may sit quiet for a minute or more. Claude never runs the extraction itself, even in a linked chat.",
+      "who": "Swami"
     },
     {
       "topic": "Upload",
-      "step": "Upload the `TITLE [VIDEOID].info.json` file from that folder to the chat. It is often over 1 MB.",
+      "step": "Upload the `TITLE [VIDEOID].info.json` file from that folder to the chat (it is often over 1 MB). In a chat linked to your computer, Claude can read it from your `~/yt` folder instead, once you grant access.",
       "who": "Swami"
     },
     {
@@ -165,7 +165,7 @@
   "limitations": [
     {
       "topic": "Cloud can't reach YouTube",
-      "text": "Claude's cloud workspace usually cannot reach youtube.com, so the download runs on the Mac (or through a linked Mac shell), never from the workspace."
+      "text": "Claude's cloud workspace usually cannot reach youtube.com, and neither can a linked computer's sandboxed shell, so the download always runs on your Mac or PC, by you."
     },
     {
       "topic": "Counts drift",
@@ -177,7 +177,7 @@
     },
     {
       "topic": "Fallback is partial",
-      "text": "The browser-console fallback flattens reply nesting and may miss comments."
+      "text": "The browser-console fallback flattens reply nesting and may miss comments, so Claude offers it only with your OK, when yt-dlp and ytx can't run."
     },
     {
       "topic": "One video at a time",
@@ -185,7 +185,7 @@
     },
     {
       "topic": "New Windows port",
-      "text": "ytx.ps1 hasn't been run on a real Windows PC yet. Its built-in `ytx -SelfTest` checks that its output matches the Mac ytx."
+      "text": "ytx.ps1 1.2.0 was rebuilt from the Mac script and has never been run on a real Windows PC. Its built-in `ytx -SelfTest` checks its results against the Mac ytx."
     }
   ],
   "scheduled_tasks": {
@@ -200,13 +200,13 @@
     },
     {
       "where": "Claude desktop app linked to the Mac",
-      "status": "Yes",
-      "notes": "Claude can run yt-dlp itself through the linked Mac shell, in a per-video folder. No upload step."
+      "status": "Partial",
+      "notes": "Claude can read the files from your `~/yt` folder once you grant it access, so there's no upload step. It can't run ytx or yt-dlp there: the linked computer's shell is a sandboxed workspace that sees only connected folders, not your Mac's Terminal. You still run the extraction."
     },
     {
       "where": "Claude desktop app linked to a Windows PC",
       "status": "Untested",
-      "notes": "Claude could run the PowerShell commands through the linked PC instead of you; not tried yet."
+      "notes": "Claude could read the `.info.json` from your connected `yt` folder, but can't run the PowerShell commands through the linked PC's sandboxed shell; you run them. Not tried yet."
     },
     {
       "where": "Claude mobile app",
@@ -266,6 +266,18 @@
       "text": "Don't retry the download from Claude's workspace with curl or another route; the network allowlist blocks it."
     },
     {
+      "topic": "Linked shell",
+      "text": "A chat linked to your computer gets a sandboxed workspace there, not your Mac's Terminal. It has no ytx and usually can't reach YouTube, so you run the extraction yourself."
+    },
+    {
+      "topic": "Transcript folder",
+      "text": "A `~/yt/<video-id>/` folder left by a transcript run without `-c` has no comments in its `.info.json`. Run `ytx -c \"VIDEO_URL\"` to download it again with comments."
+    },
+    {
+      "topic": "Browser only if asked",
+      "text": "In Nov 2026 a chat switched to the app's browser on its own when it found no comments. The skill now forbids that: Claude must ask first, since the browser route is partial."
+    },
+    {
       "topic": "Renamed uploads",
       "text": "Uploads may have spaces and brackets replaced with underscores; the processing script's file match handles that."
     },
@@ -297,7 +309,7 @@
   "requirements": [
     {
       "topic": "A Mac or Windows PC",
-      "text": "macOS 10.15 or newer with an admin password for the one-time install, or Windows 10 or 11 with PowerShell (or a linked Mac shell)."
+      "text": "macOS 10.15 or newer with an admin password for the one-time install, or Windows 10 or 11 with PowerShell."
     },
     {
       "topic": "Code execution",
@@ -305,7 +317,7 @@
     },
     {
       "topic": "File upload",
-      "text": "The `.info.json` file must be uploaded to the chat unless Claude runs yt-dlp through a linked Mac."
+      "text": "Upload the `.info.json` file to the chat, unless the chat is linked and Claude reads it from your `~/yt` folder."
     },
     {
       "topic": "Internet on the computer",
@@ -335,7 +347,7 @@
       "term": "ytx",
       "topic": "Tools",
       "match": "ytx",
-      "code": "ytx -c \"VIDEO_URL\"|ytx -v|ytx -n -c \"VIDEO_URL\"|ytx -v|ytx -SelfTest|ytx -p|ytx.ps1",
+      "code": "ytx -c \"VIDEO_URL\"|ytx -v|ytx -v|ytx -SelfTest|ytx -p|ytx.ps1",
       "def": "Swami's command-line tool that wraps yt-dlp: a Bash script on the Mac and ytx.ps1, a PowerShell port, on Windows. `ytx -c` pulls a video's comments into a yt folder along with a threaded text file."
     },
     {
@@ -409,11 +421,11 @@
       "def": "Claude's ability to run code and create files, which this skill needs for processing."
     },
     {
-      "term": "Linked Mac shell",
+      "term": "Linked computer",
       "topic": "Claude",
-      "match": "linked Mac(?: shell)?",
+      "match": "linked computer|linked to (?:the|your) (?:Mac|computer)|linked (?:Mac|Windows PC|chat)",
       "code": "",
-      "def": "When a Claude conversation is linked to Swami's Mac through the desktop app, Claude can run commands there directly."
+      "def": "The shell Claude gets when a chat is linked to Swami's Mac through the desktop app. It is a sandboxed workspace that sees only connected folders, not the Mac's Terminal, so it can read the files but can't run ytx or yt-dlp."
     },
     {
       "term": "Cloud workspace",
@@ -470,24 +482,24 @@
     "_intro": "This page is the skill sheet for the YouTube comments skill. It gets every comment and reply on a YouTube video with the free tool why-tee-dee-ell-pee, or Swami's YTX shortcut on a Mac or Windows PC, then turns them into threads for analysis or a vibe dashboard.",
     "What It Is": "What the skill is, and why it exists: copying comments by hand once caught only seventy five of four hundred and seventy four",
     "What It Does": "Eight things it handles, from ready to paste commands and full extraction, to stats, a threaded text file, a dashboard, a table, an export, and a browser fallback",
-    "How to Use It": "What to ask for, then six steps on the Mac: ask, install once, [extract](/ɪkstɹˈækt/) with YTX or why-tee-dee-ell-pee, [upload](/ʌplˈoʊd/) the file, let Claude process it, and choose the hand off. A second table gives the same steps on Windows, with the PowerShell version of YTX",
+    "How to Use It": "What to ask for, then six steps on the Mac: ask, install once, [extract](/ɪkstɹˈækt/) with YTX or why-tee-dee-ell-pee yourself, [upload](/ʌplˈoʊd/) the file or let Claude read it from a linked Mac, let Claude process it, and choose the hand off. A second table gives the same steps on Windows, with the PowerShell version of YTX",
     "Skills It Depends On": "None are required. The vibe dashboard skill is used for dashboards, the XLSX skill for spreadsheet exports, and the YouTube transcript skill is a related sibling that explains how to install YTX",
     "Programs It Depends On": "Why-tee-dee-ell-pee and Swami's YTX shortcut, which now has a PowerShell version for Windows, plus Terminal or PowerShell, Python in Claude's workspace, and optionally [Deno](/dˈiːnoʊ/) and a web browser. Each program has macOS and Windows install notes",
-    "Capabilities and Limitations": "It gets the complete comment tree with no API key. But Claude's cloud workspace can't reach YouTube, comment counts drift, YouTube changes can break older versions, and the Windows YTX is new and not yet tried on a real PC",
+    "Capabilities and Limitations": "It gets the complete comment tree with no API key. But neither Claude's cloud workspace nor a linked computer's shell can reach YouTube, comment counts drift, YouTube changes can break older versions, the browser fallback is partial and needs Swami's OK, and the Windows YTX has never been run",
     "Scheduled Tasks": "None. The skill runs only when asked",
-    "Where It Runs": "It works in any Claude app session with code execution on, and best in the desktop app linked to the Mac. A linked Windows PC, Claude Code, and other AI assistants are not tested; Swami tests in Claude only",
-    "Gotchas": "Fourteen traps, the biggest being that a reply depth of one silently drops every reply. Four are for Windows, and one covers a missing [Deno](/dˈiːnoʊ/)",
+    "Where It Runs": "It works in any Claude app session with code execution on. In a chat linked to the Mac, Claude can read the file but can't run the extraction, so that's partial. A linked Windows PC, Claude Code, and other AI assistants are not tested; Swami tests in Claude only",
+    "Gotchas": "Seventeen traps, the biggest being that a reply depth of one silently drops every reply. Three cover linked computers, folders without comments, and never switching to the browser on its own; four are for Windows, and one covers a missing [Deno](/dˈiːnoʊ/)",
     "Other Requirements": "A Mac running macOS ten fifteen or newer, or a Windows ten or eleven PC, plus code execution, a way to [upload](/ʌplˈoʊd/) the file, and internet on the computer",
     "Card and Freshness": "Which version of the skill this page describes and its fingerprint"
   },
   "meta": {
-    "card_version": 5,
-    "fingerprint": "sha256:f7525ca010d646fe",
+    "card_version": 6,
+    "fingerprint": "sha256:adbfe50de229dd73",
     "files": [
       "SKILL.md"
     ],
-    "skill_updated": "Sat Nov 7, 2026",
-    "carded": "Sat Nov 7, 2026",
+    "skill_updated": "Tue Nov 10, 2026",
+    "carded": "Tue Nov 10, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/youtube-comments.zip",
     "draft_url": "https://claude.ai/artifact/D9nX5ELyD12Qvd52DAY89p",
