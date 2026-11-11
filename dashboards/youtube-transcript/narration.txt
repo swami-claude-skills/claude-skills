@@ -4,9 +4,9 @@ Section one, Dashboard Summary. A short intro and a table of every section.
 
 Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
 
-Section three, What It Is. What the skill is, and why it exists: Claude's cloud workspace can't reach YouTube, and YouTube refused transcripts in the Claude app's browser, so YTX runs on Swami's own computer.
+Section three, What It Is. What the skill is, and why it exists: Claude's cloud workspace can't reach YouTube, and YouTube refused transcripts in the Claude app's browser, so YTX runs on Swami's own computer. Since version one point two, both versions of YTX come inside the skill.
 
-Section four, What It Does. Eight things it handles: the linked transcript, a plain text copy, the chapter list, comments, a chapter by chapter summary, a dashboard in the current vibe dashboard format, care with other people's videos, and a Windows version.
+Section four, What It Does. Nine things it handles: the linked transcript, asking YouTube for just one caption track, a plain text copy, the chapter list, comments, a chapter by chapter summary, a dashboard in the current vibe dashboard format, care with other people's videos, and a Windows version.
 
 Section five, How to Use It. What to ask for, then seven steps on the Mac: ask, run YTX from the Desktop icon, or let Claude run it on a linked Mac, [upload](/ʌplˈoʊd/) the files, and get the summary and dashboard. A second table gives six steps on Windows, starting with a one time install.
 
@@ -20,7 +20,7 @@ Section nine, Scheduled Tasks. None. The skill runs only when asked.
 
 Section ten, Where It Runs. It works in any Claude app session when Swami [uploads](/ʌplˈoʊdz/) the files. A linked Mac or Windows PC, Claude Code, and other assistants are untested; Swami tests in Claude only.
 
-Section eleven, Gotchas. Eleven traps, from YouTube refusing the app's browser, to outdated why-tee-dee-ell-pee, missing captions, never searching the whole home folder, and links with an ampersand on Windows.
+Section eleven, Gotchas. Thirteen traps, from YouTube refusing the app's browser, to outdated why-tee-dee-ell-pee, the four twenty-nine error, typing commands in Terminal rather than the chat, missing captions, never searching the whole home folder, and links with an ampersand on Windows.
 
 Section twelve, Other Requirements. A Mac or a Windows ten or eleven PC with YTX installed, an admin password once on the Mac, a way to [upload](/ʌplˈoʊd/) the files, internet on the computer, and code execution for dashboards.
 

@@ -98,9 +98,9 @@
   "youtube-transcript": {
     "title": "YouTube Transcript",
     "page": "dashboards/youtube-transcript/",
-    "fingerprint": "sha256:38b05e275cc285b6",
-    "skill_updated": "Sat Nov 7, 2026",
-    "published": "2026-11-07",
+    "fingerprint": "sha256:cab3eecc88ea6ec7",
+    "skill_updated": "Tue Nov 10, 2026",
+    "published": "2026-11-10",
     "draft_url": "https://claude.ai/artifact/T9Bmgn8JhtQPyTc8Z24Rg2"
   }
 }

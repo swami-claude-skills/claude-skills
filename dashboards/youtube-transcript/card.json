@@ -3,14 +3,18 @@
   "title": "YouTube Transcript",
   "summary": "Turns a YouTube link into a timestamped transcript and a chapter list where every time is a clickable link, optionally with the full comment tree, then summarizes it or builds a vibe dashboard.",
   "what_it_is": [
-    "A Claude skill built around **ytx**, Swami's own command-line tool that wraps yt-dlp. One command (or one double-click on a Desktop icon) saves a video's transcript, chapters, and details into a folder, and Claude works from those files.",
+    "A Claude skill built around **ytx**, Swami's own command-line tool that wraps yt-dlp. One command (or one double-click on a Desktop icon) saves a video's transcript, chapters, and details into a folder, and Claude works from those files. Since version 1.2.0, both versions of ytx ship inside the skill: `scripts/ytx` for the Mac and `scripts/ytx.ps1` for Windows.",
     "By default Claude answers in chat: the video's title, channel, date, and length, then one short summary per chapter with clickable timestamps. On request it builds a vibe dashboard instead, and with comments added it pulls in the youtube-comments skill's threads."
   ],
   "why": "Claude's cloud workspace can't reach youtube.com, and in Oct 2026 YouTube refused the Claude app's browser for transcripts (an empty transcript panel, errors, and empty caption files). Running ytx on Swami's own computer is the dependable way in.",
   "what_it_does": [
     {
       "topic": "Transcript",
-      "text": "Saves `transcript.md`: the title, channel, date, length, chapter list, and roughly 20-second paragraphs under chapter headings, with every `[m:ss]` stamp linked to that moment on YouTube."
+      "text": "Saves `transcript.md`: the title, channel, date, length, chapter list, and roughly 20-second paragraphs under chapter headings, with every `[m:ss]` stamp linked to that moment on YouTube, starting at 0:00."
+    },
+    {
+      "topic": "One caption track",
+      "text": "Downloads the video's details first, then asks YouTube for one caption track: the creator's English subtitles, else the original auto track `en-orig`, else `en`. If YouTube refuses one, it says why and tries the next. This avoids the HTTP 429 error that asking for every English track caused in Nov 2026."
     },
     {
       "topic": "Plain text",
@@ -38,7 +42,7 @@
     },
     {
       "topic": "Windows",
-      "text": "`ytx.ps1` is a PowerShell port with the same commands and output, plus an offline self-test against the Mac version."
+      "text": "`ytx.ps1` is a PowerShell port of ytx 1.2.0 with the same commands and output, plus an offline self-test against the Mac version's results. It was rebuilt from the Mac script and has never been run."
     }
   ],
   "triggers": [
@@ -86,12 +90,12 @@
   "how_to_use_windows": [
     {
       "topic": "Install once",
-      "step": "Run `winget install yt-dlp.yt-dlp` in PowerShell. Save `ytx.ps1` (Claude writes it when asked) to Downloads and run `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`.",
+      "step": "Run `winget install yt-dlp.yt-dlp` in PowerShell. Unzip `youtube-transcript.zip` in Downloads, copy `youtube-transcript\\scripts\\ytx.ps1` to Downloads, and run `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`.",
       "who": "You"
     },
     {
       "topic": "Check",
-      "step": "Close and reopen PowerShell, then run `ytx -v` (prints `ytx 1.1.0-win`) and `ytx -SelfTest` (every line PASS).",
+      "step": "Close and reopen PowerShell, then run `ytx -v` (prints `ytx 1.2.0-win`) and `ytx -SelfTest` (every line PASS).",
       "who": "You"
     },
     {
@@ -111,7 +115,7 @@
     },
     {
       "topic": "Answer",
-      "step": "Claude summarizes by chapter and offers the dashboard, exactly as on the Mac. ytx.ps1 hasn't run on a real PC yet, so treat the first run as a test.",
+      "step": "Claude summarizes by chapter and offers the dashboard, exactly as on the Mac. ytx.ps1 has never been run on a real PC, so treat the first run as a test and send Claude a screenshot of `ytx -SelfTest`.",
       "who": "Claude"
     }
   ],
@@ -147,9 +151,9 @@
       "name": "ytx",
       "need": "Required",
       "where": "Mac or Windows PC",
-      "why": "Swami's one-step wrapper around yt-dlp: `ytx URL` (or the Desktop icon) saves the transcript, chapters, and details into `~/yt/<video-id>/`; `-c` adds comments.",
-      "install": "A Bash script installed to `/usr/local/bin/ytx`. Claude writes the file when asked; save it to Downloads and run the one-line `sudo cp …` install from the skill, which also clears the quarantine flag and makes the Desktop icon.",
-      "install_windows": "`ytx.ps1`, the PowerShell port (same commands and output, no Python). Install with `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`, reopen PowerShell, then run `ytx -SelfTest`."
+      "why": "Swami's one-step wrapper around yt-dlp: `ytx URL` (or the Desktop icon) saves the transcript, chapters, and details into `~/yt/<video-id>/`; `-c` adds comments. Version 1.2.0 asks YouTube for one caption track at a time.",
+      "install": "A Bash script installed to `/usr/local/bin/ytx`, shipped in the skill zip as `scripts/ytx`. Unzip the zip in Downloads and run the one-line `sudo cp …` install from the skill, which also clears the quarantine flag and makes the Desktop icon. `ytx -v` prints `ytx 1.2.0`.",
+      "install_windows": "`ytx.ps1`, the PowerShell port in the skill zip as `scripts/ytx.ps1` (same commands and output, no Python). Install with `powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\Downloads\\ytx.ps1\" -Install`, reopen PowerShell, then run `ytx -SelfTest`."
     },
     {
       "name": "yt-dlp",
@@ -249,7 +253,7 @@
     },
     {
       "topic": "Windows untested",
-      "text": "ytx.ps1 has not been run on a real Windows PC yet."
+      "text": "ytx.ps1 1.2.0 was rebuilt from the Mac script after the 1.1.0 Windows file was lost, and has never been run on a real Windows PC."
     }
   ],
   "scheduled_tasks": {
@@ -312,6 +316,14 @@
     {
       "topic": "yt-dlp failed",
       "text": "Run `sudo yt-dlp -U` (YouTube changes break old versions), then retry."
+    },
+    {
+      "topic": "HTTP 429",
+      "text": "\"HTTP Error 429: Too Many Requests\" on captions means YouTube refused the download. Check `ytx -v`: below 1.2.0, install 1.2.0 from the skill zip; on 1.2.0, wait 15 to 30 minutes and run ytx again."
+    },
+    {
+      "topic": "Where to type",
+      "text": "Commands go in Terminal (or PowerShell), not in the chat, and only the command itself, without words like \"run\". `ytx URL` doesn't ask about comments; only the Desktop icon asks."
     },
     {
       "topic": "Harmless warning",
@@ -389,6 +401,20 @@
       "match": "yt-dlp",
       "code": "yt-dlp|sudo yt-dlp -U|yt-dlp -U|winget install yt-dlp.yt-dlp|winget upgrade yt-dlp.yt-dlp",
       "def": "A free command-line downloader for YouTube and other sites; ytx uses it to fetch captions, chapters, details, and comments."
+    },
+    {
+      "term": "en-orig",
+      "topic": "Video",
+      "match": "en-orig",
+      "code": "en-orig",
+      "def": "YouTube's original automatic English caption track. ytx 1.2.0 downloads it when the creator added no English subtitles."
+    },
+    {
+      "term": "HTTP 429",
+      "topic": "Video",
+      "match": "429",
+      "code": "",
+      "def": "\"Too Many Requests\": YouTube refusing a download for a while. ytx 1.1.0 hit it on the extra en caption track; 1.2.0 avoids it."
     },
     {
       "term": "Desktop icon",
@@ -507,26 +533,28 @@
   "spoken": {
     "_intro": "This page is the skill sheet for the YouTube transcript skill. It turns a YouTube link into a timestamped transcript and a chapter list where every time is a clickable link, optionally with all the comments, then summarizes the video or builds a vibe dashboard.",
     "Dashboard Summary": "A short intro and a table of every section",
-    "What It Is": "What the skill is, and why it exists: Claude's cloud workspace can't reach YouTube, and YouTube refused transcripts in the Claude app's browser, so YTX runs on Swami's own computer",
-    "What It Does": "Eight things it handles: the linked transcript, a plain text copy, the chapter list, comments, a chapter by chapter summary, a dashboard in the current vibe dashboard format, care with other people's videos, and a Windows version",
+    "What It Is": "What the skill is, and why it exists: Claude's cloud workspace can't reach YouTube, and YouTube refused transcripts in the Claude app's browser, so YTX runs on Swami's own computer. Since version one point two, both versions of YTX come inside the skill",
+    "What It Does": "Nine things it handles: the linked transcript, asking YouTube for just one caption track, a plain text copy, the chapter list, comments, a chapter by chapter summary, a dashboard in the current vibe dashboard format, care with other people's videos, and a Windows version",
     "How to Use It": "What to ask for, then seven steps on the Mac: ask, run YTX from the Desktop icon, or let Claude run it on a linked Mac, [upload](/ʌplˈoʊd/) the files, and get the summary and dashboard. A second table gives six steps on Windows, starting with a one time install",
     "Skills It Depends On": "The vibe dashboard skill for dashboards and the YouTube comments skill for comments, plus the built in browser as a last resort for chapters only. MakerWorld reviews and Facebook comments are related siblings",
     "Programs It Depends On": "YTX and why-tee-dee-ell-pee on the computer, Python on the Mac, Terminal or PowerShell, and optionally Deno and Python in Claude's workspace. A web browser is not needed. Each program has Mac and Windows notes",
     "Capabilities and Limitations": "It gives clickable times with no API key, for any length of video. But it needs a computer, needs captions, quotes auto-captions with care, summarizes other people's videos instead of copying them, and the Windows version is untested",
     "Scheduled Tasks": "None. The skill runs only when asked",
     "Where It Runs": "It works in any Claude app session when Swami [uploads](/ʌplˈoʊdz/) the files. A linked Mac or Windows PC, Claude Code, and other assistants are untested; Swami tests in Claude only",
-    "Gotchas": "Eleven traps, from YouTube refusing the app's browser, to outdated why-tee-dee-ell-pee, missing captions, never searching the whole home folder, and links with an ampersand on Windows",
+    "Gotchas": "Thirteen traps, from YouTube refusing the app's browser, to outdated why-tee-dee-ell-pee, the four twenty-nine error, typing commands in Terminal rather than the chat, missing captions, never searching the whole home folder, and links with an ampersand on Windows",
     "Other Requirements": "A Mac or a Windows ten or eleven PC with YTX installed, an admin password once on the Mac, a way to [upload](/ʌplˈoʊd/) the files, internet on the computer, and code execution for dashboards",
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
     "card_version": 2,
-    "fingerprint": "sha256:38b05e275cc285b6",
+    "fingerprint": "sha256:cab3eecc88ea6ec7",
     "files": [
-      "SKILL.md"
+      "SKILL.md",
+      "scripts/ytx",
+      "scripts/ytx.ps1"
     ],
-    "skill_updated": "Sat Nov 7, 2026",
-    "carded": "Sat Nov 7, 2026",
+    "skill_updated": "Tue Nov 10, 2026",
+    "carded": "Tue Nov 10, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/youtube-transcript.zip",
     "draft_url": "https://claude.ai/artifact/T9Bmgn8JhtQPyTc8Z24Rg2",
