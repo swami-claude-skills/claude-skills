@@ -14,7 +14,7 @@ Section six, Skills It Depends On. The vibe dashboard skill, which sets the desi
 
 Section seven, Programs It Depends On. Python, the Kokoro voice, ffmpeg, and Playwright in Claude's workspace, plus a web browser. No API key is needed.
 
-Section eight, Capabilities and Limitations. It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, lyve search works only on the published page, and only two relief sites are wired so far.
+Section eight, Capabilities and Limitations. It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, lyve search works only on the published page, and some relief sites still need a browser test.
 
 Section nine, Scheduled Tasks. None of its own. The audio refresh task and the nightly GitHub backup both touch the page.
 

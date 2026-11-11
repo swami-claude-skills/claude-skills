@@ -23,7 +23,7 @@
   },
   {
    "topic": "Hand-offs",
-   "text": "One-click searches on Google, Bing, Brave, and DuckDuckGo, on the SVGrepo, FreeSVG, and Freepik vector sites, on ambientCG for heightmaps and STLFinder for relief models, plus a Make a relief button that opens the Image to Relief Generator."
+   "text": "One-click searches on Google, Bing, Brave, and DuckDuckGo, on the SVGrepo, FreeSVG, and Freepik vector sites, and on the 3D relief sites yeggi, STLFinder, and ambientCG, plus a Make a relief button that opens the Image to Relief Generator."
   },
   {
    "topic": "3D relief",
@@ -233,7 +233,7 @@
   },
   {
    "topic": "Relief sites",
-   "text": "Only ambientCG and STLFinder are wired so far; Etsy and CGTrader wait until their search links are tested in a real browser."
+   "text": "The 3D relief row has yeggi, STLFinder, and ambientCG. yeggi's search link hasn't been confirmed yet, and Etsy and CGTrader wait until their links are tested in a real browser."
   }
  ],
  "scheduled_tasks": {
@@ -477,7 +477,7 @@
   "How to Use It": "Nine steps, from opening the finder or asking for a change to using it. On Windows the steps are the same, with notes on uploads and downloads",
   "Skills It Depends On": "The vibe dashboard skill, which sets the design, and the artifact capabilities skill, only for a new copy",
   "Programs It Depends On": "Python, the Kokoro voice, ffmpeg, and Playwright in Claude's workspace, plus a web browser. No API key is needed",
-  "Capabilities and Limitations": "It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, lyve search works only on the published page, and only two relief sites are wired so far",
+  "Capabilities and Limitations": "It takes text, a link, or an image, and keeps working links even when Claude can't be reached. But it can't browse, lyve search works only on the published page, and some relief sites still need a browser test",
   "Scheduled Tasks": "None of its own. The audio refresh task and the nightly GitHub backup both touch the page",
   "Where It Runs": "It works in any Claude app session. Windows and mobile are untested. In other assistants it works partly: the main finder button needs Claude, but the search engine buttons still work",
   "Gotchas": "Eight traps, from a capital S that links to the wrong section, to the stress check, to the audio player that a rebuild drops",
@@ -486,7 +486,7 @@
  },
  "meta": {
   "card_version": 1,
-  "fingerprint": "sha256:ce5a8eae4a1cd62c",
+  "fingerprint": "sha256:bc52023de75f035f",
   "files": [
    "SKILL.md",
    "assets/template.html"
