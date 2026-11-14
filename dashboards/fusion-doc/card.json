@@ -420,12 +420,12 @@
   },
   "meta": {
     "card_version": 1,
-    "fingerprint": "sha256:ab41ed2760fb128a",
+    "fingerprint": "sha256:49859df515e72585",
     "files": [
       "SKILL.md"
     ],
-    "skill_updated": "Mon Nov 9, 2026",
-    "carded": "Mon Nov 9, 2026",
+    "skill_updated": "Fri Nov 13, 2026",
+    "carded": "Fri Nov 13, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-doc.zip",
     "draft_url": "https://claude.ai/artifact/FAmU8YFsHPRg6nZyE9vASk",

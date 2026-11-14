@@ -470,12 +470,12 @@
   },
   "meta": {
     "card_version": 1,
-    "fingerprint": "sha256:99b291fe3574952f",
+    "fingerprint": "sha256:d9b59dcf4c668abd",
     "files": [
       "SKILL.md"
     ],
-    "skill_updated": "Mon Nov 9, 2026",
-    "carded": "Mon Nov 9, 2026",
+    "skill_updated": "Fri Nov 13, 2026",
+    "carded": "Fri Nov 13, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-cam-settings.zip",
     "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek",

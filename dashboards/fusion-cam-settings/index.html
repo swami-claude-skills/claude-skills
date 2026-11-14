@@ -488,6 +488,7 @@
   .citem-body > .callout{margin:14px 0 0;border-radius:0 6px 6px 0}
   .citem-body > .resource{margin:14px 0 0;border:none;background:transparent;padding:0}
   .citem-body > .table-wrap{margin:14px 0 0}
+  .citem-body > ul,.citem-body > ol{margin:12px 0 0 4px}
 
   .callout{
     background:var(--panel-2);
@@ -825,7 +826,7 @@
   <h1>Fusion CAM Settings <br><span class="sub">Turns one Autodesk Fusion CAM operation&#x27;s settings export (CSV or JSON), plus a JSON of its Autodesk documentation, into a vibe-dashboard page that explains every setting: the value, what it works out to for this tool, whether it was changed, and what the docs say.</span></h1>
   <div class="byline">
     <span>Claude skill · <code>fusion-cam-settings</code></span>
-    <span>Skill updated <strong class="dt">Mon Nov 9, 2026</strong></span><span>Card <strong class="dt">Mon Nov 9, 2026</strong></span>
+    <span>Skill updated <strong class="dt">Fri Nov 13, 2026</strong></span><span>Card <strong class="dt">Fri Nov 13, 2026</strong></span>
     <!-- add/remove byline spans as needed; links use target="_blank" rel="noopener".
          NO copyright mark here — never "© Swami" or any ©; attribution lives in the footer. -->
   </div>
@@ -1238,7 +1239,7 @@
   <div class="section cat-reference" data-title="Card and Freshness" data-cat="reference">
     <div class="sec-head"><span class="sec-num">13</span><span class="sec-title">Card and Freshness</span><span class="cat-badge">REFERENCE</span><span class="chevron">▶</span></div>
     <div class="sec-body">
-      <p>This page is built from a skill card. The fingerprint changes whenever any file in the skill changes, so a nightly check can flag this page as out of date.</p><div class="table-wrap no-sort" data-desc="Card and freshness"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td><strong>Skill</strong></td><td><code>fusion-cam-settings</code></td></tr><tr><td><strong>Skill last updated</strong></td><td><strong class="dt">Mon Nov 9, 2026</strong></td></tr><tr><td><strong>Fingerprint</strong></td><td><code>sha256:99b291fe3574952f</code></td></tr><tr><td><strong>Files covered</strong></td><td><code>SKILL.md</code></td></tr><tr><td><strong>Card written</strong></td><td><strong class="dt">Mon Nov 9, 2026</strong></td></tr><tr><td><strong>Status</strong></td><td><span class="tid" style="--tc:#38fa79">Published</span></td></tr><tr><td><strong>Download</strong></td><td><a href="https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-cam-settings.zip" target="_blank" rel="noopener">fusion-cam-settings.zip ↗</a></td></tr></tbody></table></div>
+      <p>This page is built from a skill card. The fingerprint changes whenever any file in the skill changes, so a nightly check can flag this page as out of date.</p><div class="table-wrap no-sort" data-desc="Card and freshness"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td><strong>Skill</strong></td><td><code>fusion-cam-settings</code></td></tr><tr><td><strong>Skill last updated</strong></td><td><strong class="dt">Fri Nov 13, 2026</strong></td></tr><tr><td><strong>Fingerprint</strong></td><td><code>sha256:d9b59dcf4c668abd</code></td></tr><tr><td><strong>Files covered</strong></td><td><code>SKILL.md</code></td></tr><tr><td><strong>Card written</strong></td><td><strong class="dt">Fri Nov 13, 2026</strong></td></tr><tr><td><strong>Status</strong></td><td><span class="tid" style="--tc:#38fa79">Published</span></td></tr><tr><td><strong>Download</strong></td><td><a href="https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-cam-settings.zip" target="_blank" rel="noopener">fusion-cam-settings.zip ↗</a></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -1808,9 +1809,12 @@ sk = open(os.path.join(VIBE, 'SKILL.md'), encoding='utf-8').read()
 blocks_ = re.findall(r'\`{3}python\\n(.*?)\`{3}', sk, re.S)
 pick = lambda test: next(b for b in blocks_ if test(b))
 os.makedirs(WD, exist_ok=True)
-open(os.path.join(WD, 'fit_patch.py'), 'w').write(pick(lambda b: 'function bodyWordMin(' in b and 'table-fit patch' in b))
-open(os.path.join(WD, 'mindmap_patch.py'), 'w').write(pick(lambda b: '"""mindmap_patch.py' in b))
-open(os.path.join(WD, 'stress_audio.py'), 'w').write(pick(lambda b: 'stress_audio.py — run' in b))
+# vibe-dashboard ships these helpers in its scripts/ folder (Nov 13, 2026); older versions had them only as code blocks in its SKILL.md
+vibe_helper = lambda name, test: (open(os.path.join(VIBE, 'scripts', name), encoding='utf-8').read()
+                                  if os.path.exists(os.path.join(VIBE, 'scripts', name)) else pick(test))
+open(os.path.join(WD, 'fit_patch.py'), 'w').write(vibe_helper('fit_patch.py', lambda b: 'function bodyWordMin(' in b and 'table-fit patch' in b))
+open(os.path.join(WD, 'mindmap_patch.py'), 'w').write(vibe_helper('mindmap_patch.py', lambda b: '"""mindmap_patch.py' in b))
+open(os.path.join(WD, 'stress_audio.py'), 'w').write(vibe_helper('stress_audio.py', lambda b: 'stress_audio.py — run' in b))
 for cmd in (['python3', os.path.join(WD, 'fit_patch.py'), out_p], ['python3', os.path.join(VIBE, 'scripts/search_patch.py'), out_p],
             ['python3', os.path.join(WD, 'mindmap_patch.py'), out_p]):
     pr = subprocess.run(cmd, capture_output=True, text=True); print(pr.stdout.strip() or pr.stderr.strip())
@@ -1843,7 +1847,7 @@ if(document.getElementById('verbatim')){
 const sections = [...document.querySelectorAll('.section')];
 const tocBar = document.getElementById('tocBar');
 
-/* derive body items for a section: callouts, resource cards, and tables, in DOM
+/* derive body items for a section: callouts, resource cards, tables, and bullet lists, in DOM
    order. Returns the container element, a uniform TAG, and a description — reused
    for BOTH the TOC tooltip and the collapsible body wrappers so they stay in sync.
    Table description: the .table-wrap's data-desc if set, else its first-column header. */
@@ -1872,6 +1876,24 @@ function deriveSubs(sec, si){
     el.dataset.citemId = id;                 // link container to its derived entry
     subs.push({kind, text, id, el});
   });
+  /* bullet lists: every top-level <ul>/<ol> in the body becomes a collapsible [LIST] item.
+     Description: the list's data-desc, else its data-mm-label, else its first topic IDs.
+     Lists inside callouts, cards, tables, subsections, other lists or tools stay as they are;
+     class="no-collapse" opts a list out. */
+  body.querySelectorAll('ul, ol').forEach(el => {
+    if(el.classList.contains('no-collapse')) return;
+    if(el.parentElement.closest('ul, ol, .callout, .resource, .table-wrap, .subsec, .xs, .tool-panel, .mm-wrap')) return;
+    const tids = [...el.children].map(li => (li.querySelector(':scope > .tid')?.textContent || '').trim()).filter(Boolean);
+    const words = (el.querySelector('li')?.textContent || '').trim().split(/\s+/);
+    const text = (el.dataset.desc || el.dataset.mmLabel
+      || (tids.length ? tids.slice(0, 4).join(' · ') + (tids.length > 4 ? ' …' : '')
+                      : words.slice(0, 8).join(' ') + (words.length > 8 ? '…' : ''))
+      || 'List').trim();
+    subs.push({kind:'list', text, el});
+  });
+  /* keep DOM order (lists interleave with callouts and tables), then number the anchors */
+  subs.sort((a, b) => (a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1);
+  subs.forEach((s, j) => { s.id = 'sub-' + si + '-' + j; s.el.dataset.citemId = s.id; });
   return subs;
 }
 
@@ -2122,7 +2144,7 @@ linkGlossary();
 /* ---- wrap each derived body item in a collapsible shell (all start collapsed) ----
    The [TAG] labels share one width per section (widest tag) so descriptions
    left-align. Reuses the same subs as the TOC, so headers match the tooltip. */
-const TAG_CH = {callout:'CALLOUT', resource:'RESOURCE', table:'TABLE', search:'SEARCH', filters:'FILTERS'};
+const TAG_CH = {callout:'CALLOUT', resource:'RESOURCE', table:'TABLE', list:'LIST', search:'SEARCH', filters:'FILTERS'};
 tocData.forEach(d => {
   if(!d.subs.length) return;
   // widest tag in this section -> column width in ch, so tags left-justify together
@@ -2651,7 +2673,6 @@ buildFloatingHeaders();
   if(th) th.click();
 });
 /* DEFAULT-SORTS:END */
-
 
 
 /* ---- references: start sorted by Topic column (asc); no-op without a Topic column ---- */

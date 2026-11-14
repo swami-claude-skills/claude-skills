@@ -26,25 +26,25 @@
   "fusion-cam-settings": {
     "title": "Fusion CAM Settings",
     "page": "dashboards/fusion-cam-settings/",
-    "fingerprint": "sha256:99b291fe3574952f",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
+    "fingerprint": "sha256:d9b59dcf4c668abd",
+    "skill_updated": "Fri Nov 13, 2026",
+    "published": "2026-11-13",
     "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek"
   },
   "fusion-doc": {
     "title": "Fusion Doc",
     "page": "dashboards/fusion-doc/",
-    "fingerprint": "sha256:ab41ed2760fb128a",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
+    "fingerprint": "sha256:49859df515e72585",
+    "skill_updated": "Fri Nov 13, 2026",
+    "published": "2026-11-13",
     "draft_url": "https://claude.ai/artifact/FAmU8YFsHPRg6nZyE9vASk"
   },
   "fusion-doc-json": {
     "title": "Fusion Doc to JSON",
     "page": "dashboards/fusion-doc-json/",
-    "fingerprint": "sha256:f5222bea31ecc3e7",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
+    "fingerprint": "sha256:272da863484546c8",
+    "skill_updated": "Fri Nov 13, 2026",
+    "published": "2026-11-13",
     "draft_url": "https://claude.ai/artifact/7TGERnroJdfGRKAsqfHHYK"
   },
   "fusion-palette-addin": {
