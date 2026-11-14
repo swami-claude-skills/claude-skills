@@ -6,7 +6,7 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. What the skill is, and why it exists: one locked design means every page looks and works the same, and every improvement reaches every new page.
 
-Section four, What It Does. Fourteen house rules it enforces, from the locked look and the single file, through search, the mind map, the glossary, and the audio overview, to the privacy check and nightly backups.
+Section four, What It Does. Sixteen house rules it enforces, from the locked look and the single file, through search, the mind map, the glossary, collapsible lists, and the standard comment sections, to the audio overview, the privacy check, and nightly backups.
 
 Section five, How to Use It. Seven steps, from giving Claude the content to sharing the finished page. On Windows the steps are the same, because everything runs in Claude's workspace.
 
@@ -20,7 +20,7 @@ Section nine, Scheduled Tasks. Three of Swami's scheduled tasks use it: the on d
 
 Section ten, Where It Runs. It works in any Claude app session, since everything runs in Claude's workspace. Windows, mobile, Claude Code, and other assistants are untested.
 
-Section eleven, Gotchas. Ten traps, from patch order and double escaped titles to self links, acronyms, the stress check, and blocked recordings.
+Section eleven, Gotchas. Eleven traps, from patch order and double escaped titles to self links, acronyms, the stress check, blocked recordings, and labels for every bullet list.
 
 Section twelve, Other Requirements. Code execution with network access, artifacts, the privacy list in memory, and the connector for the audio button.
 

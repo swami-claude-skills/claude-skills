@@ -488,6 +488,7 @@
   .citem-body > .callout{margin:14px 0 0;border-radius:0 6px 6px 0}
   .citem-body > .resource{margin:14px 0 0;border:none;background:transparent;padding:0}
   .citem-body > .table-wrap{margin:14px 0 0}
+  .citem-body > ul,.citem-body > ol{margin:12px 0 0 4px}
 
   .callout{
     background:var(--panel-2);
@@ -825,7 +826,7 @@
   <h1>Vector &amp; Bitmap Graphic Finder <br><span class="sub">Opens, builds, and edits Swami&#x27;s Vector &amp; Bitmap Graphic Finder: a vibe dashboard with a live AI tool that finds SVG, DXF, PNG, 3D relief heightmaps, and other graphics for 3D CAD, 3D printing, CNC, laser, and plasma.</span></h1>
   <div class="byline">
     <span>Claude skill · <code>vector-bitmap-graphic-finder</code></span>
-    <span>Skill updated <strong class="dt">Wed Nov 11, 2026</strong></span><span>Card <strong class="dt">Wed Nov 11, 2026</strong></span>
+    <span>Skill updated <strong class="dt">Fri Nov 13, 2026</strong></span><span>Card <strong class="dt">Fri Nov 13, 2026</strong></span>
     <!-- add/remove byline spans as needed; links use target="_blank" rel="noopener".
          NO copyright mark here — never "© Swami" or any ©; attribution lives in the footer. -->
   </div>
@@ -1238,7 +1239,7 @@
   <div class="section cat-reference" data-title="Card and Freshness" data-cat="reference">
     <div class="sec-head"><span class="sec-num">13</span><span class="sec-title">Card and Freshness</span><span class="cat-badge">REFERENCE</span><span class="chevron">▶</span></div>
     <div class="sec-body">
-      <p>This page is built from a skill card. The fingerprint changes whenever any file in the skill changes, so a nightly check can flag this page as out of date.</p><div class="table-wrap no-sort" data-desc="Card and freshness"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td><strong>Skill</strong></td><td><code>vector-bitmap-graphic-finder</code></td></tr><tr><td><strong>Skill last updated</strong></td><td><strong class="dt">Wed Nov 11, 2026</strong></td></tr><tr><td><strong>Fingerprint</strong></td><td><code>sha256:bc52023de75f035f</code></td></tr><tr><td><strong>Files covered</strong></td><td><code>SKILL.md</code>, <code>assets/template.html</code></td></tr><tr><td><strong>Card written</strong></td><td><strong class="dt">Wed Nov 11, 2026</strong></td></tr><tr><td><strong>Status</strong></td><td><span class="tid" style="--tc:#38fa79">Published</span></td></tr><tr><td><strong>Download</strong></td><td><a href="https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vector-bitmap-graphic-finder.zip" target="_blank" rel="noopener">vector-bitmap-graphic-finder.zip ↗</a></td></tr></tbody></table></div>
+      <p>This page is built from a skill card. The fingerprint changes whenever any file in the skill changes, so a nightly check can flag this page as out of date.</p><div class="table-wrap no-sort" data-desc="Card and freshness"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td><strong>Skill</strong></td><td><code>vector-bitmap-graphic-finder</code></td></tr><tr><td><strong>Skill last updated</strong></td><td><strong class="dt">Fri Nov 13, 2026</strong></td></tr><tr><td><strong>Fingerprint</strong></td><td><code>sha256:064826e4c9c3ec05</code></td></tr><tr><td><strong>Files covered</strong></td><td><code>SKILL.md</code>, <code>assets/template.html</code></td></tr><tr><td><strong>Card written</strong></td><td><strong class="dt">Fri Nov 13, 2026</strong></td></tr><tr><td><strong>Status</strong></td><td><span class="tid" style="--tc:#38fa79">Published</span></td></tr><tr><td><strong>Download</strong></td><td><a href="https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vector-bitmap-graphic-finder.zip" target="_blank" rel="noopener">vector-bitmap-graphic-finder.zip ↗</a></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -1355,7 +1356,7 @@ The page is **script-built**. Its sources are published as files of the live art
 | Published file | Save as | What it is |
 |---|---|---|
 | \`build.txt\` | \`build.py\` | Page generator: fills the vibe template with **all the finder's content** (sections, tables, glossary rows, categories) and ports the Find Graphics tool |
-| \`make.txt\` | \`make.sh\` | Full pipeline: extracts the table-fit and Mind Map patches from the current vibe-dashboard SKILL.md, runs \`build.py\`, the table-fit patch, \`search_patch.py\`, the tool's \`[INPUT]\`/\`[RESULTS]\` tags, and the Mind Map patch |
+| \`make.txt\` | \`make.sh\` | Full pipeline: takes the table-fit and Mind Map patches from the current vibe-dashboard skill (its \`scripts/\` folder; older copies: its SKILL.md), runs \`build.py\`, the table-fit patch, \`search_patch.py\`, the tool's \`[INPUT]\`/\`[RESULTS]\` tags, and the Mind Map patch |
 | \`tool-source.txt\` | \`tool-source.html\` | Frozen source of the Find Graphics tool (its CSS block, markup and engine script), which \`build.py\` ports. Identical to this skill's \`assets/template.html\` (use that if the read fails) |
 | \`narration.txt\` | \`narration.txt\` | Approved audio-overview narration |
 | \`check.txt\` | \`check.py\` | Headless check (Playwright + \`/usr/bin/google-chrome\`): console warnings, section links, glossary counts, table fit at 1440 / 1000 / 390 px |
@@ -1368,7 +1369,7 @@ Get them with the Artifact tool: \`read\` with the URL (proceed only if Swami is
 2. **Content edits go in \`build.py\`** — the header (subtitle, byline), the section bodies (\`SUMMARY\`, \`TOOL\`, \`OPS\`, \`VEC\`, \`BMP\`, \`FT\`, \`RELIEF\`, \`VZ\`, \`LIM\`), the tables (\`OPS_ROWS\`, \`TOOLS\`), the glossary (\`GL\`, \`TOPICS\`) and categories (\`CATS\`). Follow the vibe-dashboard rules for every edit (topic IDs on list items, colour-coded Kind/Cost tags, Oxford comma, a Section 01 summary row per new section). Look up current facts (prices, export formats, editions) for any new tool or site before writing its row. A plain "make/reproduce the finder" needs no edits.
 3. **Save the live audio block first** if the narration won't change: \`make.sh\` rebuilds the page from scratch and drops the \`AUDIO-OVERVIEW\` block, so cut it from the saved live \`index.html\` (everything from \`<\!-- AUDIO-OVERVIEW:BEGIN\` to \`<\!-- AUDIO-OVERVIEW:END -->\`) into a file before building.
 4. \`sh make.sh /home/claude/vector-bitmap-graphic-finder.html\` (write the page in the working directory, never \`/mnt/user-data/outputs\`).
-5. **Audio overview.** Narration unchanged → insert the saved block just before \`<\/header>\`. Narration changed (a section added, removed or rewritten, or the glossary term count changed) → edit \`narration.txt\` per the vibe-dashboard skill's Writing the narration and Pronunciation rules plus the finder respellings below. Save the vibe-dashboard skill's \`stress_audio.py\` helper (its Noun/verb stress bullet) to the working folder, run \`python3 stress_audio.py /mnt/skills/plugins/vibe-dashboard audit narration.txt\` and mark any wrong stress as \`[word](/phonemes/)\` until the audit is clean, then \`python3 stress_audio.py /mnt/skills/plugins/vibe-dashboard build PAGE narration.txt PAGE --trigger trig_01MDSUNZYpr1KP3SBwfjAk6L --artifact https://claude.ai/artifact/SRzCSG8CU53A8nChozsh7a\` (the refresh task "Vibe dashboard — refresh audio overview"; find it with \`list_triggers\` if that id ever fails). If the voice-model download is cut off (curl exit 56), delete the partial \`~/.cache/vibe-audio/kokoro.onnx\` and retry once; if it still fails, use the vibe-dashboard browser-voice fallback and tell Swami why. A new table row usually doesn't need a re-record: the Vectorize paragraph describes the table in general terms.
+5. **Audio overview.** Narration unchanged → insert the saved block just before \`<\/header>\`. Narration changed (a section added, removed or rewritten, or the glossary term count changed) → edit \`narration.txt\` per the vibe-dashboard skill's Writing the narration and Pronunciation rules plus the finder respellings below. Use the vibe-dashboard skill's \`scripts/stress_audio.py\` helper in place: run \`python3 /mnt/skills/plugins/vibe-dashboard/scripts/stress_audio.py /mnt/skills/plugins/vibe-dashboard audit narration.txt\` and mark any wrong stress as \`[word](/phonemes/)\` until the audit is clean, then \`python3 /mnt/skills/plugins/vibe-dashboard/scripts/stress_audio.py /mnt/skills/plugins/vibe-dashboard build PAGE narration.txt PAGE --trigger trig_01MDSUNZYpr1KP3SBwfjAk6L --artifact https://claude.ai/artifact/SRzCSG8CU53A8nChozsh7a\` (the refresh task "Vibe dashboard — refresh audio overview"; find it with \`list_triggers\` if that id ever fails). If the voice-model download is cut off (curl exit 56), delete the partial \`~/.cache/vibe-audio/kokoro.onnx\` and retry once; if it still fails, use the vibe-dashboard browser-voice fallback and tell Swami why. A new table row usually doesn't need a re-record: the Vectorize paragraph describes the table in general terms.
 6. \`python3 check.py /home/claude/vector-bitmap-graphic-finder.html\` — the only console message allowed is the blocked Google Fonts load (offline); no colour-clash or glossary-regex warnings, no glossary term at 0, no page-level sideways scroll, every section link pointing at the intended section, and the audio player present. Fix anything else in \`build.py\` and rebuild.
 7. **Privacy check** (vibe-dashboard rule): no one under NDA in the page, narration or any published file.
 8. **Publish** to the same artifact: \`Artifact\` publish with \`url\` = the artifact URL (or the same \`file_path\` if it was already published in this conversation), \`file_path\` the page, \`files\` = whichever of \`build.txt\`, \`make.txt\`, \`tool-source.txt\`, \`narration.txt\`, \`check.txt\` changed (each \`{from, contentType: "text/plain"}\`; files left out are kept), and **no \`capabilities\` field** — the artifact keeps both grants. Only for a brand-new artifact (when Swami asks for a separate copy) pass all five files plus \`capabilities: {sample: {images: true}, mcp: {servers: [{server: "Claude Code Remote", tools: ["fire_trigger"]}]}}\` and wire that copy's own artifact URL into the audio build. Reply with one or two lines on what changed.
@@ -1441,7 +1442,7 @@ if(document.getElementById('verbatim')){
 const sections = [...document.querySelectorAll('.section')];
 const tocBar = document.getElementById('tocBar');
 
-/* derive body items for a section: callouts, resource cards, and tables, in DOM
+/* derive body items for a section: callouts, resource cards, tables, and bullet lists, in DOM
    order. Returns the container element, a uniform TAG, and a description — reused
    for BOTH the TOC tooltip and the collapsible body wrappers so they stay in sync.
    Table description: the .table-wrap's data-desc if set, else its first-column header. */
@@ -1470,6 +1471,24 @@ function deriveSubs(sec, si){
     el.dataset.citemId = id;                 // link container to its derived entry
     subs.push({kind, text, id, el});
   });
+  /* bullet lists: every top-level <ul>/<ol> in the body becomes a collapsible [LIST] item.
+     Description: the list's data-desc, else its data-mm-label, else its first topic IDs.
+     Lists inside callouts, cards, tables, subsections, other lists or tools stay as they are;
+     class="no-collapse" opts a list out. */
+  body.querySelectorAll('ul, ol').forEach(el => {
+    if(el.classList.contains('no-collapse')) return;
+    if(el.parentElement.closest('ul, ol, .callout, .resource, .table-wrap, .subsec, .xs, .tool-panel, .mm-wrap')) return;
+    const tids = [...el.children].map(li => (li.querySelector(':scope > .tid')?.textContent || '').trim()).filter(Boolean);
+    const words = (el.querySelector('li')?.textContent || '').trim().split(/\s+/);
+    const text = (el.dataset.desc || el.dataset.mmLabel
+      || (tids.length ? tids.slice(0, 4).join(' · ') + (tids.length > 4 ? ' …' : '')
+                      : words.slice(0, 8).join(' ') + (words.length > 8 ? '…' : ''))
+      || 'List').trim();
+    subs.push({kind:'list', text, el});
+  });
+  /* keep DOM order (lists interleave with callouts and tables), then number the anchors */
+  subs.sort((a, b) => (a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1);
+  subs.forEach((s, j) => { s.id = 'sub-' + si + '-' + j; s.el.dataset.citemId = s.id; });
   return subs;
 }
 
@@ -1720,7 +1739,7 @@ linkGlossary();
 /* ---- wrap each derived body item in a collapsible shell (all start collapsed) ----
    The [TAG] labels share one width per section (widest tag) so descriptions
    left-align. Reuses the same subs as the TOC, so headers match the tooltip. */
-const TAG_CH = {callout:'CALLOUT', resource:'RESOURCE', table:'TABLE', search:'SEARCH', filters:'FILTERS'};
+const TAG_CH = {callout:'CALLOUT', resource:'RESOURCE', table:'TABLE', list:'LIST', search:'SEARCH', filters:'FILTERS'};
 tocData.forEach(d => {
   if(!d.subs.length) return;
   // widest tag in this section -> column width in ch, so tags left-justify together

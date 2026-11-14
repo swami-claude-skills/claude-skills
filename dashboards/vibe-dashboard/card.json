@@ -38,11 +38,19 @@
     },
     {
       "topic": "Collapsed start",
-      "text": "Every section and every item inside it starts collapsed; tables, callouts, and cards fold into labeled items listed in the table of contents."
+      "text": "Every section and every item inside it starts collapsed; tables, callouts, cards, and (since Nov 13) every top-level bullet list fold into labeled items, such as `[LIST]`, listed in the table of contents."
     },
     {
       "topic": "Tables",
       "text": "Every table sorts, resizes, wraps words without breaking them, and keeps its header pinned under the section and item headers while you scroll."
+    },
+    {
+      "topic": "Comment dashboards",
+      "text": "Pages built from comments or reviews (Facebook, MakerWorld, YouTube, and the like) get four standard sections after Search: The Post, Discussion at a Glance, Themes & Takeaways, and one Comment Threads table with every message, color-coded by topic and opened sorted by Topic. A script writes them from a standard comment JSON file."
+    },
+    {
+      "topic": "Helper scripts",
+      "text": "Every patch and helper is a script in the skill's `scripts/` folder (table-fit, Search, Mind Map, comment sections, audio, stress audit, and browser-voice fallback), run in place and safe to re-run. Other skills' builders copy them from there."
     },
     {
       "topic": "Audio overview",
@@ -83,7 +91,7 @@
     },
     {
       "topic": "Build",
-      "step": "Claude fills the locked template, then runs the table-fit, Search, and Mind Map patches.",
+      "step": "Claude fills the locked template, then runs the table-fit, Search, and Mind Map patch scripts. Pages built from comments or reviews also get their four comment sections from a script.",
       "who": "Claude"
     },
     {
@@ -138,17 +146,17 @@
     {
       "name": "youtube-comments",
       "need": "Related",
-      "why": "Builds its comment dashboards with this skill."
+      "why": "Builds its comment dashboards with this skill, using the standard comment JSON and its four comment sections."
     },
     {
       "name": "facebook-comments",
       "need": "Related",
-      "why": "Builds its comment dashboards with this skill."
+      "why": "Builds its comment dashboards with this skill, using the standard comment JSON and its four comment sections."
     },
     {
       "name": "makerworld-reviews",
       "need": "Related",
-      "why": "Builds its review dashboards with this skill."
+      "why": "Builds its review dashboards with this skill, using the standard comment JSON and its four comment sections."
     },
     {
       "name": "vibe-promptmaker",
@@ -325,7 +333,7 @@
   "gotchas": [
     {
       "topic": "Patch order",
-      "text": "Run the table-fit patch, then Search, then Mind Map, after the content sections are final; each is safe to re-run."
+      "text": "Run the table-fit patch, then Search, then Mind Map (and, for comment pages, the comment sections script first), after the content sections are final; each is a script in `scripts/` and safe to re-run. Builders written before Nov 13 that pulled the patches out of SKILL.md code blocks no longer work."
     },
     {
       "topic": "Double-escaped titles",
@@ -362,6 +370,10 @@
     {
       "topic": "Category colors",
       "text": "Two categories with similar colors trigger a console warning; a finished page has none."
+    },
+    {
+      "topic": "List labels",
+      "text": "Each top-level bullet list now becomes its own collapsible `[LIST]` item, so give every list a short `data-desc` label, like a table. Lists inside callouts, cards, tables, or tools stay as they are, and `class=\"no-collapse\"` opts one out only when Swami asks."
     }
   ],
   "requirements": [
@@ -508,6 +520,20 @@
       "match": "ffmpeg",
       "code": "",
       "def": "The tool that turns the recorded speech into a small MP3."
+    },
+    {
+      "term": "Collapsible item",
+      "topic": "Sections",
+      "match": "collapsible|\\[LIST\\]",
+      "code": "exact",
+      "def": "A table, callout, card, subsection, or bullet list wrapped in a labeled shell that starts collapsed and opens on click."
+    },
+    {
+      "term": "Comment JSON",
+      "topic": "Build",
+      "match": "comment JSON",
+      "code": "exact",
+      "def": "The standard file of extracted comments or reviews (source, topics, themes, and items) that the comment sections script turns into four sections."
     }
   ],
   "confirm": [],
@@ -515,32 +541,38 @@
     "_intro": "This page is the skill sheet for the vibe dashboard skill. It builds Swami's signature Vibe Coding dashboards: one dark page with numbered sections, search, a mind map, a glossary, and a spoken overview, all in one locked design.",
     "Dashboard Summary": "A short intro and a table of every section",
     "What It Is": "What the skill is, and why it exists: one locked design means every page looks and works the same, and every improvement reaches every new page",
-    "What It Does": "Fourteen house rules it enforces, from the locked look and the single file, through search, the mind map, the glossary, and the audio overview, to the privacy check and nightly backups",
+    "What It Does": "Sixteen house rules it enforces, from the locked look and the single file, through search, the mind map, the glossary, collapsible lists, and the standard comment sections, to the audio overview, the privacy check, and nightly backups",
     "How to Use It": "Seven steps, from giving Claude the content to sharing the finished page. On Windows the steps are the same, because everything runs in Claude's workspace",
     "Skills It Depends On": "The artifact design skill, plus the skills that build their pages on this one or share its design",
     "Programs It Depends On": "Python, the Kokoro voice, and ffmpeg in Claude's workspace, a web browser to view the page, and optionally Playwright, the Claude Code Remote connector, and GitHub",
     "Capabilities and Limitations": "It turns any kind of content into the same kind of page, with owner only parts and self updating pages. But recording needs network access, owner only parts are not private, and a page is not a lyve view",
     "Scheduled Tasks": "Three of Swami's scheduled tasks use it: the on demand audio refresh, the nightly GitHub backup, and the nightly Skill Library refresh",
     "Where It Runs": "It works in any Claude app session, since everything runs in Claude's workspace. Windows, mobile, Claude Code, and other assistants are untested",
-    "Gotchas": "Ten traps, from patch order and double escaped titles to self links, acronyms, the stress check, and blocked recordings",
+    "Gotchas": "Eleven traps, from patch order and double escaped titles to self links, acronyms, the stress check, blocked recordings, and labels for every bullet list",
     "Other Requirements": "Code execution with network access, artifacts, the privacy list in memory, and the connector for the audio button",
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
     "card_version": 2,
-    "fingerprint": "sha256:ef2d833d47edeabb",
+    "fingerprint": "sha256:6e21be6ac9d1e62f",
     "files": [
       "SKILL.md",
       "assets/audio-player.html",
+      "assets/fallback.html",
       "assets/template.html",
       "references/audio-refresh-task.md",
       "references/patterns.md",
       "references/search-scroll.md",
+      "scripts/add_fallback.py",
       "scripts/audio_overview.py",
-      "scripts/search_patch.py"
+      "scripts/comments_sections.py",
+      "scripts/fit_patch.py",
+      "scripts/mindmap_patch.py",
+      "scripts/search_patch.py",
+      "scripts/stress_audio.py"
     ],
-    "skill_updated": "Mon Nov 9, 2026",
-    "carded": "Mon Nov 9, 2026",
+    "skill_updated": "Fri Nov 13, 2026",
+    "carded": "Fri Nov 13, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-dashboard.zip",
     "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx",
