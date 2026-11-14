@@ -22,11 +22,11 @@
     },
     {
       "topic": "Threaded text",
-      "text": "Writes `comments-threaded.txt`: threads ranked by total likes, replies in time order, uploader replies marked."
+      "text": "Writes `comments-threaded.txt`: threads ranked by total likes, replies in time order, uploader replies marked. A reply to a reply stays in its thread and is marked \"(reply to @handle)\", so no reply is dropped."
     },
     {
       "topic": "Dashboard",
-      "text": "Hands off to the vibe-dashboard skill: ideas credited to specific @handles, sections grouped by theme, plus a Method section with the command, counts, and date pulled."
+      "text": "Hands off to the vibe-dashboard skill's comment-dashboard layout: Claude writes the standard comment JSON (6 to 9 topics, always with Chatter, plus themes credited to specific @handles), and vibe-dashboard's `comments_sections.py` builds The Video, Comments at a Glance, Themes & Takeaways, and one Comment Threads table of every comment and reply, opening sorted by Topic. A Method section adds the command, counts, and date pulled."
     },
     {
       "topic": "Table view",
@@ -81,7 +81,7 @@
     {
       "name": "vibe-dashboard",
       "need": "Optional",
-      "why": "Builds the comments dashboard, the usual goal. Needed only for dashboards."
+      "why": "Builds the comments dashboard, the usual goal, with its comment-dashboard layout and `comments_sections.py`. Needed only for dashboards."
     },
     {
       "name": "xlsx",
@@ -147,7 +147,7 @@
   "capabilities": [
     {
       "topic": "Complete tree",
-      "text": "Every top-level comment and every reply, with parent links, in one pass."
+      "text": "Every top-level comment and every reply, with parent links, in one pass. Replies to replies are walked up to their top-level comment, so they land in the right thread."
     },
     {
       "topic": "No API key",
@@ -160,6 +160,10 @@
     {
       "topic": "Permalinks",
       "text": "Any comment can be linked directly: `https://www.youtube.com/watch?v=VIDEOID&lc=COMMENTID`."
+    },
+    {
+      "topic": "One threads table",
+      "text": "On a dashboard, every comment and reply sits in one Comment Threads table (Topic / From / QTY / QTY-TOT / Likes / Comment / Link) with a ↗ link to the exact comment on YouTube."
     }
   ],
   "limitations": [
@@ -186,6 +190,10 @@
     {
       "topic": "New Windows port",
       "text": "ytx.ps1 1.2.0 was rebuilt from the Mac script and has never been run on a real Windows PC. Its built-in `ytx -SelfTest` checks its results against the Mac ytx."
+    },
+    {
+      "topic": "ytx threaded file",
+      "text": "The `comments-threaded.txt` that ytx 1.2.0 writes still groups replies by parent only, so it can miss replies to replies. Claude re-threads from the `.info.json`, which is complete, so dashboards are not affected. A ytx fix is pending."
     }
   ],
   "scheduled_tasks": {
@@ -240,6 +248,10 @@
     {
       "topic": "Reply depth",
       "text": "`max_comments` takes five values: total, parents, replies, replies per thread, and depth. A depth of 1 silently discards every reply, so always pass `all,all,all,all,all`."
+    },
+    {
+      "topic": "Replies to replies",
+      "text": "A reply to a reply names the earlier reply as its parent, not the thread. Grouping by parent alone drops it silently (ytx 1.2.0 did this on a real video in Nov 2026). The skill's own processing code walks each reply up to its thread; check that the replies printed equal the replies counted."
     },
     {
       "topic": "Wrong yt-dlp file",
@@ -475,31 +487,52 @@
       "match": "Deno",
       "code": "deno.exe",
       "def": "A JavaScript runtime that yt-dlp uses to solve YouTube's JavaScript challenges."
+    },
+    {
+      "term": "Standard comment JSON",
+      "topic": "Data",
+      "match": "standard comment JSON",
+      "code": "comments.json",
+      "def": "vibe-dashboard's shared format for comment and review data: source, labels, topics, themes, and one item per comment or reply."
+    },
+    {
+      "term": "comments_sections.py",
+      "topic": "Claude",
+      "match": "comments_sections",
+      "code": "comments_sections.py",
+      "def": "vibe-dashboard's script that turns the standard comment JSON into The Video, Comments at a Glance, Themes & Takeaways, and Comment Threads sections."
+    },
+    {
+      "term": "QTY-TOT",
+      "topic": "Data",
+      "match": "QTY-TOT",
+      "code": "",
+      "def": "In the Comment Threads table, the number of messages in the whole thread; QTY counts only those in the thread with the same topic."
     }
   ],
   "confirm": [],
   "spoken": {
     "_intro": "This page is the skill sheet for the YouTube comments skill. It gets every comment and reply on a YouTube video with the free tool why-tee-dee-ell-pee, or Swami's YTX shortcut on a Mac or Windows PC, then turns them into threads for analysis or a vibe dashboard.",
     "What It Is": "What the skill is, and why it exists: copying comments by hand once caught only seventy five of four hundred and seventy four",
-    "What It Does": "Eight things it handles, from ready to paste commands and full extraction, to stats, a threaded text file, a dashboard, a table, an export, and a browser fallback",
+    "What It Does": "Eight things it handles, from ready to paste commands and full extraction, to stats, a threaded text file that keeps replies to replies in their thread, a dashboard with one table of every comment sorted by topic, a table, an export, and a browser fallback",
     "How to Use It": "What to ask for, then six steps on the Mac: ask, install once, [extract](/ɪkstɹˈækt/) with YTX or why-tee-dee-ell-pee yourself, [upload](/ʌplˈoʊd/) the file or let Claude read it from a linked Mac, let Claude process it, and choose the hand off. A second table gives the same steps on Windows, with the PowerShell version of YTX",
     "Skills It Depends On": "None are required. The vibe dashboard skill is used for dashboards, the XLSX skill for spreadsheet exports, and the YouTube transcript skill is a related sibling that explains how to install YTX",
     "Programs It Depends On": "Why-tee-dee-ell-pee and Swami's YTX shortcut, which now has a PowerShell version for Windows, plus Terminal or PowerShell, Python in Claude's workspace, and optionally [Deno](/dˈiːnoʊ/) and a web browser. Each program has macOS and Windows install notes",
-    "Capabilities and Limitations": "It gets the complete comment tree with no API key. But neither Claude's cloud workspace nor a linked computer's shell can reach YouTube, comment counts drift, YouTube changes can break older versions, the browser fallback is partial and needs Swami's OK, and the Windows YTX has never been run",
+    "Capabilities and Limitations": "It gets the complete comment tree with no API key, keeps replies to replies in their threads, and on a dashboard puts every comment in one table. But neither Claude's cloud workspace nor a linked computer's shell can reach YouTube, comment counts drift, YouTube changes can break older versions, the browser fallback is partial and needs Swami's OK, and the Windows YTX has never been run",
     "Scheduled Tasks": "None. The skill runs only when asked",
     "Where It Runs": "It works in any Claude app session with code execution on. In a chat linked to the Mac, Claude can read the file but can't run the extraction, so that's partial. A linked Windows PC, Claude Code, and other AI assistants are not tested; Swami tests in Claude only",
-    "Gotchas": "Seventeen traps, the biggest being that a reply depth of one silently drops every reply. Three cover linked computers, folders without comments, and never switching to the browser on its own; four are for Windows, and one covers a missing [Deno](/dˈiːnoʊ/)",
+    "Gotchas": "Eighteen traps, the biggest being that a reply depth of one silently drops every reply, and that grouping replies by parent alone drops replies to replies. Three cover linked computers, folders without comments, and never switching to the browser on its own; four are for Windows, and one covers a missing [Deno](/dˈiːnoʊ/)",
     "Other Requirements": "A Mac running macOS ten fifteen or newer, or a Windows ten or eleven PC, plus code execution, a way to [upload](/ʌplˈoʊd/) the file, and internet on the computer",
     "Card and Freshness": "Which version of the skill this page describes and its fingerprint"
   },
   "meta": {
-    "card_version": 6,
-    "fingerprint": "sha256:adbfe50de229dd73",
+    "card_version": 7,
+    "fingerprint": "sha256:31d355b526549f18",
     "files": [
       "SKILL.md"
     ],
-    "skill_updated": "Tue Nov 10, 2026",
-    "carded": "Tue Nov 10, 2026",
+    "skill_updated": "Fri Nov 13, 2026",
+    "carded": "Sat Nov 14, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/youtube-comments.zip",
     "draft_url": "https://claude.ai/artifact/D9nX5ELyD12Qvd52DAY89p",

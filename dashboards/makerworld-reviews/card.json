@@ -4,7 +4,7 @@
   "summary": "Pulls every rating, comment, and nested reply from a MakerWorld model page into one translated, threaded JSON file with a working link per entry, and can turn it into a vibe dashboard.",
   "what_it_is": [
     "A Claude skill that collects the complete **Reviews & Ratings** tab of a MakerWorld model: star ratings, comments, and every reply under them, however deep. Non-English posts are translated, and each entry gets a permalink that opens the model page with that thread pinned at the top.",
-    "The result is one JSON file (plus an optional plain-text thread tree). After delivering it, Claude offers a button to build Swami's vibe dashboard from the same file, with stats, a Q&A synthesis, critical feedback, every thread, the designer's replies, a search, a mind map, a glossary, and an audio overview."
+    "The result is one JSON file (plus an optional plain-text thread tree). After delivering it, Claude offers a button to build Swami's vibe dashboard from the same file, in vibe-dashboard's shared review layout: The Model, Reviews at a Glance, Themes & Takeaways, and one Review Threads table of every rating, comment and reply, then critical feedback, the designer's replies, a search, a mind map, a glossary, and an audio overview."
   ],
   "why": "MakerWorld loads reviews by script, 10 at a time, with replies hidden behind \"View N more replies\". WebFetch only sees an empty page and Claude's cloud workspace can't reach makerworld.com at all, so the data has to come from the site's own API, called from inside a real browser tab.",
   "what_it_does": [
@@ -38,7 +38,7 @@
     },
     {
       "topic": "Dashboard",
-      "text": "On request, or from the button after delivery, builds a vibe dashboard from the JSON in the current vibe-dashboard format: stats (including ratings by print profile), common questions, critical feedback, rating and comment threads, designer replies, and contributors, plus the Search section, Mind Map, Glossary, References, and an audio overview."
+      "text": "On request, or from the button after delivery, writes vibe-dashboard's standard comment JSON (6 to 9 topics, always with Chatter, plus themes citing entries) and runs its `comments_sections.py`. That builds The Model, Reviews at a Glance (stars, star spread, ratings by print profile, languages), Themes & Takeaways, and one Review Threads table (Topic / From / QTY / QTY-TOT / Stars / Comment / Link, opening sorted by Topic). The skill adds Critical Feedback, Designer Replies, and Data & Link Format, plus Search, Mind Map, Glossary, References, and an audio overview."
     }
   ],
   "triggers": [
@@ -140,7 +140,7 @@
     {
       "name": "vibe-dashboard",
       "need": "Optional",
-      "why": "Required only for the dashboard step: its design system, template, search, mind map, glossary, and audio all apply, and this skill only maps the reviews onto it."
+      "why": "Required only for the dashboard step: its review-dashboard layout and `comments_sections.py`, design system, template, search, mind map, glossary, and audio all apply, and this skill only maps the reviews onto it."
     },
     {
       "name": "facebook-comments",
@@ -357,8 +357,8 @@
       "text": "`build_reviews.py` refuses translation ids it doesn't know, so a mistyped id shows up at once instead of silently dropping a translation."
     },
     {
-      "topic": "Crushed columns",
-      "text": "Dashboard thread tables use exactly three columns (From, Review, Link); splitting out author, stars, and date makes names break one letter per line."
+      "topic": "One threads table",
+      "text": "Dashboards no longer get separate rating and comment thread tables or a Contributors section. Every entry goes in the single Review Threads table that `comments_sections.py` builds; Claude writes only the standard comment JSON, the topics, and the themes."
     },
     {
       "topic": "Personal details",
@@ -545,6 +545,27 @@
       "match": "file card",
       "code": "SendUserFile",
       "def": "The Claude tool that delivers a file into the chat as a card."
+    },
+    {
+      "term": "Standard comment JSON",
+      "topic": "Output",
+      "match": "standard comment JSON",
+      "code": "comments.json",
+      "def": "vibe-dashboard's shared format for comment and review data: source, labels, topics, themes, and one item per rating, comment or reply."
+    },
+    {
+      "term": "comments_sections.py",
+      "topic": "Output",
+      "match": "comments_sections",
+      "code": "comments_sections.py",
+      "def": "vibe-dashboard's script that turns the standard comment JSON into The Model, Reviews at a Glance, Themes & Takeaways, and Review Threads sections."
+    },
+    {
+      "term": "QTY-TOT",
+      "topic": "Output",
+      "match": "QTY-TOT",
+      "code": "",
+      "def": "In the Review Threads table, the number of entries in the whole thread; QTY counts only those in the thread with the same topic."
     }
   ],
   "confirm": [],
@@ -552,7 +573,7 @@
     "_intro": "This page is the skill sheet for the MakerWorld reviews skill. It pulls every rating, comment, and nested reply from a MakerWorld model page into one translated, threaded file with a working link for each entry, and it can turn that file into a vibe dashboard.",
     "Dashboard Summary": "A short intro and a table of every section",
     "What It Is": "What the skill is, and why it exists: MakerWorld loads reviews ten at a time by script, so the data has to come from the site's own interface, called from a real browser tab",
-    "What It Does": "Eight things it handles: the full pull in the background, a count check, translation, the threaded file, permalinks, a plain text version, and a dashboard in the current vibe dashboard format, with search, a mind map, and a glossary",
+    "What It Does": "Eight things it handles: the full pull in the background, a count check, translation, the threaded file, permalinks, a plain text version, and a dashboard that puts every rating, comment and reply in one table sorted by topic, with search, a mind map, and a glossary",
     "How to Use It": "What to ask for, then eight steps on the Mac, from opening the desktop app and pasting the model link, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet",
     "Skills It Depends On": "The built in browser skill, or the Chrome browser skill for Chrome, and the vibe dashboard skill for dashboards. The Facebook comments and YouTube comments skills are related siblings",
     "Programs It Depends On": "The Claude desktop app, Google Chrome with the Claude in Chrome extension, or Perplexity's Comet browser, plus Python in Claude's workspace. Edge and [Bambu](/bˈæmbuː/) Studio are not needed",
@@ -564,13 +585,13 @@
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
-    "card_version": 3,
-    "fingerprint": "sha256:4cd944b2c2f8f2ee",
+    "card_version": 4,
+    "fingerprint": "sha256:58520ee46a3fcf24",
     "files": [
       "SKILL.md"
     ],
-    "skill_updated": "Sat Nov 7, 2026",
-    "carded": "Sat Nov 7, 2026",
+    "skill_updated": "Fri Nov 13, 2026",
+    "carded": "Sat Nov 14, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/makerworld-reviews.zip",
     "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU",

@@ -3,8 +3,8 @@
   "title": "Facebook Comments",
   "summary": "Pulls every comment and reply from a Facebook post into one threaded JSON file with exact reply-to links and clean permalinks, and can turn it into a vibe dashboard.",
   "what_it_is": [
-    "A Claude skill that collects the complete comment tree of a Facebook post, in a group, on a page, or on a profile. It switches the post to **All comments**, expands every hidden reply, records who answered whom, and saves the result as one JSON file. This page describes version 1.1.0 of the skill.",
-    "After delivering the file, Claude offers a button to build Swami's vibe dashboard from it: the post, discussion stats and participants, Claude's themes and takeaways, every thread, a search, a mind map, a glossary, and an audio overview."
+    "A Claude skill that collects the complete comment tree of a Facebook post, in a group, on a page, or on a profile. It switches the post to **All comments**, expands every hidden reply, records who answered whom, and saves the result as one JSON file. This page describes the skill as updated on Fri Nov 13, 2026.",
+    "After delivering the file, Claude offers a button to build Swami's vibe dashboard from it, in vibe-dashboard's shared comment layout: The Post, Discussion at a Glance (stats and participants), Claude's Themes & Takeaways, and one Comment Threads table of every comment and reply, plus a search, a mind map, a glossary, and an audio overview."
   ],
   "why": "Facebook lazy-loads comments, hides replies behind \"View all N replies\", and defaults to \"Most relevant\", which leaves some comments out. Group posts also need a signed-in member, so a plain web fetch or Claude's cloud workspace gets nothing.",
   "what_it_does": [
@@ -38,7 +38,7 @@
     },
     {
       "topic": "Dashboard",
-      "text": "On request, or from the button after delivery, builds a vibe dashboard in the current vibe-dashboard format: the post, stats and participants, themes and open requests, every thread (with an OP tag on the post author's own comments), Search, Mind Map, Glossary, references, and an audio overview."
+      "text": "On request, or from the button after delivery, writes vibe-dashboard's standard comment JSON (6 to 9 topics, always with Chatter, plus themes naming who raised them) and runs its `comments_sections.py`. That builds The Post, Discussion at a Glance, Themes & Takeaways, and one Comment Threads table (Topic / From / QTY / QTY-TOT / Comment / Link, OP tag on the post author, opening sorted by Topic), then Search, Mind Map, Glossary, References, and an audio overview."
     }
   ],
   "triggers": [
@@ -134,7 +134,7 @@
     {
       "name": "vibe-dashboard",
       "need": "Optional",
-      "why": "Required only for the dashboard step: its design system, template, search, mind map, glossary, and audio all apply."
+      "why": "Required only for the dashboard step: its comment-dashboard layout and `comments_sections.py`, design system, template, search, mind map, glossary, and audio all apply."
     },
     {
       "name": "makerworld-reviews",
@@ -251,6 +251,10 @@
     {
       "topic": "Windows untested",
       "text": "The Windows desktop app and Chrome on Windows have not been tried yet."
+    },
+    {
+      "topic": "Photo count",
+      "text": "The dashboard's \"with media\" count reads a `has_media` flag that the extraction step does not record yet, so it shows zero. A fix to the extraction is pending."
     }
   ],
   "scheduled_tasks": {
@@ -343,8 +347,8 @@
       "text": "Where the file, message, or button tools aren't available, Claude attaches the file that surface's own way and sends the summary and the dashboard offer as plain messages."
     },
     {
-      "topic": "Crushed columns",
-      "text": "Dashboard thread tables use exactly three columns (From, Comment, Link); more columns make names break one letter per line."
+      "topic": "One threads table",
+      "text": "Dashboards no longer get one table per thread. Every comment and reply goes in the single Comment Threads table that `comments_sections.py` builds; Claude only writes the standard comment JSON, the topics, and the themes."
     },
     {
       "topic": "Personal details",
@@ -506,6 +510,27 @@
       "match": "the button|a button",
       "code": "AskUserQuestion",
       "def": "The clickable \"Build a vibe-dashboard?\" offer Claude sends as the last thing after delivering the JSON."
+    },
+    {
+      "term": "Standard comment JSON",
+      "topic": "Structure",
+      "match": "standard comment JSON",
+      "code": "comments.json",
+      "def": "vibe-dashboard's shared format for comment and review data: source, labels, topics, themes, and one item per comment or reply."
+    },
+    {
+      "term": "comments_sections.py",
+      "topic": "Claude",
+      "match": "comments_sections",
+      "code": "comments_sections.py",
+      "def": "vibe-dashboard's script that turns the standard comment JSON into The Post, Discussion at a Glance, Themes & Takeaways, and Comment Threads sections."
+    },
+    {
+      "term": "QTY-TOT",
+      "topic": "Structure",
+      "match": "QTY-TOT",
+      "code": "",
+      "def": "In the Comment Threads table, the number of messages in the whole thread; QTY counts only those in the thread with the same topic."
     }
   ],
   "confirm": [],
@@ -513,7 +538,7 @@
     "_intro": "This page is the skill sheet for the Facebook comments skill. It pulls every comment and reply from a Facebook post into one threaded file with exact reply links and clean permalinks, and it can turn that file into a vibe dashboard.",
     "Dashboard Summary": "A short intro and a table of every section",
     "What It Is": "What the skill is, and why it exists: Facebook hides replies, defaults to most relevant, and needs a signed in member for groups, so the comments have to come from a real browser",
-    "What It Does": "Eight things it handles: switching to all comments, expanding every reply, a count check, exact reply links, the threaded file, clean permalinks, approximate dates, and the dashboard",
+    "What It Does": "Eight things it handles: switching to all comments, expanding every reply, a count check, exact reply links, the threaded file, clean permalinks, approximate dates, and the dashboard, which now puts every comment in one table sorted by topic",
     "How to Use It": "What to ask for, then eight steps on the Mac, from opening the desktop app and signing in to Facebook, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet",
     "Skills It Depends On": "The built in browser skill, or the Chrome browser skill as a fallback, and the vibe dashboard skill for dashboards. MakerWorld reviews and YouTube comments are related siblings",
     "Programs It Depends On": "The Claude desktop app, or Google Chrome with the Claude in Chrome extension, plus Python in Claude's workspace, with Beautiful Soup and Playwright as helpers. Comet and Edge are not supported",
@@ -525,13 +550,13 @@
     "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
   },
   "meta": {
-    "card_version": 4,
-    "fingerprint": "sha256:020b7e2fe708e2fe",
+    "card_version": 5,
+    "fingerprint": "sha256:2b30c1cd9b26b650",
     "files": [
       "SKILL.md"
     ],
-    "skill_updated": "Sat Nov 7, 2026",
-    "carded": "Sun Nov 8, 2026",
+    "skill_updated": "Fri Nov 13, 2026",
+    "carded": "Sat Nov 14, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/facebook-comments.zip",
     "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba",

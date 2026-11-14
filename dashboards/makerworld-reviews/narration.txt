@@ -6,7 +6,7 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. What the skill is, and why it exists: MakerWorld loads reviews ten at a time by script, so the data has to come from the site's own interface, called from a real browser tab.
 
-Section four, What It Does. Eight things it handles: the full pull in the background, a count check, translation, the threaded file, permalinks, a plain text version, and a dashboard in the current vibe dashboard format, with search, a mind map, and a glossary.
+Section four, What It Does. Eight things it handles: the full pull in the background, a count check, translation, the threaded file, permalinks, a plain text version, and a dashboard that puts every rating, comment and reply in one table sorted by topic, with search, a mind map, and a glossary.
 
 Section five, How to Use It. What to ask for, then eight steps on the Mac, from opening the desktop app and pasting the model link, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet.
 

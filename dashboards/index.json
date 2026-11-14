@@ -2,9 +2,9 @@
   "facebook-comments": {
     "title": "Facebook Comments",
     "page": "dashboards/facebook-comments/",
-    "fingerprint": "sha256:020b7e2fe708e2fe",
-    "skill_updated": "Sat Nov 7, 2026",
-    "published": "2026-11-08",
+    "fingerprint": "sha256:2b30c1cd9b26b650",
+    "skill_updated": "Fri Nov 13, 2026",
+    "published": "2026-11-14",
     "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
   },
   "fusion-addin-installer": {
@@ -58,9 +58,9 @@
   "makerworld-reviews": {
     "title": "MakerWorld Reviews",
     "page": "dashboards/makerworld-reviews/",
-    "fingerprint": "sha256:4cd944b2c2f8f2ee",
-    "skill_updated": "Sat Nov 7, 2026",
-    "published": "2026-11-07",
+    "fingerprint": "sha256:58520ee46a3fcf24",
+    "skill_updated": "Fri Nov 13, 2026",
+    "published": "2026-11-14",
     "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
   },
   "vector-bitmap-graphic-finder": {
@@ -90,9 +90,9 @@
   "youtube-comments": {
     "title": "YouTube Comments",
     "page": "dashboards/youtube-comments/",
-    "fingerprint": "sha256:adbfe50de229dd73",
-    "skill_updated": "Tue Nov 10, 2026",
-    "published": "2026-11-11",
+    "fingerprint": "sha256:31d355b526549f18",
+    "skill_updated": "Fri Nov 13, 2026",
+    "published": "2026-11-14",
     "draft_url": "https://claude.ai/artifact/D9nX5ELyD12Qvd52DAY89p"
   },
   "youtube-transcript": {

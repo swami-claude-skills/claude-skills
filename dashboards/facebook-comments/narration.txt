@@ -6,7 +6,7 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. What the skill is, and why it exists: Facebook hides replies, defaults to most relevant, and needs a signed in member for groups, so the comments have to come from a real browser.
 
-Section four, What It Does. Eight things it handles: switching to all comments, expanding every reply, a count check, exact reply links, the threaded file, clean permalinks, approximate dates, and the dashboard.
+Section four, What It Does. Eight things it handles: switching to all comments, expanding every reply, a count check, exact reply links, the threaded file, clean permalinks, approximate dates, and the dashboard, which now puts every comment in one table sorted by topic.
 
 Section five, How to Use It. What to ask for, then eight steps on the Mac, from opening the desktop app and signing in to Facebook, to picking yes on the dashboard button. A second table gives the Windows steps, which have not been tried yet.
 

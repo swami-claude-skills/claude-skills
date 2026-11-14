@@ -6,7 +6,7 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. What the skill is, and why it exists: copying comments by hand once caught only seventy five of four hundred and seventy four.
 
-Section four, What It Does. Eight things it handles, from ready to paste commands and full extraction, to stats, a threaded text file, a dashboard, a table, an export, and a browser fallback.
+Section four, What It Does. Eight things it handles, from ready to paste commands and full extraction, to stats, a threaded text file that keeps replies to replies in their thread, a dashboard with one table of every comment sorted by topic, a table, an export, and a browser fallback.
 
 Section five, How to Use It. What to ask for, then six steps on the Mac: ask, install once, [extract](/ɪkstɹˈækt/) with YTX or why-tee-dee-ell-pee yourself, [upload](/ʌplˈoʊd/) the file or let Claude read it from a linked Mac, let Claude process it, and choose the hand off. A second table gives the same steps on Windows, with the PowerShell version of YTX.
 
@@ -14,13 +14,13 @@ Section six, Skills It Depends On. None are required. The vibe dashboard skill i
 
 Section seven, Programs It Depends On. Why-tee-dee-ell-pee and Swami's YTX shortcut, which now has a PowerShell version for Windows, plus Terminal or PowerShell, Python in Claude's workspace, and optionally [Deno](/dˈiːnoʊ/) and a web browser. Each program has macOS and Windows install notes.
 
-Section eight, Capabilities and Limitations. It gets the complete comment tree with no API key. But neither Claude's cloud workspace nor a linked computer's shell can reach YouTube, comment counts drift, YouTube changes can break older versions, the browser fallback is partial and needs Swami's OK, and the Windows YTX has never been run.
+Section eight, Capabilities and Limitations. It gets the complete comment tree with no API key, keeps replies to replies in their threads, and on a dashboard puts every comment in one table. But neither Claude's cloud workspace nor a linked computer's shell can reach YouTube, comment counts drift, YouTube changes can break older versions, the browser fallback is partial and needs Swami's OK, and the Windows YTX has never been run.
 
 Section nine, Scheduled Tasks. None. The skill runs only when asked.
 
 Section ten, Where It Runs. It works in any Claude app session with code execution on. In a chat linked to the Mac, Claude can read the file but can't run the extraction, so that's partial. A linked Windows PC, Claude Code, and other AI assistants are not tested; Swami tests in Claude only.
 
-Section eleven, Gotchas. Seventeen traps, the biggest being that a reply depth of one silently drops every reply. Three cover linked computers, folders without comments, and never switching to the browser on its own; four are for Windows, and one covers a missing [Deno](/dˈiːnoʊ/).
+Section eleven, Gotchas. Eighteen traps, the biggest being that a reply depth of one silently drops every reply, and that grouping replies by parent alone drops replies to replies. Three cover linked computers, folders without comments, and never switching to the browser on its own; four are for Windows, and one covers a missing [Deno](/dˈiːnoʊ/).
 
 Section twelve, Other Requirements. A Mac running macOS ten fifteen or newer, or a Windows ten or eleven PC, plus code execution, a way to [upload](/ʌplˈoʊd/) the file, and internet on the computer.
 
