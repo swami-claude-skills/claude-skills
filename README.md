@@ -6,6 +6,8 @@ Claude skills built by Swami (Vibe Coding: Swami · AI: Claude). Each skill is o
 
 | Skill | What it does | Download |
 |---|---|---|
+| `ai-rule-review` | Reviews a batch of proposed Fusion AI rules against the existing set, flagging conflicts and gaps and recommending fixes. | [ai-rule-review.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/ai-rule-review.zip) |
+| `ai-rules-manager` | Maintains Swami's Fusion AI Rules repo: adds, changes or deprecates rules, bumps the version, opens a PR and republishes. | [ai-rules-manager.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/ai-rules-manager.zip) |
 | `facebook-comments` | Extracts every comment and reply from a Facebook post into threaded JSON, optionally as a vibe dashboard. | [facebook-comments.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/facebook-comments.zip) |
 | `fusion-addin-installer` | Generates double-click macOS and Windows installers that copy a Fusion add-in into Fusion's AddIns folder. | [fusion-addin-installer.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-installer.zip) |
 | `fusion-addin-scaffold` | Scaffolds Fusion Python add-ins and scripts: manifest, commands, handlers, palettes, icons, teardown and debugging. | [fusion-addin-scaffold.zip](https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-scaffold.zip) |
