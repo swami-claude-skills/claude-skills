@@ -7,6 +7,14 @@
     "published": "2026-11-14",
     "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
   },
+  "fusion-addin-github-tracker": {
+    "title": "Fusion Add-in GitHub Tracker",
+    "page": "dashboards/fusion-addin-github-tracker/",
+    "fingerprint": "sha256:0a97fa1ab9cbab0e",
+    "skill_updated": "Tue Nov 24, 2026",
+    "published": "2026-11-24",
+    "draft_url": "https://claude.ai/artifact/RhR9Uy1sWHXyduhCY7wzmN"
+  },
   "fusion-addin-installer": {
     "title": "Fusion Add-in Installer",
     "page": "dashboards/fusion-addin-installer/",

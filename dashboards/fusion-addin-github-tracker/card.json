@@ -1,0 +1,421 @@
+{
+  "skill": "fusion-addin-github-tracker",
+  "title": "Fusion Add-in GitHub Tracker",
+  "summary": "Builds a tracker dashboard for taking one Autodesk Fusion add-in to a public GitHub repo, from just its name: moving an existing add-in, or starting a new one in its repo.",
+  "what_it_is": [
+    "A Claude skill that builds a **tracker dashboard**: a vibe-dashboard page with its own owner-only database, for one Fusion add-in on its way to a public GitHub repository. It follows the shape of the Selection Inspector move tracker (**Tue Nov 24, 2026**).",
+    "It has two paths. **Move** is for an add-in that already exists: Swami uploads its zip, and the steps run Instructions, Tracker, Audit, Create repo, First release, Future releases and Field guide. **New** is for an add-in built in its repo from day one: Instructions, Tracker, Create repo, Build on branch `dev`, First release, Future releases and Field guide.",
+    "Every step has a copyable prompt, a status and a done tick saved in the page's database, so any later chat can tick a step for Swami and the page stays the one record of where the job stands."
+  ],
+  "why": "Moving the Selection Inspector add-in to GitHub taught lessons worth keeping, such as shipping the update check in the very first release. This skill bakes them into a tracker Claude builds fresh for each add-in, instead of re-planning every move from scratch.",
+  "what_it_does": [
+    {
+      "topic": "Inputs",
+      "text": "Works out the path (an uploaded zip means move), the display and internal names, the repo name (`fusion-addin-<name>` under `swami-claude-skills`), a one-sentence description, the button location and, for a move, the uploaded version. It asks only for what it can't work out."
+    },
+    {
+      "topic": "Kit",
+      "text": "Gets the tracker kit from Swami's private repo `swami-claude-skills/vibe-dashboards`, folder `addin-tracker/`: `build_tracker.py`, `tracker.js`, `extra.css`, `post.py`, three patch files and two sample configs."
+    },
+    {
+      "topic": "Config",
+      "text": "Writes a small `cfg.json` for the add-in, such as name, internal name, description, location, start date and path."
+    },
+    {
+      "topic": "Build",
+      "text": "Builds the page with `build_tracker.py`, then runs vibe-dashboard's table-fit, toolbar, Search, Mind Map, source colour and tooltip patches in a fixed order."
+    },
+    {
+      "topic": "Page Content",
+      "text": "The step table with a prompt per step, a diagram of the whole job with a colour key, Decisions, Links that turn live, the model and planned repo layouts as collapsible trees, a 15-check Test in Fusion list and Troubleshooting."
+    },
+    {
+      "topic": "Checks",
+      "text": "Looks at the diagram for overlaps and opens the page at 1440, 1000 and 390 px: no console errors, no sideways scroll on a phone, no system tooltips, every glossary term found, and 13 sections in order."
+    },
+    {
+      "topic": "Audio",
+      "text": "Records the audio overview from the narration draft the build writes, after the noun/verb stress audit."
+    },
+    {
+      "topic": "Privacy",
+      "text": "Scans the page, narration and config against the project's own exclusion list before publishing; any real hit stops the publish."
+    },
+    {
+      "topic": "Publish",
+      "text": "Publishes the page with an owner-only database (steps, tests and links), checks the database, ticks step 2 done, and records the tracker link in project memory."
+    }
+  ],
+  "triggers": [
+    "\"Make a GitHub tracker for my Hole Counter add-in\"",
+    "\"I want to move Selection Inspector to GitHub\" (with the add-in's zip)",
+    "\"Start a new Fusion add-in in its own repo and give me a tracker\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "In the Claude project for the add-in, ask for a tracker. For a move, upload the add-in's zip.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Answer",
+      "step": "Answer any questions about the name, description or button location that Claude can't work out.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Build",
+      "step": "Claude gets the kit, builds and checks the page, records the audio, runs the privacy scan and publishes the tracker.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Link It",
+      "step": "Add the tracker link to the project instructions, so every chat in the project ticks its steps there.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Work the Steps",
+      "step": "Copy each step's prompt into a chat. When a step is done, tick it on the page or ask Claude to tick it.",
+      "who": "Swami, then Claude"
+    },
+    {
+      "topic": "Test",
+      "step": "Run the Test in Fusion checks on your own computer; checks 13 to 15 need the second release.",
+      "who": "Swami"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Same Steps",
+      "step": "Building the tracker happens in Claude's workspace and on claude.ai, so these steps are the same on Windows 10 or 11.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Test",
+      "step": "The Test in Fusion checks run in Fusion on the Windows PC; where a step says Finder or Terminal, use File Explorer or PowerShell.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Required",
+      "why": "Loaded first: its template, patches, audio, pronunciation and privacy rules govern the tracker page."
+    },
+    {
+      "name": "fusion-palette-addin",
+      "need": "Related",
+      "why": "Builds add-ins to Swami's house spec; a new add-in built on branch `dev` would usually follow it."
+    },
+    {
+      "name": "fusion-addin-installer",
+      "need": "Related",
+      "why": "Makes the double-click installers an add-in release may ship with."
+    }
+  ],
+  "programs": [
+    {
+      "name": "git",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Clones the private repo that holds the tracker kit.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs `build_tracker.py`, `post.py` and the vibe-dashboard patches.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Playwright with Chromium",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Renders the diagram to PNG and opens the page at three widths for the checks.",
+      "install": "Pre-installed in Claude's workspace.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Kokoro voice and ffmpeg",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Record the audio overview through the vibe-dashboard skill.",
+      "install": "Installed on first use by vibe-dashboard's audio script (needs network access for the voice model).",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Autodesk Fusion",
+      "need": "Not needed",
+      "where": "Swami's Mac or PC",
+      "why": "Not used to build the tracker. Swami uses it later for the tracker's Test in Fusion step.",
+      "install": "—",
+      "install_windows": "—"
+    },
+    {
+      "name": "Terminal or PowerShell",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Nothing runs on Swami's computer while the tracker is built.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "From a Name",
+      "text": "Starts from just the add-in's name and works out the rest, asking only for what it can't."
+    },
+    {
+      "topic": "Two Paths",
+      "text": "Covers both a move of an existing add-in and a new add-in built in its repo from day one."
+    },
+    {
+      "topic": "One Record",
+      "text": "Ticks and statuses live in the page's own database, so they survive rebuilds and any chat can update them."
+    },
+    {
+      "topic": "Lessons Kept",
+      "text": "Bakes in what earlier moves taught: the update check ships in the first release, update-banner tests wait for the second, and the Claude GitHub app may need the new repo added."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Tracks, Doesn't Do",
+      "text": "It builds the tracker; the move or build itself happens later, step by step, from the prompts on the page."
+    },
+    {
+      "topic": "Private Kit",
+      "text": "The kit lives in Swami's private repo, so the skill only works on an account whose Claude GitHub app can reach that repo."
+    },
+    {
+      "topic": "Owner-Only Ticks",
+      "text": "Only Swami, or Claude writing as him, can change a step's status or tick; other viewers see them read only."
+    },
+    {
+      "topic": "No Fusion Testing",
+      "text": "Claude can't run the add-in in Fusion; the Test in Fusion checks are for Swami."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. It runs when Swami asks for a tracker, and steps are ticked from chats. The nightly GitHub backup of Swami's artifacts also saves each tracker page, but that task is not part of this skill.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "Where it is meant to run, inside the add-in's Claude project: needs code execution, the private vibe-dashboards repo attached, and the artifact database. Not run yet."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Untested",
+      "notes": "The work happens in Claude's cloud workspace; linking the Mac adds nothing it needs."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Should work the same way, since nothing runs on the PC."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "A cloud session started from the phone should be able to build it; uploading an add-in zip from a phone is harder."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Would need the kit cloned locally, Playwright, the audio tools and a way to publish artifacts with a database."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. It has no claude.ai artifacts or artifact database, and no access to the private kit repo, so the tracker can't be built as designed."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Same limits: no artifact database and no access to the private kit."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip, or the SKILL.md if refused; installing by chat drifts. Same limits as the others."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Update Check First",
+      "text": "The first public release always includes the update check; a move's first release is a minor bump over the uploaded version, with no separate as-is release."
+    },
+    {
+      "topic": "Banner Tests",
+      "text": "Update-banner checks 13 to 15 only work from the second release."
+    },
+    {
+      "topic": "GitHub App Access",
+      "text": "Add the new repo to the Claude GitHub app before the first push (github.com/settings/installations › Claude › Repository access; GitHub confirms by email)."
+    },
+    {
+      "topic": "New Path",
+      "text": "Main gets no `version.json` until the first release, so the release workflow has nothing to publish while the add-in is built on `dev`."
+    },
+    {
+      "topic": "Republishing",
+      "text": "Later republishes leave the capabilities out, so the database rules and saved ticks stay. Read a database doc before changing it, since writing it replaces the whole doc."
+    },
+    {
+      "topic": "Privacy Terms",
+      "text": "Never write the exclusion terms anywhere; refer to an exclusion only as \"1 item excluded for privacy\"."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Claude Project",
+      "text": "A Claude project for the add-in, with instructions that include its privacy exclusion list; the skill follows those instructions on top of its own."
+    },
+    {
+      "topic": "GitHub Access",
+      "text": "Swami's GitHub connected to Claude, with the private vibe-dashboards repo reachable by the Claude GitHub app."
+    },
+    {
+      "topic": "Code Execution",
+      "text": "Code execution with network access, for the kit, the patches, the browser checks and the audio."
+    },
+    {
+      "topic": "Windows",
+      "text": "Nothing extra to build a tracker: works the same from Windows 10 or 11."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Tracker dashboard",
+      "topic": "Tracker",
+      "match": "[Tt]racker(?:s| dashboards?)?",
+      "code": "",
+      "def": "The vibe-dashboard page this skill builds: steps, prompts, ticks, diagram, links and checks for one add-in's trip to GitHub."
+    },
+    {
+      "term": "Fusion add-in",
+      "topic": "Fusion",
+      "match": "add-ins?",
+      "code": "",
+      "def": "A Python program that adds commands or panels to Autodesk Fusion, installed in Fusion's AddIns folder."
+    },
+    {
+      "term": "Move path",
+      "topic": "Tracker",
+      "match": "[Mm]oves?",
+      "code": "",
+      "def": "The path for an add-in that already exists: it is audited, then published from a new repo."
+    },
+    {
+      "term": "New path",
+      "topic": "Tracker",
+      "match": "[Nn]ew path|day one",
+      "code": "",
+      "def": "The path for an add-in built in its repo from day one, on branch dev, until the first release."
+    },
+    {
+      "term": "Repository",
+      "topic": "GitHub",
+      "match": "repos?(?:itory|itories)?",
+      "code": "",
+      "def": "A GitHub project folder with its full history. Each add-in gets its own public one."
+    },
+    {
+      "term": "Release",
+      "topic": "GitHub",
+      "match": "releases?",
+      "code": "version.json",
+      "def": "A published version of the add-in on GitHub, with its zip, that users download and the update check looks for."
+    },
+    {
+      "term": "Update check",
+      "topic": "Fusion",
+      "match": "update check",
+      "code": "",
+      "def": "Code in the add-in that looks for a newer release and shows a banner, so users hear about fixes."
+    },
+    {
+      "term": "Branch",
+      "topic": "GitHub",
+      "match": "branch(?:es)?",
+      "code": "dev",
+      "def": "A separate line of work in a repo. The new path builds on dev and merges to main for the first release."
+    },
+    {
+      "term": "Kit",
+      "topic": "Tracker",
+      "match": "kit",
+      "code": "addin-tracker/|build_tracker.py",
+      "def": "The scripts and files in Swami's private repo that build every tracker page."
+    },
+    {
+      "term": "Database",
+      "topic": "Claude",
+      "match": "database",
+      "code": "",
+      "def": "The page's own owner-only store of step statuses, test ticks and live links, kept across republishes."
+    },
+    {
+      "term": "Test in Fusion",
+      "topic": "Fusion",
+      "match": "Test in Fusion",
+      "code": "",
+      "def": "The tracker's list of 15 checks Swami runs in Fusion on a release."
+    },
+    {
+      "term": "Claude GitHub app",
+      "topic": "GitHub",
+      "match": "Claude GitHub app",
+      "code": "",
+      "def": "The GitHub app that lets Claude read and push to Swami's repos; each repo must be added to it."
+    },
+    {
+      "term": "Privacy scan",
+      "topic": "Claude",
+      "match": "privacy scan",
+      "code": "",
+      "def": "A check of the page, narration and config against the project's exclusion list before anything is published."
+    },
+    {
+      "term": "Audio overview",
+      "topic": "Claude",
+      "match": "audio overview",
+      "code": "",
+      "def": "The spoken summary of the page, recorded by the vibe-dashboard skill and played under its title."
+    },
+    {
+      "term": "Prompt",
+      "topic": "Tracker",
+      "match": "prompts?",
+      "code": "",
+      "def": "The copyable text for each step, pasted into a chat to have Claude do that step."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This is the skill sheet for the Fusion Add-in GitHub Tracker, the skill that builds a tracker page for taking one Fusion add-in to its own public GitHub repo",
+    "What It Is": "It has two paths: move, for an add-in that already exists, and new, for one built in its repo from day one. Every step has a copyable prompt and a done tick saved in the page's own database",
+    "What It Does": "It gets the tracker kit from Swami's private repo, writes a small settings file, builds and patches the page, checks it in a browser, adds the audio overview, runs the privacy scan, and publishes it",
+    "How to Use It": "Ask for a tracker in the add-in's Claude project, answer any questions, add the tracker link to the project instructions, then work through the steps and tick each one when it's done",
+    "Gotchas": "The first public release always includes the update check, and the update banner tests only work from the second release"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:0a97fa1ab9cbab0e",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Tue Nov 24, 2026",
+    "carded": "Tue Nov 24, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-github-tracker.zip",
+    "draft_url": "https://claude.ai/artifact/RhR9Uy1sWHXyduhCY7wzmN",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-addin-github-tracker/"
+  }
+}
