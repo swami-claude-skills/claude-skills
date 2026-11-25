@@ -1,130 +1,130 @@
 {
-  "ai-rule-review": {
-    "title": "AI Rule Review",
-    "page": "dashboards/ai-rule-review/",
-    "fingerprint": "sha256:c7283ab75cfd36b6",
-    "skill_updated": "Sun Nov 22, 2026",
-    "published": "2026-11-24",
-    "draft_url": "https://claude.ai/artifact/HFEt245Bj8KHfoCCKiVxqu"
-  },
-  "ai-rules-manager": {
-    "title": "AI Rules Manager",
-    "page": "dashboards/ai-rules-manager/",
-    "fingerprint": "sha256:df5f2752b533c055",
-    "skill_updated": "Sun Nov 22, 2026",
-    "published": "2026-11-25",
-    "draft_url": "https://claude.ai/artifact/KGpiLJVkZM3nvbAB5Sb36s"
-  },
-  "facebook-comments": {
-    "title": "Facebook Comments",
-    "page": "dashboards/facebook-comments/",
-    "fingerprint": "sha256:2b30c1cd9b26b650",
-    "skill_updated": "Fri Nov 13, 2026",
-    "published": "2026-11-14",
-    "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
-  },
-  "fusion-addin-github-tracker": {
-    "title": "Fusion Add-in GitHub Tracker",
-    "page": "dashboards/fusion-addin-github-tracker/",
-    "fingerprint": "sha256:325f2f4f2df8c296",
-    "skill_updated": "Tue Nov 24, 2026",
-    "published": "2026-11-25",
-    "draft_url": "https://claude.ai/artifact/RhR9Uy1sWHXyduhCY7wzmN"
-  },
-  "fusion-addin-installer": {
-    "title": "Fusion Add-in Installer",
-    "page": "dashboards/fusion-addin-installer/",
-    "fingerprint": "sha256:3ef4d006505e4b7f",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
-    "draft_url": "https://claude.ai/artifact/EXB9S9KWE2d4zjoxMTJfKD"
-  },
-  "fusion-addin-scaffold": {
-    "title": "Fusion Add-in Scaffold",
-    "page": "dashboards/fusion-addin-scaffold/",
-    "fingerprint": "sha256:30fb3053e7003c36",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
-    "draft_url": "https://claude.ai/artifact/Q3jsfc35Ee98qj5v6L1eHU"
-  },
-  "fusion-cam-settings": {
-    "title": "Fusion CAM Settings",
-    "page": "dashboards/fusion-cam-settings/",
-    "fingerprint": "sha256:d9b59dcf4c668abd",
-    "skill_updated": "Fri Nov 13, 2026",
-    "published": "2026-11-13",
-    "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek"
-  },
-  "fusion-doc": {
-    "title": "Fusion Doc",
-    "page": "dashboards/fusion-doc/",
-    "fingerprint": "sha256:49859df515e72585",
-    "skill_updated": "Fri Nov 13, 2026",
-    "published": "2026-11-13",
-    "draft_url": "https://claude.ai/artifact/FAmU8YFsHPRg6nZyE9vASk"
-  },
-  "fusion-doc-json": {
-    "title": "Fusion Doc to JSON",
-    "page": "dashboards/fusion-doc-json/",
-    "fingerprint": "sha256:272da863484546c8",
-    "skill_updated": "Fri Nov 13, 2026",
-    "published": "2026-11-13",
-    "draft_url": "https://claude.ai/artifact/7TGERnroJdfGRKAsqfHHYK"
-  },
-  "fusion-palette-addin": {
-    "title": "Fusion Palette Add-in",
-    "page": "dashboards/fusion-palette-addin/",
-    "fingerprint": "sha256:7da3895bd4fac5fb",
-    "skill_updated": "Tue Nov 24, 2026",
-    "published": "2026-11-25",
-    "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq"
-  },
-  "makerworld-reviews": {
-    "title": "MakerWorld Reviews",
-    "page": "dashboards/makerworld-reviews/",
-    "fingerprint": "sha256:58520ee46a3fcf24",
-    "skill_updated": "Fri Nov 13, 2026",
-    "published": "2026-11-14",
-    "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
-  },
-  "vector-bitmap-graphic-finder": {
-    "title": "Vector & Bitmap Graphic Finder",
-    "page": "dashboards/vector-bitmap-graphic-finder/",
-    "fingerprint": "sha256:064826e4c9c3ec05",
-    "skill_updated": "Fri Nov 13, 2026",
-    "published": "2026-11-14",
-    "draft_url": "https://claude.ai/artifact/EPQj1yqnwomXi6zF8XTe6B"
-  },
-  "vibe-dashboard": {
-    "title": "Vibe Dashboard",
-    "page": "dashboards/vibe-dashboard/",
-    "fingerprint": "sha256:134d18129b732c81",
-    "skill_updated": "Tue Nov 24, 2026",
-    "published": "2026-11-24",
-    "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx"
-  },
-  "vibe-promptmaker": {
-    "title": "Vibe Prompt Maker",
-    "page": "dashboards/vibe-promptmaker/",
-    "fingerprint": "sha256:2d8805f984e01dcc",
-    "skill_updated": "Sun Nov 8, 2026",
-    "published": "2026-11-08",
-    "draft_url": "https://claude.ai/artifact/ECdwvu8BUfzvDTB1yFyk2o"
-  },
-  "youtube-comments": {
-    "title": "YouTube Comments",
-    "page": "dashboards/youtube-comments/",
-    "fingerprint": "sha256:31d355b526549f18",
-    "skill_updated": "Fri Nov 13, 2026",
-    "published": "2026-11-14",
-    "draft_url": "https://claude.ai/artifact/D9nX5ELyD12Qvd52DAY89p"
-  },
-  "youtube-transcript": {
-    "title": "YouTube Transcript",
-    "page": "dashboards/youtube-transcript/",
-    "fingerprint": "sha256:cee3c071ff1fcbe4",
-    "skill_updated": "Tue Nov 10, 2026",
-    "published": "2026-11-11",
-    "draft_url": "https://claude.ai/artifact/T9Bmgn8JhtQPyTc8Z24Rg2"
-  }
+ "ai-rule-review": {
+  "title": "AI Rule Review",
+  "page": "dashboards/ai-rule-review/",
+  "fingerprint": "sha256:c7283ab75cfd36b6",
+  "skill_updated": "Sun Nov 22, 2026",
+  "published": "2026-11-24",
+  "draft_url": "https://claude.ai/artifact/HFEt245Bj8KHfoCCKiVxqu"
+ },
+ "ai-rules-manager": {
+  "title": "AI Rules Manager",
+  "page": "dashboards/ai-rules-manager/",
+  "fingerprint": "sha256:18319066e3913ede",
+  "skill_updated": "Wed Nov 25, 2026",
+  "published": "2026-11-25",
+  "draft_url": "https://claude.ai/artifact/KGpiLJVkZM3nvbAB5Sb36s"
+ },
+ "facebook-comments": {
+  "title": "Facebook Comments",
+  "page": "dashboards/facebook-comments/",
+  "fingerprint": "sha256:2b30c1cd9b26b650",
+  "skill_updated": "Fri Nov 13, 2026",
+  "published": "2026-11-14",
+  "draft_url": "https://claude.ai/artifact/RAe6Csy9VStaB9Dj3ofnba"
+ },
+ "fusion-addin-github-tracker": {
+  "title": "Fusion Add-in GitHub Tracker",
+  "page": "dashboards/fusion-addin-github-tracker/",
+  "fingerprint": "sha256:325f2f4f2df8c296",
+  "skill_updated": "Tue Nov 24, 2026",
+  "published": "2026-11-25",
+  "draft_url": "https://claude.ai/artifact/RhR9Uy1sWHXyduhCY7wzmN"
+ },
+ "fusion-addin-installer": {
+  "title": "Fusion Add-in Installer",
+  "page": "dashboards/fusion-addin-installer/",
+  "fingerprint": "sha256:3ef4d006505e4b7f",
+  "skill_updated": "Mon Nov 9, 2026",
+  "published": "2026-11-09",
+  "draft_url": "https://claude.ai/artifact/EXB9S9KWE2d4zjoxMTJfKD"
+ },
+ "fusion-addin-scaffold": {
+  "title": "Fusion Add-in Scaffold",
+  "page": "dashboards/fusion-addin-scaffold/",
+  "fingerprint": "sha256:30fb3053e7003c36",
+  "skill_updated": "Mon Nov 9, 2026",
+  "published": "2026-11-09",
+  "draft_url": "https://claude.ai/artifact/Q3jsfc35Ee98qj5v6L1eHU"
+ },
+ "fusion-cam-settings": {
+  "title": "Fusion CAM Settings",
+  "page": "dashboards/fusion-cam-settings/",
+  "fingerprint": "sha256:d9b59dcf4c668abd",
+  "skill_updated": "Fri Nov 13, 2026",
+  "published": "2026-11-13",
+  "draft_url": "https://claude.ai/artifact/YCoTHrgkV5EFxS47ge2fek"
+ },
+ "fusion-doc": {
+  "title": "Fusion Doc",
+  "page": "dashboards/fusion-doc/",
+  "fingerprint": "sha256:49859df515e72585",
+  "skill_updated": "Fri Nov 13, 2026",
+  "published": "2026-11-13",
+  "draft_url": "https://claude.ai/artifact/FAmU8YFsHPRg6nZyE9vASk"
+ },
+ "fusion-doc-json": {
+  "title": "Fusion Doc to JSON",
+  "page": "dashboards/fusion-doc-json/",
+  "fingerprint": "sha256:272da863484546c8",
+  "skill_updated": "Fri Nov 13, 2026",
+  "published": "2026-11-13",
+  "draft_url": "https://claude.ai/artifact/7TGERnroJdfGRKAsqfHHYK"
+ },
+ "fusion-palette-addin": {
+  "title": "Fusion Palette Add-in",
+  "page": "dashboards/fusion-palette-addin/",
+  "fingerprint": "sha256:7da3895bd4fac5fb",
+  "skill_updated": "Tue Nov 24, 2026",
+  "published": "2026-11-25",
+  "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq"
+ },
+ "makerworld-reviews": {
+  "title": "MakerWorld Reviews",
+  "page": "dashboards/makerworld-reviews/",
+  "fingerprint": "sha256:58520ee46a3fcf24",
+  "skill_updated": "Fri Nov 13, 2026",
+  "published": "2026-11-14",
+  "draft_url": "https://claude.ai/artifact/9LNk16PkZsiD4XaVxvEyrU"
+ },
+ "vector-bitmap-graphic-finder": {
+  "title": "Vector & Bitmap Graphic Finder",
+  "page": "dashboards/vector-bitmap-graphic-finder/",
+  "fingerprint": "sha256:064826e4c9c3ec05",
+  "skill_updated": "Fri Nov 13, 2026",
+  "published": "2026-11-14",
+  "draft_url": "https://claude.ai/artifact/EPQj1yqnwomXi6zF8XTe6B"
+ },
+ "vibe-dashboard": {
+  "title": "Vibe Dashboard",
+  "page": "dashboards/vibe-dashboard/",
+  "fingerprint": "sha256:e710934d912f13a5",
+  "skill_updated": "Wed Nov 25, 2026",
+  "published": "2026-11-25",
+  "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx"
+ },
+ "vibe-promptmaker": {
+  "title": "Vibe Prompt Maker",
+  "page": "dashboards/vibe-promptmaker/",
+  "fingerprint": "sha256:2d8805f984e01dcc",
+  "skill_updated": "Sun Nov 8, 2026",
+  "published": "2026-11-08",
+  "draft_url": "https://claude.ai/artifact/ECdwvu8BUfzvDTB1yFyk2o"
+ },
+ "youtube-comments": {
+  "title": "YouTube Comments",
+  "page": "dashboards/youtube-comments/",
+  "fingerprint": "sha256:31d355b526549f18",
+  "skill_updated": "Fri Nov 13, 2026",
+  "published": "2026-11-14",
+  "draft_url": "https://claude.ai/artifact/D9nX5ELyD12Qvd52DAY89p"
+ },
+ "youtube-transcript": {
+  "title": "YouTube Transcript",
+  "page": "dashboards/youtube-transcript/",
+  "fingerprint": "sha256:cee3c071ff1fcbe4",
+  "skill_updated": "Tue Nov 10, 2026",
+  "published": "2026-11-11",
+  "draft_url": "https://claude.ai/artifact/T9Bmgn8JhtQPyTc8Z24Rg2"
+ }
 }

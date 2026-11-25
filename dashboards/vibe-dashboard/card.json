@@ -54,7 +54,7 @@
   },
   {
    "topic": "Visuals",
-   "text": "Since Nov 24, every section gets the picture that explains it best: system, workflow, state, or decision diagrams drawn as SVG images, annotated schematics, illustrations, or screenshots, each with a colour key naming what every colour and line style means."
+   "text": "Since Nov 24, every section gets the picture that explains it best: system, workflow, state, or decision diagrams drawn as SVG images, annotated schematics, illustrations, or screenshots, each with a colour key naming what every colour and line style means. Hovering a box or arrow in a diagram shows what its colour or line style means in that key."
   },
   {
    "topic": "Hierarchy trees",
@@ -62,7 +62,7 @@
   },
   {
    "topic": "Toolbar",
-   "text": "A show/hide TOC button and one expand/collapse toggle sit left of the search box, whose clear × is at the start of the field."
+   "text": "Since Nov 25, a show/hide TOC button, a top button, and separate expand all (▲) and collapse all (▼) buttons sit left of the search box, whose clear × is at the start of the field. Every section header also has its own expand/collapse button, and Alt/Option-click on a header does the same."
   },
   {
    "topic": "Source view",
@@ -623,7 +623,7 @@
  },
  "meta": {
   "card_version": 3,
-  "fingerprint": "sha256:134d18129b732c81",
+  "fingerprint": "sha256:e710934d912f13a5",
   "files": [
    "SKILL.md",
    "assets/audio-player.html",
@@ -640,12 +640,14 @@
    "scripts/search_patch.py",
    "scripts/stress_audio.py"
   ],
-  "skill_updated": "Tue Nov 24, 2026",
-  "carded": "Tue Nov 24, 2026",
+  "skill_updated": "Wed Nov 25, 2026",
+  "carded": "Wed Nov 25, 2026",
   "status": "published",
   "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-dashboard.zip",
   "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx",
-  "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/vibe-dashboard/"
+  "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/vibe-dashboard/",
+  "vibe_fingerprint": "sha256:e710934d912f13a5",
+  "vibe_updated": "Wed Nov 25, 2026"
  },
  "flow": {
   "heading": "VIBE DASHBOARD · FROM CONTENT TO A PUBLISHED PAGE",

@@ -1,4 +1,4 @@
-This is the skill sheet for AI Rules Manager, the skill that makes every change to the Fusion AI Rules
+This is the skill sheet for AI Rules Manager, the skill that makes every change to the Fusion AI Rules repository. It adds, changes, deprecates or accepts rules, bumps the version, opens a pull request, and republishes the Rule Set page.
 
 Section one, Dashboard Summary. A short intro and a table of every section.
 

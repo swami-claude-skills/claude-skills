@@ -181,12 +181,17 @@
   .tool-btn:hover{border-color:var(--cyan);color:var(--cyan)}
   /* ---- toolbar patch css ---- */
   .tool-btn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-  .tool-btn .ico{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .tool-btn .ico,.sec-all .ico{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .tool-btn .ico circle{fill:currentColor;stroke:none}
-  #toggleAll .tl{min-width:12ch} #tocToggle .tl{min-width:8ch}  /* label swap never shifts the toolbar */
-  #toggleAll .i-col{display:none} #toggleAll.all-open .i-col{display:block} #toggleAll.all-open .i-exp{display:none}
+  .tool-btn .ico.tri{width:16px;height:16px;fill:currentColor;stroke:none}
+  #tocToggle .tl{min-width:8ch}
   #tocToggle[aria-pressed="false"]{color:var(--cyan);border-color:rgba(0,229,255,.45)}
   body.toc-hidden .toc-bar{display:none}
+  .sec-all{display:inline-flex;align-items:center;justify-content:center;width:28px;height:26px;flex:none;padding:0;
+    background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-mute);cursor:pointer}
+  .sec-all:hover,.sec-all:focus-visible{border-color:var(--cyan);color:var(--cyan)}
+  .sec-all .i-col{display:none} .sec-all.all-open .i-col{display:block} .sec-all.all-open .i-exp{display:none}
+  .sec-all.all-open{color:var(--cyan);border-color:rgba(0,229,255,.35)}
   /* ---- end toolbar patch css ---- */
 
   .toc-bar{
@@ -863,6 +868,10 @@
   .tree .tnote{color:var(--text-mute);margin-left:10px;font-size:11.5px}
   .tree .tcount{color:var(--text-mute);margin-left:8px;font-size:11px}
   .tree .tcount::before{content:'{'} .tree .tcount::after{content:'}'}
+  .viz-hotwrap{position:relative;width:100%;min-width:720px}
+  .viz-hot{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
+  .viz-hot .vh-box{pointer-events:all;cursor:help}
+  .viz-hot .vh-arrow{pointer-events:stroke;cursor:help}
   /* VISUALS:CSS:END */
   /* ---- source category colour ---- */
   .cat-source .cat-badge{color:var(--cat-source);background:rgba(242,242,242,.12)}
@@ -917,7 +926,7 @@
   <h1>Vibe Dashboard <br><span class="sub">Builds Swami&#x27;s signature Vibe Coding dashboard: one self-contained dark-theme page with collapsible numbered sections, search, a mind map, a cross-linked glossary, and a spoken audio overview.</span></h1>
   <div class="byline">
     <span>Claude skill · <code>vibe-dashboard</code></span>
-    <span>Skill updated <strong class="dt">Tue Nov 24, 2026</strong></span><span>Card <strong class="dt">Tue Nov 24, 2026</strong></span>
+    <span>Skill updated <strong class="dt">Wed Nov 25, 2026</strong></span><span>Card <strong class="dt">Wed Nov 25, 2026</strong></span>
     <!-- add/remove byline spans as needed; links use target="_blank" rel="noopener".
          NO copyright mark here — never "© Swami" or any ©; attribution lives in the footer. -->
   </div>
@@ -1155,7 +1164,9 @@
   <div class="toc-bar" id="tocBar"></div>
   <div class="toolbar">
     <button class="tool-btn" id="tocToggle" aria-pressed="true" title="Hide the table of contents to see more of the page"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.3"/><circle cx="4.5" cy="12" r="1.3"/><circle cx="4.5" cy="18" r="1.3"/></svg><span class="tl">hide TOC</span></button>
-    <button class="tool-btn" id="toggleAll" title="Open every section and item"><svg class="ico i-exp" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9l5-5 5 5M7 15l5 5 5-5"/></svg><svg class="ico i-col" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg><span class="tl">expand all</span></button>
+    <button class="tool-btn" id="toTop" title="Go to the top of the page"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14M12 21V9M7 14l5-5 5 5"/></svg><span class="tl">top</span></button>
+    <button class="tool-btn" id="expandAll" title="Open every section and every part in it"><svg class="ico tri" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L22.5 20.5H1.5Z"/></svg><span class="tl">expand all</span></button>
+    <button class="tool-btn" id="collapseAll" title="Close every section and every part in it"><svg class="ico tri" viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 3.5H22.5L12 21Z"/></svg><span class="tl">collapse all</span></button>
     <div class="search-wrap">
       <div class="search-field">
         <input id="search" type="text" placeholder="search dashboard…" autocomplete="off">
@@ -1267,7 +1278,7 @@
   <div class="section cat-overview" data-title="What It Does" data-cat="overview">
     <div class="sec-head"><span class="sec-num">04</span><span class="sec-title">What It Does</span><span class="cat-badge">OVERVIEW</span><span class="chevron">▶</span></div>
     <div class="sec-body">
-      <ul><li><span class="tid">Locked look</span>Background #0d0d0f, cyan accent #00e5ff, JetBrains Mono and DM Sans. Never new colors, fonts, or layouts; category accents come in order from one 8-color palette.</li><li><span class="tid">One file</span>Every page is one self-contained .html file. Google Fonts is the only outside dependency, and images go in as data URIs.</li><li><span class="tid">Full width</span>Header, table of contents, toolbar, sections, and footer all span the window; tables fit their width when opened and refit when it changes.</li><li><span class="tid">Kicker and summary</span>A short UPPERCASE kicker above the title, and section 01 is always the Dashboard Summary with a linked &quot;What each section covers&quot; table.</li><li><span class="tid">Search</span>Section 02 is always Search: words in any order, start of a word, small typos forgiven, &quot;phrases&quot; and -exclusions, filters, and a jump to every result.</li><li><span class="tid">Mind Map</span>Every page carries a Mind Map, built from the page itself, with zoom, pan, and hover cards on every bubble.</li><li><span class="tid">Glossary</span>Terms get a dotted underline that jumps to a Glossary with color-coded topics, and each term links back to every section that uses it.</li><li><span class="tid">Collapsed start</span>Every section and every item inside it starts collapsed; tables, callouts, cards, and (since Nov 13) every top-level bullet list fold into labeled items, such as <code>[LIST]</code>, listed in the table of contents.</li><li><span class="tid">Tables</span>Every table sorts, resizes, wraps words without breaking them, and keeps its header pinned under the section and item headers while you scroll.</li><li><span class="tid">Comment dashboards</span>Pages built from comments or reviews (Facebook, MakerWorld, YouTube, and the like) get four standard sections after Search: The Post, Discussion at a Glance, Themes &amp; Takeaways, and one Comment Threads table with every message, color-coded by topic and opened sorted by Topic. A script writes them from a standard comment JSON file.</li><li><span class="tid">Helper scripts</span>Every patch and helper is a script in the skill&#x27;s <code>scripts/</code> folder (table-fit, Search, Mind Map, comment sections, audio, stress audit, and browser-voice fallback), run in place and safe to re-run. Five newer patches (toolbar, source colour, source view, tooltips, and visuals) are code blocks in its SKILL.md, saved and run the same way.</li><li><span class="tid">Visuals</span>Since Nov 24, every section gets the picture that explains it best: system, workflow, state, or decision diagrams drawn as SVG images, annotated schematics, illustrations, or screenshots, each with a colour key naming what every colour and line style means.</li><li><span class="tid">Hierarchy trees</span>Nested parts, menus, settings, and file layouts become collapsible trees, written as a plain nested list and built by the visuals patch: every branch starts closed, shows its child count in curly braces, and opens itself when a search or jump lands inside it.</li><li><span class="tid">Toolbar</span>A show/hide TOC button and one expand/collapse toggle sit left of the search box, whose clear × is at the start of the field.</li><li><span class="tid">Source view</span>The Source Document opens formatted as Markdown, with a switch to plain text; search results land on the same line in either view.</li><li><span class="tid">House tooltips</span>Every hover hint uses the house tooltip card, never the browser&#x27;s own tooltip.</li><li><span class="tid">Audio overview</span>A spoken overview (one female voice) sits under the title. Its narration follows Swami&#x27;s pronunciation rules and a noun/verb stress check; if recording fails, a browser-voice player takes its place.</li><li><span class="tid">Privacy check</span>Before every publish, people under NDA are kept off the page, its narration, and its data files.</li><li><span class="tid">House style</span>Days, dates, and times bold and bright; cyan ● bullets; topic IDs on list items; the Oxford comma; the Glossary, References, and Source Document badges in bright silver <code>#f2f2f2</code>; the footer &quot;Vibe Coding: Swami · AI: Claude&quot; with a mail link built at runtime; no © anywhere.</li><li><span class="tid">Publish as artifact</span>Pages are written in the working directory and published as private artifacts, with no runtime capabilities unless a feature needs one. This rule also overrides other skills&#x27; older save locations.</li><li><span class="tid">Version history</span>A nightly scheduled task backs up every published page to Swami&#x27;s private GitHub repo, and script-built pages commit their sources too.</li></ul>
+      <ul><li><span class="tid">Locked look</span>Background #0d0d0f, cyan accent #00e5ff, JetBrains Mono and DM Sans. Never new colors, fonts, or layouts; category accents come in order from one 8-color palette.</li><li><span class="tid">One file</span>Every page is one self-contained .html file. Google Fonts is the only outside dependency, and images go in as data URIs.</li><li><span class="tid">Full width</span>Header, table of contents, toolbar, sections, and footer all span the window; tables fit their width when opened and refit when it changes.</li><li><span class="tid">Kicker and summary</span>A short UPPERCASE kicker above the title, and section 01 is always the Dashboard Summary with a linked &quot;What each section covers&quot; table.</li><li><span class="tid">Search</span>Section 02 is always Search: words in any order, start of a word, small typos forgiven, &quot;phrases&quot; and -exclusions, filters, and a jump to every result.</li><li><span class="tid">Mind Map</span>Every page carries a Mind Map, built from the page itself, with zoom, pan, and hover cards on every bubble.</li><li><span class="tid">Glossary</span>Terms get a dotted underline that jumps to a Glossary with color-coded topics, and each term links back to every section that uses it.</li><li><span class="tid">Collapsed start</span>Every section and every item inside it starts collapsed; tables, callouts, cards, and (since Nov 13) every top-level bullet list fold into labeled items, such as <code>[LIST]</code>, listed in the table of contents.</li><li><span class="tid">Tables</span>Every table sorts, resizes, wraps words without breaking them, and keeps its header pinned under the section and item headers while you scroll.</li><li><span class="tid">Comment dashboards</span>Pages built from comments or reviews (Facebook, MakerWorld, YouTube, and the like) get four standard sections after Search: The Post, Discussion at a Glance, Themes &amp; Takeaways, and one Comment Threads table with every message, color-coded by topic and opened sorted by Topic. A script writes them from a standard comment JSON file.</li><li><span class="tid">Helper scripts</span>Every patch and helper is a script in the skill&#x27;s <code>scripts/</code> folder (table-fit, Search, Mind Map, comment sections, audio, stress audit, and browser-voice fallback), run in place and safe to re-run. Five newer patches (toolbar, source colour, source view, tooltips, and visuals) are code blocks in its SKILL.md, saved and run the same way.</li><li><span class="tid">Visuals</span>Since Nov 24, every section gets the picture that explains it best: system, workflow, state, or decision diagrams drawn as SVG images, annotated schematics, illustrations, or screenshots, each with a colour key naming what every colour and line style means. Hovering a box or arrow in a diagram shows what its colour or line style means in that key.</li><li><span class="tid">Hierarchy trees</span>Nested parts, menus, settings, and file layouts become collapsible trees, written as a plain nested list and built by the visuals patch: every branch starts closed, shows its child count in curly braces, and opens itself when a search or jump lands inside it.</li><li><span class="tid">Toolbar</span>Since Nov 25, a show/hide TOC button, a top button, and separate expand all (▲) and collapse all (▼) buttons sit left of the search box, whose clear × is at the start of the field. Every section header also has its own expand/collapse button, and Alt/Option-click on a header does the same.</li><li><span class="tid">Source view</span>The Source Document opens formatted as Markdown, with a switch to plain text; search results land on the same line in either view.</li><li><span class="tid">House tooltips</span>Every hover hint uses the house tooltip card, never the browser&#x27;s own tooltip.</li><li><span class="tid">Audio overview</span>A spoken overview (one female voice) sits under the title. Its narration follows Swami&#x27;s pronunciation rules and a noun/verb stress check; if recording fails, a browser-voice player takes its place.</li><li><span class="tid">Privacy check</span>Before every publish, people under NDA are kept off the page, its narration, and its data files.</li><li><span class="tid">House style</span>Days, dates, and times bold and bright; cyan ● bullets; topic IDs on list items; the Oxford comma; the Glossary, References, and Source Document badges in bright silver <code>#f2f2f2</code>; the footer &quot;Vibe Coding: Swami · AI: Claude&quot; with a mail link built at runtime; no © anywhere.</li><li><span class="tid">Publish as artifact</span>Pages are written in the working directory and published as private artifacts, with no runtime capabilities unless a feature needs one. This rule also overrides other skills&#x27; older save locations.</li><li><span class="tid">Version history</span>A nightly scheduled task backs up every published page to Swami&#x27;s private GitHub repo, and script-built pages commit their sources too.</li></ul>
       <!-- FLOWVIZ:BEGIN --><div class="subsec" data-tag="diagram" data-desc="Workflow diagram of a build" data-mm-tip="The ten steps from handing Claude the content to sharing the finished page, with other skills feeding in and the nightly backup after publishing."><figure class="viz"><div class="viz-scroll"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTcyIiBoZWlnaHQ9Ijc4OCIgdmlld0JveD0iMCAwIDExNzIgNzg4Ij4KPGRlZnM+PG1hcmtlciBpZD0iYWgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iOSIgcmVmWT0iNSIgbWFya2VyV2lkdGg9IjciIG1hcmtlckhlaWdodD0iNyIgb3JpZW50PSJhdXRvLXN0YXJ0LXJldmVyc2UiPjxwYXRoIGQ9Ik0wLDAgTDEwLDUgTDAsMTAgeiIgZmlsbD0iIzlhYTBhYSIvPjwvbWFya2VyPjwvZGVmcz4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjExNzIiIGhlaWdodD0iNzg4IiByeD0iMTQiIGZpbGw9IiMxNDE0MTgiIHN0cm9rZT0iIzI2MjYyZSIvPgo8dGV4dCB4PSIyNCIgeT0iMzQiIGZvbnQtZmFtaWx5PSJKZXRCcmFpbnMgTW9ubywgRGVqYVZ1IFNhbnMgTW9ubywgTWVubG8sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2U4ZThlYyIgbGV0dGVyLXNwYWNpbmc9IjEiPlZJQkUgREFTSEJPQVJEIMK3IEZST00gQ09OVEVOVCBUTyBBIFBVQkxJU0hFRCBQQUdFPC90ZXh0Pgo8cGF0aCBkPSJNMjcyLDI2Ni4wIEwzMTYsMjY2LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzlhYTBhYSIgc3Ryb2tlLXdpZHRoPSIyIiBtYXJrZXItZW5kPSJ1cmwoI2FoKSIvPgo8cGF0aCBkPSJNNTY0LDI2Ni4wIEw2MDgsMjY2LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzlhYTBhYSIgc3Ryb2tlLXdpZHRoPSIyIiBtYXJrZXItZW5kPSJ1cmwoI2FoKSIvPgo8cGF0aCBkPSJNODU2LDI2Ni4wIEw5MDAsMjY2LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzlhYTBhYSIgc3Ryb2tlLXdpZHRoPSIyIiBtYXJrZXItZW5kPSJ1cmwoI2FoKSIvPgo8cGF0aCBkPSJNMTAyNC4wLDMxOCBMMTAyNC4wLDM2OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWFhMGFhIiBzdHJva2Utd2lkdGg9IjIiIG1hcmtlci1lbmQ9InVybCgjYWgpIi8+CjxwYXRoIGQ9Ik05MDAsNDIwLjAgTDg1Niw0MjAuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWFhMGFhIiBzdHJva2Utd2lkdGg9IjIiIG1hcmtlci1lbmQ9InVybCgjYWgpIi8+CjxwYXRoIGQ9Ik02MDgsNDIwLjAgTDU2NCw0MjAuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWFhMGFhIiBzdHJva2Utd2lkdGg9IjIiIG1hcmtlci1lbmQ9InVybCgjYWgpIi8+CjxwYXRoIGQ9Ik0zMTYsNDIwLjAgTDI3Miw0MjAuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWFhMGFhIiBzdHJva2Utd2lkdGg9IjIiIG1hcmtlci1lbmQ9InVybCgjYWgpIi8+CjxwYXRoIGQ9Ik0xNDguMCw0NzIgTDE0OC4wLDUyMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWFhMGFhIiBzdHJva2Utd2lkdGg9IjIiIG1hcmtlci1lbmQ9InVybCgjYWgpIi8+CjxwYXRoIGQ9Ik0yNzIsNTc0LjAgTDMxNiw1NzQuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWFhMGFhIiBzdHJva2Utd2lkdGg9IjIiIG1hcmtlci1lbmQ9InVybCgjYWgpIi8+CjxwYXRoIGQ9Ik0xNDguMCwxNjQgTDE0OC4wLDIxNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOWFhMGFhIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjYgNSIgbWFya2VyLWVuZD0idXJsKCNhaCkiLz4KPHBhdGggZD0iTTE0OC4wLDYyNiBMMTQ4LjAsNjc2IiBmaWxsPSJub25lIiBzdHJva2U9IiM5YWEwYWEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNiA1IiBtYXJrZXItZW5kPSJ1cmwoI2FoKSIvPgo8cmVjdCB4PSIyNCIgeT0iMjE0IiB3aWR0aD0iMjQ4IiBoZWlnaHQ9IjEwNCIgcng9IjEwIiBmaWxsPSJyZ2JhKDI1MCwxNTMsNTYsMC4xKSIgc3Ryb2tlPSIjZmE5OTM4IiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iMzgiIHk9IjIzOCIgZm9udC1mYW1pbHk9IkpldEJyYWlucyBNb25vLCBEZWphVnUgU2FucyBNb25vLCBNZW5sbywgbW9ub3NwYWNlIiBmb250LXNpemU9IjEzLjUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmYTk5MzgiPjEgwrcgQ09OVEVOVDwvdGV4dD4KPHRleHQgeD0iMzgiIHk9IjI2MCIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+UGFzdGUgYSBwb3N0LCBzaGFyZSBhIGxpbmssPC90ZXh0Pgo8dGV4dCB4PSIzOCIgeT0iMjc4IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj51cGxvYWQgZmlsZXMsIG9yIGdpdmUgbm90ZXM8L3RleHQ+CjxyZWN0IHg9IjMxNiIgeT0iMjE0IiB3aWR0aD0iMjQ4IiBoZWlnaHQ9IjEwNCIgcng9IjEwIiBmaWxsPSJyZ2JhKDU2LDIxOCwyNTAsMC4xKSIgc3Ryb2tlPSIjMzhkYWZhIiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iMzMwIiB5PSIyMzgiIGZvbnQtZmFtaWx5PSJKZXRCcmFpbnMgTW9ubywgRGVqYVZ1IFNhbnMgTW9ubywgTWVubG8sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMy41IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzhkYWZhIj4yIMK3IFNUUlVDVFVSRTwvdGV4dD4KPHRleHQgeD0iMzMwIiB5PSIyNjAiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPk51bWJlcmVkIHNlY3Rpb25zLCBvd248L3RleHQ+Cjx0ZXh0IHg9IjMzMCIgeT0iMjc4IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5jYXRlZ29yeSBjb2xvdXJzLCBhbmQ8L3RleHQ+Cjx0ZXh0IHg9IjMzMCIgeT0iMjk2IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5nbG9zc2FyeSB0ZXJtczwvdGV4dD4KPHJlY3QgeD0iNjA4IiB5PSIyMTQiIHdpZHRoPSIyNDgiIGhlaWdodD0iMTA0IiByeD0iMTAiIGZpbGw9InJnYmEoNTYsMjE4LDI1MCwwLjEpIiBzdHJva2U9IiMzOGRhZmEiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSI2MjIiIHk9IjIzOCIgZm9udC1mYW1pbHk9IkpldEJyYWlucyBNb25vLCBEZWphVnUgU2FucyBNb25vLCBNZW5sbywgbW9ub3NwYWNlIiBmb250LXNpemU9IjEzLjUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzOGRhZmEiPjMgwrcgVEVNUExBVEU8L3RleHQ+Cjx0ZXh0IHg9IjYyMiIgeT0iMjYwIiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5GaWxsIHRoZSBsb2NrZWQgdGVtcGxhdGU7PC90ZXh0Pgo8dGV4dCB4PSI2MjIiIHk9IjI3OCIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+dGFibGUtZml0IGFuZCB0b29sYmFyPC90ZXh0Pgo8dGV4dCB4PSI2MjIiIHk9IjI5NiIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+cGF0Y2hlczwvdGV4dD4KPHJlY3QgeD0iOTAwIiB5PSIyMTQiIHdpZHRoPSIyNDgiIGhlaWdodD0iMTA0IiByeD0iMTAiIGZpbGw9InJnYmEoNTYsMjE4LDI1MCwwLjEpIiBzdHJva2U9IiMzOGRhZmEiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSI5MTQiIHk9IjIzOCIgZm9udC1mYW1pbHk9IkpldEJyYWlucyBNb25vLCBEZWphVnUgU2FucyBNb25vLCBNZW5sbywgbW9ub3NwYWNlIiBmb250LXNpemU9IjEzLjUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzOGRhZmEiPjQgwrcgVklTVUFMUzwvdGV4dD4KPHRleHQgeD0iOTE0IiB5PSIyNjAiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPkRpYWdyYW1zIHdpdGggY29sb3VyIGtleXM8L3RleHQ+Cjx0ZXh0IHg9IjkxNCIgeT0iMjc4IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5hbmQgdHJlZXMsIGJ1aWx0IGJ5IHRoZTwvdGV4dD4KPHRleHQgeD0iOTE0IiB5PSIyOTYiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPnZpc3VhbHMgcGF0Y2g8L3RleHQ+CjxyZWN0IHg9IjkwMCIgeT0iMzY4IiB3aWR0aD0iMjQ4IiBoZWlnaHQ9IjEwNCIgcng9IjEwIiBmaWxsPSJyZ2JhKDU2LDIxOCwyNTAsMC4xKSIgc3Ryb2tlPSIjMzhkYWZhIiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iOTE0IiB5PSIzOTIiIGZvbnQtZmFtaWx5PSJKZXRCcmFpbnMgTW9ubywgRGVqYVZ1IFNhbnMgTW9ubywgTWVubG8sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMy41IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzhkYWZhIj41IMK3IFNFQVJDSCArIE1BUDwvdGV4dD4KPHRleHQgeD0iOTE0IiB5PSI0MTQiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPlNlYXJjaCBiZWNvbWVzIHNlY3Rpb24gMDI7PC90ZXh0Pgo8dGV4dCB4PSI5MTQiIHk9IjQzMiIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+dGhlIE1pbmQgTWFwIGdvZXMgaW48L3RleHQ+Cjx0ZXh0IHg9IjkxNCIgeT0iNDUwIiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5iZWZvcmUgdGhlIEdsb3NzYXJ5PC90ZXh0Pgo8cmVjdCB4PSI2MDgiIHk9IjM2OCIgd2lkdGg9IjI0OCIgaGVpZ2h0PSIxMDQiIHJ4PSIxMCIgZmlsbD0icmdiYSg1NiwyMTgsMjUwLDAuMSkiIHN0cm9rZT0iIzM4ZGFmYSIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjYyMiIgeT0iMzkyIiBmb250LWZhbWlseT0iSmV0QnJhaW5zIE1vbm8sIERlamFWdSBTYW5zIE1vbm8sIE1lbmxvLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzM4ZGFmYSI+NiDCtyBGSU5JU0ggUEFUQ0hFUzwvdGV4dD4KPHRleHQgeD0iNjIyIiB5PSI0MTQiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPlNvdXJjZSBjb2xvdXIsIHNvdXJjZSB2aWV3PC90ZXh0Pgo8dGV4dCB4PSI2MjIiIHk9IjQzMiIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+c3dpdGNoLCBhbmQgaG91c2UgdG9vbHRpcHM8L3RleHQ+CjxyZWN0IHg9IjMxNiIgeT0iMzY4IiB3aWR0aD0iMjQ4IiBoZWlnaHQ9IjEwNCIgcng9IjEwIiBmaWxsPSJyZ2JhKDU2LDIxOCwyNTAsMC4xKSIgc3Ryb2tlPSIjMzhkYWZhIiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iMzMwIiB5PSIzOTIiIGZvbnQtZmFtaWx5PSJKZXRCcmFpbnMgTW9ubywgRGVqYVZ1IFNhbnMgTW9ubywgTWVubG8sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMy41IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzhkYWZhIj43IMK3IEFVRElPPC90ZXh0Pgo8dGV4dCB4PSIzMzAiIHk9IjQxNCIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+TmFycmF0aW9uLCBwcm9udW5jaWF0aW9uPC90ZXh0Pgo8dGV4dCB4PSIzMzAiIHk9IjQzMiIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+YW5kIHN0cmVzcyBhdWRpdCwgdGhlbjwvdGV4dD4KPHRleHQgeD0iMzMwIiB5PSI0NTAiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPnRoZSByZWNvcmRpbmc8L3RleHQ+CjxyZWN0IHg9IjI0IiB5PSIzNjgiIHdpZHRoPSIyNDgiIGhlaWdodD0iMTA0IiByeD0iMTAiIGZpbGw9InJnYmEoNTYsMjE4LDI1MCwwLjEpIiBzdHJva2U9IiMzOGRhZmEiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSIzOCIgeT0iMzkyIiBmb250LWZhbWlseT0iSmV0QnJhaW5zIE1vbm8sIERlamFWdSBTYW5zIE1vbm8sIE1lbmxvLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzM4ZGFmYSI+OCDCtyBDSEVDSzwvdGV4dD4KPHRleHQgeD0iMzgiIHk9IjQxNCIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+UHJpdmFjeSBzY2FuIGZvciBOREE8L3RleHQ+Cjx0ZXh0IHg9IjM4IiB5PSI0MzIiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPm5hbWVzOyBicm93c2VyIHRlc3RzIGF0PC90ZXh0Pgo8dGV4dCB4PSIzOCIgeT0iNDUwIiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj50aHJlZSB3aWR0aHM8L3RleHQ+CjxyZWN0IHg9IjI0IiB5PSI1MjIiIHdpZHRoPSIyNDgiIGhlaWdodD0iMTA0IiByeD0iMTAiIGZpbGw9InJnYmEoNTYsMjE4LDI1MCwwLjEpIiBzdHJva2U9IiMzOGRhZmEiIHN0cm9rZS13aWR0aD0iMiIvPgo8dGV4dCB4PSIzOCIgeT0iNTQ2IiBmb250LWZhbWlseT0iSmV0QnJhaW5zIE1vbm8sIERlamFWdSBTYW5zIE1vbm8sIE1lbmxvLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzM4ZGFmYSI+OSDCtyBQVUJMSVNIPC90ZXh0Pgo8dGV4dCB4PSIzOCIgeT0iNTY4IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5BIHByaXZhdGUgYXJ0aWZhY3QsPC90ZXh0Pgo8dGV4dCB4PSIzOCIgeT0iNTg2IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5ubyBjYXBhYmlsaXRpZXMgdW5sZXNzPC90ZXh0Pgo8dGV4dCB4PSIzOCIgeT0iNjA0IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5hIGZlYXR1cmUgbmVlZHMgb25lPC90ZXh0Pgo8cmVjdCB4PSIzMTYiIHk9IjUyMiIgd2lkdGg9IjI0OCIgaGVpZ2h0PSIxMDQiIHJ4PSIxMCIgZmlsbD0icmdiYSgyNTAsMTUzLDU2LDAuMSkiIHN0cm9rZT0iI2ZhOTkzOCIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjMzMCIgeT0iNTQ2IiBmb250LWZhbWlseT0iSmV0QnJhaW5zIE1vbm8sIERlamFWdSBTYW5zIE1vbm8sIE1lbmxvLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZhOTkzOCI+MTAgwrcgU0hBUkU8L3RleHQ+Cjx0ZXh0IHg9IjMzMCIgeT0iNTY4IiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj5Gcm9tIHRoZSBwYWdlJiN4Mjc7cyBTaGFyZTwvdGV4dD4KPHRleHQgeD0iMzMwIiB5PSI1ODYiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPm1lbnUsIHdoZW4geW91JiN4Mjc7cmUgcmVhZHk8L3RleHQ+CjxyZWN0IHg9IjI0IiB5PSI2MCIgd2lkdGg9IjI0OCIgaGVpZ2h0PSIxMDQiIHJ4PSIxMCIgZmlsbD0icmdiYSgxMjEsNTYsMjUwLDAuMSkiIHN0cm9rZT0iIzc5MzhmYSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI3IDUiLz4KPHRleHQgeD0iMzgiIHk9Ijg0IiBmb250LWZhbWlseT0iSmV0QnJhaW5zIE1vbm8sIERlamFWdSBTYW5zIE1vbm8sIE1lbmxvLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTMuNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzc5MzhmYSI+RlJPTSBPVEhFUiBTS0lMTFM8L3RleHQ+Cjx0ZXh0IHg9IjM4IiB5PSIxMDYiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPlRyYW5zY3JpcHRzLCBjb21tZW50cyw8L3RleHQ+Cjx0ZXh0IHg9IjM4IiB5PSIxMjQiIGZvbnQtZmFtaWx5PSJETSBTYW5zLCBIZWx2ZXRpY2EgTmV1ZSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNlOGU4ZWMiPnJldmlld3MsIGFuZCBGdXNpb24gZG9jczwvdGV4dD4KPHRleHQgeD0iMzgiIHk9IjE0MiIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+aGFuZCB0aGVpciByZXN1bHRzIGluPC90ZXh0Pgo8cmVjdCB4PSIyNCIgeT0iNjc2IiB3aWR0aD0iMjQ4IiBoZWlnaHQ9Ijg2IiByeD0iMTAiIGZpbGw9InJnYmEoNTYsMjUwLDEyMSwwLjEpIiBzdHJva2U9IiMzOGZhNzkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNyA1Ii8+Cjx0ZXh0IHg9IjM4IiB5PSI3MDAiIGZvbnQtZmFtaWx5PSJKZXRCcmFpbnMgTW9ubywgRGVqYVZ1IFNhbnMgTW9ubywgTWVubG8sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMy41IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzhmYTc5Ij5OSUdIVExZIEJBQ0tVUDwvdGV4dD4KPHRleHQgeD0iMzgiIHk9IjcyMiIgZm9udC1mYW1pbHk9IkRNIFNhbnMsIEhlbHZldGljYSBOZXVlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2U4ZThlYyI+RXZlcnkgY2hhbmdlZCBwYWdlIHNhdmVkPC90ZXh0Pgo8dGV4dCB4PSIzOCIgeT0iNzQwIiBmb250LWZhbWlseT0iRE0gU2FucywgSGVsdmV0aWNhIE5ldWUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjZThlOGVjIj50byB0aGUgcHJpdmF0ZSBHaXRIdWIgcmVwbzwvdGV4dD4KPC9zdmc+" alt="Workflow diagram: 1 Swami gives the content, 2 Claude structures it into sections, categories and glossary terms, 3 fills the locked template and runs the table-fit and toolbar patches, 4 adds diagrams and trees with the visuals patch, 5 runs the Search and Mind Map patches, 6 runs the source colour, source view and tooltip patches, 7 writes and records the audio overview, 8 runs the privacy check and browser tests, 9 publishes a private artifact, 10 Swami shares it. Other skills can hand their results in at step 1, and a nightly task backs the page up to GitHub after step 9." style="max-width:1172px"></div><div class="viz-legend" aria-label="Colour key"><span class="lg-title">Key</span><span class="lg"><i class="lg-sw" style="--c:#38dafa"></i>Claude&#x27;s work</span><span class="lg"><i class="lg-sw" style="--c:#fa9938"></i>Swami decides</span><span class="lg"><i class="lg-sw" style="--c:#38fa79"></i>automatic GitHub backup</span><span class="lg"><i class="lg-sw" style="--c:#7938fa"></i>another skill does it</span><span class="lg"><i class="lg-line" style="--c:#9aa0aa"></i>next step</span><span class="lg"><i class="lg-line lg-dashed" style="--c:#9aa0aa"></i>only sometimes, or automatic</span></div><figcaption>Read left to right along the top row, right to left along the middle row, then left to right along the bottom. Swami starts it and decides when to share; everything else is Claude&#x27;s work in its workspace.</figcaption></figure></div><!-- FLOWVIZ:END -->
     </div>
   </div>
@@ -1331,7 +1342,7 @@
   <div class="section cat-reference" data-title="Card and Freshness" data-cat="reference">
     <div class="sec-head"><span class="sec-num">13</span><span class="sec-title">Card and Freshness</span><span class="cat-badge">REFERENCE</span><span class="chevron">▶</span></div>
     <div class="sec-body">
-      <p>This page is built from a skill card. The fingerprint changes whenever any file in the skill changes, so a nightly check can flag this page as out of date.</p><div class="table-wrap no-sort" data-desc="Card and freshness"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td><strong>Skill</strong></td><td><code>vibe-dashboard</code></td></tr><tr><td><strong>Skill last updated</strong></td><td><strong class="dt">Tue Nov 24, 2026</strong></td></tr><tr><td><strong>Fingerprint</strong></td><td><code>sha256:134d18129b732c81</code></td></tr><tr><td><strong>Files covered</strong></td><td><code>SKILL.md</code>, <code>assets/audio-player.html</code>, <code>assets/fallback.html</code>, <code>assets/template.html</code>, <code>references/audio-refresh-task.md</code>, <code>references/patterns.md</code>, <code>references/search-scroll.md</code>, <code>scripts/add_fallback.py</code>, <code>scripts/audio_overview.py</code>, <code>scripts/comments_sections.py</code>, <code>scripts/fit_patch.py</code>, <code>scripts/mindmap_patch.py</code>, <code>scripts/search_patch.py</code>, <code>scripts/stress_audio.py</code></td></tr><tr><td><strong>Card written</strong></td><td><strong class="dt">Tue Nov 24, 2026</strong></td></tr><tr><td><strong>Status</strong></td><td><span class="tid" style="--tc:#38fa79">Published</span></td></tr><tr><td><strong>Download</strong></td><td><a href="https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-dashboard.zip" target="_blank" rel="noopener">vibe-dashboard.zip ↗</a></td></tr></tbody></table></div>
+      <p>This page is built from a skill card. The fingerprint changes whenever any file in the skill changes, so a nightly check can flag this page as out of date.</p><div class="table-wrap no-sort" data-desc="Card and freshness"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td><strong>Skill</strong></td><td><code>vibe-dashboard</code></td></tr><tr><td><strong>Skill last updated</strong></td><td><strong class="dt">Wed Nov 25, 2026</strong></td></tr><tr><td><strong>Fingerprint</strong></td><td><code>sha256:e710934d912f13a5</code></td></tr><tr><td><strong>Files covered</strong></td><td><code>SKILL.md</code>, <code>assets/audio-player.html</code>, <code>assets/fallback.html</code>, <code>assets/template.html</code>, <code>references/audio-refresh-task.md</code>, <code>references/patterns.md</code>, <code>references/search-scroll.md</code>, <code>scripts/add_fallback.py</code>, <code>scripts/audio_overview.py</code>, <code>scripts/comments_sections.py</code>, <code>scripts/fit_patch.py</code>, <code>scripts/mindmap_patch.py</code>, <code>scripts/search_patch.py</code>, <code>scripts/stress_audio.py</code></td></tr><tr><td><strong>Card written</strong></td><td><strong class="dt">Wed Nov 25, 2026</strong></td></tr><tr><td><strong>Status</strong></td><td><span class="tid" style="--tc:#38fa79">Published</span></td></tr><tr><td><strong>Download</strong></td><td><a href="https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-dashboard.zip" target="_blank" rel="noopener">vibe-dashboard.zip ↗</a></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -1456,7 +1467,7 @@ Swami's dashboards all share ONE locked design system. This skill reproduces it 
 | \`scripts/audio_overview.py extract PAGE\` / \`build …\` | Page outline for the narration / records the audio |
 | \`scripts/stress_audio.py SKILL_DIR audit\\|build\\|plain …\` | Noun/verb stress audit and exact-pronunciation recording |
 | \`scripts/add_fallback.py PAGE narration-plain.txt SKILL_DIR/assets/fallback.html\` | Browser-voice player when the recording can't be made |
-| \`toolbar_patch.py PAGE\` (code in "Toolbar patch" below; save it to the working directory) | Show/hide TOC button + single expand/collapse toggle |
+| \`toolbar_patch.py PAGE\` (code in "Toolbar patch" below; save it to the working directory) | Show/hide TOC, top, expand all (▲) and collapse all (▼) buttons, and an expand/collapse button on each section header |
 | \`visuals_patch.py PAGE\` (code in "Visuals patch" below; save it to the working directory) | Builds collapsible hierarchy trees from tree sources, plus the diagram/tree CSS and plumbing |
 
 All are idempotent (safe to re-run) and also upgrade dashboards built earlier. **Other skills' builders** (fusion-doc, fusion-doc-json, fusion-cam-settings, vector-bitmap-graphic-finder, and others) copy \`fit_patch.py\`, \`mindmap_patch.py\` and \`stress_audio.py\` from \`SKILL_DIR/scripts/\`; older copies of those builders extracted them from code blocks in this file, which are gone (Nov 13, 2026).
@@ -1469,7 +1480,7 @@ All are idempotent (safe to re-run) and also upgrade dashboards built earlier. *
 3b. **Large or index dashboards.** If the page holds a lot of content (roughly 100+ rows/items) or indexes other dashboards and chats, also plan the **index-page columns** and the Search section's second layer (the text of the linked dashboards) — see "Advanced features" below. Build such pages from a Python build script rather than by hand-editing, so they can be regenerated. (The Search section itself is on every dashboard — step 4a.)
 4. **Copy the template** \`assets/template.html\` to the working directory, **apply the table-fit patch** to the copy (\`python3 SKILL_DIR/scripts/fit_patch.py PAGE.html\`; see "Table-fit patch" below — safe to re-run), then fill placeholders, add/duplicate sections, and delete anything unused (e.g. the verbatim block). **Comment or review dashboards** (built from extracted comments, reviews or replies, by any skill): also write the standard comment JSON and run \`scripts/comments_sections.py\`, which adds The Post, Discussion at a Glance, Themes & Takeaways and Comment Threads — see "Comment & review dashboards" below.
 4a. **Add the Search section (REQUIRED, always).** Once the content sections, Glossary, References and Source Document are in place, run \`python3 scripts/search_patch.py PAGE.html\` (one command, safe to re-run: a second run refreshes it). It inserts the **Search** section as section 02 right after the Dashboard Summary in its own category colour (the next unused palette colour, or — when all 8 are taken — a colour the page's colour check accepts), renumbers every section after it, adds its row to the section 01 summary table, and adds the generic-subsection patch. Run it before the Mind Map patch. See "Search section" under Advanced features for what it does. Never ship a dashboard without it.
-4a1. **Apply the toolbar patch (REQUIRED, always).** Right after the table-fit patch, run the toolbar patch (see "Toolbar patch" below) so the toolbar has the show/hide TOC button and the single expand/collapse toggle.
+4a1. **Apply the toolbar patch (REQUIRED, always).** Right after the table-fit patch, run the toolbar patch (see "Toolbar patch" below) so the toolbar has the show/hide TOC, top, expand all and collapse all buttons, and each section header gets its own expand/collapse button.
 4a2. **Add the Mind Map (REQUIRED, always).** Once the content sections, Glossary and References are in place, run \`python3 SKILL_DIR/scripts/mindmap_patch.py PAGE.html\` (see "Mind Map patch" below — one command, safe to re-run). It adds the Mind Map section just before the Glossary, numbers it, renumbers the sections after it and adds its row to the section 01 summary table. Optional hints on the markup name list branches and group table rows (see the patch section).
 4a3. **Make it visual (REQUIRED wherever it helps).** Swami (Nov 24, 2026): "where appropriate/possible, add collapsible hierarchy trees, diagrams, system diagrams, workflow diagrams, illustrations, images, help documentation screenshots, etc. — make the dashboard more visual so the user can more easily understand things and get at them." Before the Search and Mind Map patches, go section by section and add the visual that explains it best — see "Visuals: diagrams, trees and images" below. Skip a section only when a picture would add nothing (a plain glossary-like list, a short note). Write each tree as a tree source and, on every page with a diagram or tree, run the visuals patch (see "Visuals patch") before the Search and Mind Map patches.
 4a4. **Add the Source Document view switch (REQUIRED when the page has a Source Document).** After the Search and Mind Map patches and before the tooltip patch, run the source view patch (see "Source view patch" below). The Source Document then offers Markdown or plain text, opening in Markdown.
@@ -1520,7 +1531,7 @@ All are idempotent (safe to re-run) and also upgrade dashboards built earlier. *
   Before publishing, check that every row of the section 01 summary table has a working section link.
 - **\`data-target\` navigation, never bare \`href\` anchors.** TOC chips carry \`data-target="<index>"\` and scroll via JS. Bare \`href="#id"\` anchors trigger the artifact sandbox's external-link dialog — do not use them anywhere.
 - **Live search** with debounced input, \`mark\` highlights, prev/next stepping (Enter / Shift-Enter and buttons), \`n/total\` counter, active hit in green with glow, and a reset "×" that restores scroll position without jumping. The active hit must land just BELOW every pinned layer above it: TOC/toolbar, section header, item header, and (for table rows) the floating column header, never underneath them. A hit inside a sticky header is positioned from that header's container (section / item / table), and the position is re-checked and snapped after the smooth scroll settles. Implemented by \`hitTarget\` + \`focusMatch\`; keep them intact and never reintroduce a fixed offset (e.g. stack height + 20) for search hits. On a page with owner-only content, this toolbar search must skip hidden matches (\`matches = matches.filter(m => !m.closest('[hidden]'))\` just before the first \`focusMatch\`). This quick toolbar search stays alongside the Search section (section 02), which every dashboard has.
-- **Toolbar buttons (Swami, Nov 24, 2026):** a show/hide TOC button (list icon), then ONE expand/collapse toggle (arrows icon), then the search box — never separate "expand all" and "collapse all" buttons. Added by the toolbar patch (see "Toolbar patch").
+- **Toolbar buttons (Swami, Nov 25, 2026):** a show/hide TOC button (list icon), a **top** button (scrolls to the top of the page), then **expand all** (large up-facing triangle ▲) and **collapse all** (large down-facing triangle ▼) as two separate buttons, then the search box. Every section header with collapsible parts also has a small expand/collapse button, left of the chevron (it keeps its arrows icon), that opens the section and every part in it, or closes all its parts when they are all open (Alt/Option-click on the header does the same). Added by the toolbar patch (see "Toolbar patch").
 - **Search reset × sits at the START of the field (Swami, Nov 24, 2026).** The toolbar search's clear button (\`#resetBtn\`, \`.search-reset\`) is pinned to the left edge inside the input, not the right. Until the template ships it, patch the copied page once, right after copying the template (two exact replacements in the \`<style>\`; assert each anchor exists, skip if already applied): in \`.search-reset{…}\` replace \`right:8px;\` with \`left:8px;\`, and in \`#search{…}\` replace \`padding:9px 34px 9px 12px;\` with \`padding:9px 12px 9px 34px;\` (the left padding is always reserved, so typed text never jumps when the × appears). Markup and script stay as they are (the button is absolutely positioned). Apply the same to existing dashboards when they are rebuilt or edited.
 - **No system tooltips, ever (Swami, Nov 24, 2026).** Every mouseover tooltip uses the house style (the \`.gj-tip\` card: panel-2 background, cyan border, soft shadow), never the browser's own \`title\` tooltip. Write hints as plain \`title\` attributes if convenient; the tooltip patch (see "Tooltip patch") moves every \`title\` — in the markup, set later by a script, or an inline \`<svg><title>\` — to \`data-vtip\` and shows it in the house style on hover and keyboard focus. Feature tooltips that already have their own styled card (TOC chips, glossary, audio player, Mind Map) keep theirs. A finished page has no element with a \`title\` attribute after load.
 - **Runtime-assembled mailto** on the "Swami" footer link — build the address from parts (\`'swami.human' + '@' + 'gmail.com'\`); never hard-code it in an \`href\`.
@@ -1617,6 +1628,8 @@ Every dashboard should be as visual as its content allows (Swami, Nov 24, 2026).
 **Colour key under every diagram (REQUIRED where colour or line style carries meaning; Swami, Nov 24, 2026).** Each diagram, chart, illustration or colour-coded visual gets a one-line **Key** between the image and its figcaption: one swatch per colour actually used, named by what it means in *that* diagram ("Claude's workspace", "private repo", "largest avoidable cost"), plus a line sample for each line style when the diagram mixes them (solid = done by you or Claude, dashed = automatic or occasional, etc.). Skip it only when colour is pure decoration or the visual uses a single colour (collapsible trees usually need none). Keep colours consistent within a diagram so the key is true, and reuse the page's category colours where the meanings match. The key is HTML (sharp, searchable, wraps on phones), never drawn inside the SVG image. Markup, inside the \`figure.viz\` after \`.viz-scroll\`:
 \`<div class="viz-legend" aria-label="Colour key"><span class="lg-title">Key<\/span><span class="lg"><i class="lg-sw" style="--c:#38dafa"><\/i>Claude's workspace<\/span><span class="lg"><i class="lg-line lg-dashed" style="--c:#9aa0aa"><\/i>automatic or occasional<\/span><\/div>\`
 Its CSS comes with the visuals patch.
+
+**Hover on diagrams (Swami, Nov 24, 2026).** Every box and arrow in a diagram with a Key shows a house-style tooltip saying what it means in that Key: a box shows its title and its colour's Key label ("4 · BUILD · Key: Claude's work", plus the dashed line's label when the box is dashed); an arrow shows its line style's label ("Arrow · Key: next step"), plus its colour's label when the arrow is coloured. Nothing extra to write: the visuals patch reads each diagram's own SVG at load and lays an invisible copy over the image to catch the pointer, matching boxes to Key swatches by stroke colour and arrows to the solid or dashed line sample. So keep each box's stroke the exact hex of its Key swatch, put the box title as the first text inside the box, and draw arrows as \`path\`/\`line\`/\`polyline\` with \`fill="none"\` (or a marker). Shapes whose colour isn't in the Key get no tooltip. The tooltip patch shows them, so it must run on the page as usual.
 In a Python build, give each diagram function its legend list (\`[(colour, label), ('solid'|'dashed', label, colour)]\`) and let the figure helper render it (reference: \`github-guide/vbase.py\` and \`gviz.py\` LEGENDS in the vibe-dashboards repo). Since the key sits inside \`figure.viz\`, glossary linking already skips it.
 
 **Narration:** say in one sentence on the summary that most sections carry diagrams or trees; don't describe each picture.
@@ -1849,84 +1862,133 @@ Dashboards must be single files. For images, embed as base64 data URIs. If image
 
 ## Toolbar patch (REQUIRED until the template ships it)
 
-Swami (Nov 24, 2026): the toolbar has a **show/hide TOC** button and **one expand/collapse toggle** instead of separate "expand all" / "collapse all" buttons. Order, left to right: hide TOC, expand all (toggle), search box, prev / counter / next.
+Swami (Nov 25, 2026): the toolbar has a **show/hide TOC** button, then **expand all** and **collapse all** as two separate buttons (Nov 24's single toggle is retired), and every section gets its own expand/collapse button. Order, left to right: hide TOC, top, expand all, collapse all, search box, prev / counter / next.
 - **Show/hide TOC** (\`#tocToggle\`, list icon): hides the TOC chip bar so the pinned stack is just the toolbar (on a phone the TOC can fill most of the screen). Label flips to "show TOC" and turns cyan while hidden; \`--stack-h\` is re-measured so every pinned layer and jump still lands right. The choice is remembered per viewer in browser storage (try/catch).
-- **Expand/collapse toggle** (\`#toggleAll\`): its icon and label name the next action — "expand all" (arrows apart) until every section is open, then "collapse all" (arrows together). It re-syncs after any click, so opening or closing sections by hand keeps it right. Labels have a fixed minimum width so the toolbar never shifts.
+- **Top** (\`#toTop\`, arrow-to-bar icon): scrolls smoothly to the top of the page.
+- **Expand all / collapse all** (\`#expandAll\`, \`#collapseAll\`, large filled up-facing ▲ and down-facing ▼ triangles, in the button's colour): open or close every section and every part in it.
+- **Section expand/collapse** (\`.sec-all\`, added at load to every section header that holds collapsible parts, left of the chevron): opens the section and every part in it; when all its parts are already open, closes them (the section stays open; a click on the header closes it). Alt/Option-click on a section header does the same. Its icon (arrows apart / arrows together, not the toolbar's triangles) and tooltip follow the section's state however parts open or close (by hand, a jump, a search hit).
 - All buttons have hover tooltips (\`title\`). Icons are small inline stroke SVGs in \`currentColor\`.
 
-Apply it right after copying the template (with the table-fit patch), and to any existing dashboard when it is rebuilt or edited: save the block below as \`toolbar_patch.py\` in the working directory and run \`python3 toolbar_patch.py PAGE.html\`. It is idempotent ("already applied" on a second run), also upgrades pages that had the old two buttons or an older TOC toggle, and stops with an error, changing nothing, if its anchors have moved.
+Apply it right after copying the template (with the table-fit patch), and to any existing dashboard when it is rebuilt or edited: save the block below as \`toolbar_patch.py\` in the working directory and run \`python3 toolbar_patch.py PAGE.html\`. It is idempotent ("already applied" on a second run), upgrades pages made with the single toggle from Nov 24 or the earlier two-button version (and a trial "toolbar extra" block, such as the Skill Library's), and stops with an error, changing nothing, if its anchors have moved.
 
 \`\`\`python
 #!/usr/bin/env python3
-"""Vibe-dashboard toolbar patch (idempotent).
-- 'show/hide TOC' button (list icon) left of the expand/collapse button; choice remembered per viewer.
-- 'expand all' + 'collapse all' merged into ONE toggle button (#toggleAll) whose icon and label
-  show the next action: 'expand all' (arrows apart) until every section is open, then 'collapse all'
-  (arrows together). Stays in sync when sections are opened or closed by hand.
-Works on a fresh template copy and on pages that already had the separate buttons or an older TOC toggle.
+"""Vibe-dashboard toolbar patch v3 (idempotent).
+- Toolbar, left to right: 'hide TOC' (list icon; choice remembered per viewer), 'top' (scrolls to the top of
+  the page), 'expand all' (large up-facing triangle), 'collapse all' (large down-facing triangle), then the
+  search box. Two separate expand/collapse buttons (Swami, Nov 25, 2026).
+- Every section header that holds collapsible parts gets a small expand/collapse button (left of the chevron):
+  it opens the section and every part in it, or, when everything in it is already open, closes all its parts
+  (the section itself stays open). Alt/Option-click on a section header does the same. Its icon follows the
+  section's state however parts open or close.
+Works on a fresh template copy and upgrades pages made with toolbar patch v1 (one-button toggle) or v2.
 Usage: python3 toolbar_patch.py PAGE.html"""
 import re, sys
 p = sys.argv[1]; s = open(p).read()
-if 'id="toggleAll"' in s and 'id="tocToggle"' in s:
+if '/* ---- toolbar patch v3 js ---- */' in s:
     print('toolbar: already applied'); sys.exit()
 
 ICO = '<svg class="ico{c}" viewBox="0 0 24 24" aria-hidden="true">{d}<\/svg>'
+I_UP = '<svg class="ico tri" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L22.5 20.5H1.5Z"/><\/svg>'
+I_DN = '<svg class="ico tri" viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 3.5H22.5L12 21Z"/><\/svg>'
+I_TOP = ICO.format(c='', d='<path d="M5 4h14M12 21V9M7 14l5-5 5 5"/>')
 I_TOC = ICO.format(c='', d='<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.3"/><circle cx="4.5" cy="12" r="1.3"/><circle cx="4.5" cy="18" r="1.3"/>')
-I_EXP = ICO.format(c=' i-exp', d='<path d="M7 9l5-5 5 5M7 15l5 5 5-5"/>')
-I_COL = ICO.format(c=' i-col', d='<path d="M7 4l5 5 5-5M7 20l5-5 5 5"/>')
 BTNS = (f'<button class="tool-btn" id="tocToggle" aria-pressed="true" title="Hide the table of contents to see more of the page">{I_TOC}<span class="tl">hide TOC<\/span><\/button>\\n'
-        f'    <button class="tool-btn" id="toggleAll" title="Open every section and item">{I_EXP}{I_COL}<span class="tl">expand all<\/span><\/button>')
+        f'    <button class="tool-btn" id="toTop" title="Go to the top of the page">{I_TOP}<span class="tl">top<\/span><\/button>\\n'
+        f'    <button class="tool-btn" id="expandAll" title="Open every section and every part in it">{I_UP}<span class="tl">expand all<\/span><\/button>\\n'
+        f'    <button class="tool-btn" id="collapseAll" title="Close every section and every part in it">{I_DN}<span class="tl">collapse all<\/span><\/button>')
 
-# 1. markup: replace whatever expand/collapse/TOC buttons are there with the two new ones
-m = re.search(r'(?:<button class="tool-btn" id="tocToggle".*?<\/button>\\s*)?<button class="tool-btn" id="expandAll".*?<\/button>\\s*<button class="tool-btn" id="collapseAll".*?<\/button>', s, re.S)
-assert m, 'expand/collapse buttons not found'
+# 1. markup: whatever TOC / toggle / expand / collapse buttons are there -> the three buttons
+m = re.search(r'(?:<button class="tool-btn" id="tocToggle".*?<\/button>\\s*)?(?:<button class="tool-btn" id="toTop".*?<\/button>\\s*)?'
+              r'(?:<button class="tool-btn" id="toggleAll".*?<\/button>|<button class="tool-btn" id="expandAll".*?<\/button>\\s*<button class="tool-btn" id="collapseAll".*?<\/button>)', s, re.S)
+assert m, 'toolbar buttons not found'
 s = s[:m.start()] + BTNS + s[m.end():]
 
-# 2. CSS (drop an older copy first)
+# 2. CSS (drop any older copy first, including a trial 'toolbar extra' block)
 s = re.sub(r"\\n  /\\* ---- toolbar patch css ---- \\*/.*?/\\* ---- end toolbar patch css ---- \\*/", "", s, flags=re.S)
-s = re.sub(r"\\n  \\.tool-btn\\{display:inline-flex;align-items:center;gap:6px;white-space:nowrap\\}.*?body\\.toc-hidden \\.toc-bar\\{display:none\\}", "", s, flags=re.S)
+s = re.sub(r"\\n  /\\* ---- toolbar extra css ---- \\*/.*?/\\* ---- end toolbar extra css ---- \\*/", "", s, flags=re.S)
 CSS = """
   /* ---- toolbar patch css ---- */
   .tool-btn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-  .tool-btn .ico{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .tool-btn .ico,.sec-all .ico{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .tool-btn .ico circle{fill:currentColor;stroke:none}
-  #toggleAll .tl{min-width:12ch} #tocToggle .tl{min-width:8ch}  /* label swap never shifts the toolbar */
-  #toggleAll .i-col{display:none} #toggleAll.all-open .i-col{display:block} #toggleAll.all-open .i-exp{display:none}
+  .tool-btn .ico.tri{width:16px;height:16px;fill:currentColor;stroke:none}
+  #tocToggle .tl{min-width:8ch}
   #tocToggle[aria-pressed="false"]{color:var(--cyan);border-color:rgba(0,229,255,.45)}
   body.toc-hidden .toc-bar{display:none}
+  .sec-all{display:inline-flex;align-items:center;justify-content:center;width:28px;height:26px;flex:none;padding:0;
+    background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-mute);cursor:pointer}
+  .sec-all:hover,.sec-all:focus-visible{border-color:var(--cyan);color:var(--cyan)}
+  .sec-all .i-col{display:none} .sec-all.all-open .i-col{display:block} .sec-all.all-open .i-exp{display:none}
+  .sec-all.all-open{color:var(--cyan);border-color:rgba(0,229,255,.35)}
   /* ---- end toolbar patch css ---- */"""
 a = '  .tool-btn:hover{border-color:var(--cyan);color:var(--cyan)}'
 assert a in s; s = s.replace(a, a + CSS, 1)
 
-# 3. JS: replace the two old listeners with the single toggle
-JS_ALL = r"""/* ---- one expand/collapse toggle (label + icon show the next action) ---- */
-const toggleAllBtn = document.getElementById('toggleAll');
-function syncToggleAll(){
-  const open = [...sections].length > 0 && [...sections].every(s => s.classList.contains('open'));
-  toggleAllBtn.classList.toggle('all-open', open);
-  toggleAllBtn.querySelector('.tl').textContent = open ? 'collapse all' : 'expand all';
-  toggleAllBtn.title = open ? 'Close every section and item' : 'Open every section and item';
-}
-toggleAllBtn.addEventListener('click', () => {
-  if(toggleAllBtn.classList.contains('all-open')){
-    sections.forEach(s=>s.classList.remove('open')); document.querySelectorAll('.citem').forEach(c=>c.classList.remove('open')); syncFloatingHeaders();
-  } else {
-    sections.forEach(s=>s.classList.add('open')); document.querySelectorAll('.citem').forEach(c=>c.classList.add('open')); fitVisibleTables(); syncFloatingHeaders();
+# 3. JS: replace the template's two listeners, or v1's one-button toggle, with the two buttons + section buttons
+JS_ALL = r"""/* ---- toolbar patch v3 js ---- */
+/* top of page */
+document.getElementById('toTop').addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+/* expand all / collapse all: two buttons */
+document.getElementById('expandAll').addEventListener('click', () => {
+  sections.forEach(s => s.classList.add('open')); document.querySelectorAll('.citem').forEach(c => c.classList.add('open'));
+  fitVisibleTables(); syncFloatingHeaders(); });
+document.getElementById('collapseAll').addEventListener('click', () => {
+  sections.forEach(s => s.classList.remove('open')); document.querySelectorAll('.citem').forEach(c => c.classList.remove('open'));
+  syncFloatingHeaders(); });
+/* per-section expand/collapse: a small button in each section header (and Alt/Option-click on the header) */
+(function(){
+  const ICO = d => '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + d + '<\/svg>';
+  const EXP = ICO('<path d="M7 9l5-5 5 5M7 15l5 5 5-5"/>').replace('class="ico"', 'class="ico i-exp"');
+  const COL = ICO('<path d="M7 4l5 5 5-5M7 20l5-5 5 5"/>').replace('class="ico"', 'class="ico i-col"');
+  const parts = sec => [...sec.querySelectorAll('.citem')];
+  const allOpen = sec => sec.classList.contains('open') && parts(sec).every(c => c.classList.contains('open'));
+  function toggle(sec){
+    if(allOpen(sec)){ parts(sec).forEach(c => c.classList.remove('open')); }
+    else { sec.classList.add('open'); parts(sec).forEach(c => c.classList.add('open')); fitVisibleTables(); }
+    syncFloatingHeaders(); syncAll();
   }
-  syncToggleAll();
-});
-document.addEventListener('click', () => setTimeout(syncToggleAll, 0));
-syncToggleAll();
+  function sync(b){
+    const o = allOpen(b.closest('.section'));
+    if(b.classList.contains('all-open') === o && b.dataset.synced) return;
+    b.dataset.synced = '1'; b.classList.toggle('all-open', o);
+    b.setAttribute('aria-label', o ? 'Collapse every part of this section' : 'Expand this section and every part in it');
+    b.title = o ? 'Close every part of this section (or Alt/Option-click the header)' : 'Open this section and every part in it (or Alt/Option-click the header)';
+  }
+  const btns = [];
+  sections.forEach(sec => {
+    const head = sec.querySelector('.sec-head'); if(!head || !parts(sec).length) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sec-all'; b.innerHTML = EXP + COL;
+    b.addEventListener('click', e => { e.stopPropagation(); toggle(sec); });
+    head.insertBefore(b, head.querySelector('.chevron')); btns.push(b);
+  });
+  function syncAll(){ btns.forEach(sync); }
+  document.addEventListener('click', e => {
+    if(!e.altKey) return;
+    const head = e.target.closest && e.target.closest('.section .sec-head'); if(!head || e.target.closest('.sec-all')) return;
+    const sec = head.closest('.section'); if(!parts(sec).length) return;
+    e.preventDefault(); e.stopPropagation(); toggle(sec);
+  }, true);
+  new MutationObserver(syncAll).observe(document.getElementById('content') || document.body, {subtree:true, attributes:true, attributeFilter:['class']});
+  syncAll();
+})();
+/* ---- end toolbar patch v3 js ---- */
 """
-m1 = re.search(r"document\\.getElementById\\('expandAll'\\)\\.addEventListener\\('click'.*?\\n", s)
-m2 = re.search(r"document\\.getElementById\\('collapseAll'\\)\\.addEventListener\\('click'.*?\\n", s)
-assert m1 and m2, 'old listeners not found'
-s = s[:m1.start()] + JS_ALL + s[m2.end():]
+s = re.sub(r"/\\* ---- toolbar extra js ---- \\*/.*?/\\* ---- end toolbar extra js ---- \\*/\\n", "", s, flags=re.S)
+m = (re.search(r"/\\* ---- toolbar patch v2 js ---- \\*/.*?/\\* ---- end toolbar patch v2 js ---- \\*/\\n", s, re.S)
+     or re.search(r"/\\* ---- one expand/collapse toggle .*?\\nsyncToggleAll\\(\\);\\n", s, re.S))
+if m:
+    s = s[:m.start()] + JS_ALL + s[m.end():]
+else:
+    m1 = re.search(r"document\\.getElementById\\('expandAll'\\)\\.addEventListener\\('click'.*?\\n", s)
+    m2 = re.search(r"document\\.getElementById\\('collapseAll'\\)\\.addEventListener\\('click'.*?\\n", s)
+    assert m1 and m2, 'expand/collapse listeners not found'
+    s = s[:m1.start()] + JS_ALL + s[m2.end():]
 
 # 4. JS: TOC show/hide (drop an older copy first)
 s = re.sub(r"\\n/\\* ---- show/hide TOC .*?\\n\\}\\)\\(\\);\\n", "\\n", s, flags=re.S)
 JS_TOC = r"""
-/* ---- show/hide TOC (toolbar button left of the expand/collapse toggle); remembered per viewer ---- */
+/* ---- show/hide TOC (toolbar button left of expand all / collapse all); remembered per viewer ---- */
 (function(){
   const btn = document.getElementById('tocToggle'); if(!btn) return;
   const lab = btn.querySelector('.tl');
@@ -1947,7 +2009,7 @@ JS_TOC = r"""
 """
 a = "if(document.fonts && document.fonts.ready) document.fonts.ready.then(updateStackH);\\n"
 assert a in s; s = s.replace(a, a + JS_TOC, 1)
-open(p, 'w').write(s); print('toolbar: applied')
+open(p, 'w').write(s); print('toolbar: applied (v3: top button, triangle expand/collapse, section buttons)')
 \`\`\`
 
 ## Source colour patch (REQUIRED until the template ships it)
@@ -2267,6 +2329,8 @@ Swami (Nov 24, 2026): every dashboard draws hierarchy trees the same way. Save t
    Search section finds them. Labels and notes may hold inline HTML (code, strong, links).
 2. Adds the page plumbing for diagrams and trees: [DIAGRAM]/[TREE] tags, glossary skips, the .viz figure and
    colour-key CSS, the tree CSS, and opening every closed branch that holds a jump, Search result or search hit.
+3. Diagram hover: every box and arrow in a diagram with a colour key shows, in the house tooltip style, what it
+   means in that Key (boxes by stroke colour, arrows by solid or dashed line).
 Usage: python3 visuals_patch.py PAGE.html"""
 import html, re, sys
 p = sys.argv[1]; s = open(p, encoding='utf-8').read()
@@ -2352,6 +2416,10 @@ CSS = """  /* VISUALS:CSS:BEGIN */
   .tree .tnote{color:var(--text-mute);margin-left:10px;font-size:11.5px}
   .tree .tcount{color:var(--text-mute);margin-left:8px;font-size:11px}
   .tree .tcount::before{content:'{'} .tree .tcount::after{content:'}'}
+  .viz-hotwrap{position:relative;width:100%;min-width:720px}
+  .viz-hot{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
+  .viz-hot .vh-box{pointer-events:all;cursor:help}
+  .viz-hot .vh-arrow{pointer-events:stroke;cursor:help}
   /* VISUALS:CSS:END */
 """
 JS = r"""<script>/* VISUALS:JS:BEGIN (visuals_patch.py) */
@@ -2366,6 +2434,62 @@ if(typeof jumpToEl === 'function'){ const _j = jumpToEl; jumpToEl = function(el)
 (function(){ const c = document.getElementById('content'); if(!c) return;
   new MutationObserver(ms => { for(const m of ms) for(const n of m.addedNodes) if(n.nodeName === 'MARK') openDetailsFor(n); })
     .observe(c, {childList:true, subtree:true}); })();
+/* Diagram hover: each box and arrow in a diagram (figure.viz) shows what it means in that diagram's Key, in the house
+   tooltip style. The diagram's own SVG is laid over the image as an invisible copy (no text, so page passes and searches
+   ignore it); boxes match a Key swatch by stroke colour, arrows match the Key's solid or dashed line sample. */
+(function(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const norm = c => { c = String(c || '').trim().toLowerCase(); if(/^#[0-9a-f]{3}$/.test(c)) c = '#' + [...c.slice(1)].map(x => x + x).join(''); return c; };
+  const sty = (el, k) => el.getAttribute(k) || ((el.getAttribute('style') || '').match(new RegExp('(?:^|;)\\\\s*' + k + '\\\\s*:\\\\s*([^;]+)')) || [])[1] || '';
+  const dashed = el => { for(let e = el; e && e.getAttribute; e = e.parentNode){ const d = sty(e, 'stroke-dasharray'); if(d && d !== 'none') return true; } return false; };
+  const stroke = el => { for(let e = el; e && e.getAttribute; e = e.parentNode){ const c = sty(e, 'stroke'); if(c && c !== 'none') return norm(c); } return ''; };
+  function hover(fig){
+    const img = fig.querySelector('img[src^="data:image/svg+xml"]'), lg = fig.querySelector('.viz-legend');
+    if(!img || !lg || fig.querySelector('.viz-hot')) return;
+    const sw = new Map(); let solidLab = '', dashLab = '';
+    lg.querySelectorAll('.lg').forEach(l => { const i = l.querySelector('i'); if(!i) return; const lab = l.textContent.replace(/\\s+/g, ' ').trim();
+      if(i.classList.contains('lg-sw')) sw.set(norm(i.style.getPropertyValue('--c')), lab);
+      else if(i.classList.contains('lg-dashed')) dashLab = lab; else if(i.classList.contains('lg-line')) solidLab = lab; });
+    let src;
+    try{ const u = img.getAttribute('src'), d = u.slice(u.indexOf(',') + 1);
+      src = /;base64,/.test(u) ? new TextDecoder().decode(Uint8Array.from(atob(d), c => c.charCodeAt(0))) : decodeURIComponent(d); }catch(e){ return; }
+    const svg = new DOMParser().parseFromString(src, 'image/svg+xml').documentElement;
+    if(!svg || svg.nodeName.toLowerCase() !== 'svg') return;
+    const vb = (svg.getAttribute('viewBox') || '').trim().split(/[\\s,]+/).map(Number);
+    const W = vb.length === 4 ? vb[2] : parseFloat(svg.getAttribute('width')), H = vb.length === 4 ? vb[3] : parseFloat(svg.getAttribute('height'));
+    if(!(W > 0 && H > 0)) return;
+    const texts = [...svg.querySelectorAll('text')].map(t => ({x: parseFloat(t.getAttribute('x')) || 0, y: parseFloat(t.getAttribute('y')) || 0, s: t.textContent.replace(/\\s+/g, ' ').trim()}));
+    const inDefs = el => !!el.closest('defs,marker,clipPath,mask,pattern,symbol');
+    svg.querySelectorAll('rect,circle,ellipse').forEach(el => {
+      if(inDefs(el)) return;
+      const n = el.nodeName.toLowerCase(), f = k => parseFloat(el.getAttribute(k)) || 0;
+      const box = n === 'rect' ? [f('x'), f('y'), f('width'), f('height')]
+                : [f('cx') - (f('r') || f('rx')), f('cy') - (f('r') || f('ry')), 2 * (f('r') || f('rx')), 2 * (f('r') || f('ry'))];
+      if(box[2] >= W * 0.9 && box[3] >= H * 0.8) return;                       // the background panel
+      const lab = sw.get(stroke(el)); if(!lab) return;
+      const t = texts.find(t => t.s && t.x >= box[0] - 2 && t.x <= box[0] + box[2] + 2 && t.y >= box[1] && t.y <= box[1] + box[3] + 2);
+      const opt = dashed(el) && dashLab ? ' (' + dashLab + ')' : '';
+      el.setAttribute('class', 'vh-box'); el.setAttribute('data-vtip', (t ? t.s + ' · ' : '') + 'Key: ' + lab + opt);
+    });
+    svg.querySelectorAll('path,line,polyline').forEach(el => {
+      if(inDefs(el) || !stroke(el)) return;
+      if(el.nodeName.toLowerCase() === 'path' && !(sty(el, 'fill') === 'none' || el.getAttribute('marker-end') || el.getAttribute('marker-start'))) return;
+      const col = sw.get(stroke(el)), line = dashed(el) ? dashLab : solidLab;
+      const lab = [col, line].filter(Boolean).join(', '); if(!lab) return;
+      el.setAttribute('class', 'vh-arrow'); el.setAttribute('data-vtip', 'Arrow · Key: ' + lab);
+      el.setAttribute('stroke-width', '14'); el.removeAttribute('marker-end'); el.removeAttribute('marker-start');
+    });
+    if(!svg.querySelector('[data-vtip]')) return;
+    svg.querySelectorAll('text,title,desc,image,foreignObject,script').forEach(e => e.remove());
+    const ov = document.importNode(svg, true);
+    ov.setAttribute('class', 'viz-hot'); ov.setAttribute('aria-hidden', 'true'); ov.removeAttribute('width'); ov.removeAttribute('height');
+    if(vb.length !== 4) ov.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const wrap = document.createElement('div'); wrap.className = 'viz-hotwrap';
+    if(img.style.maxWidth){ wrap.style.maxWidth = img.style.maxWidth; img.style.maxWidth = ''; }
+    img.parentNode.insertBefore(wrap, img); wrap.appendChild(img); wrap.appendChild(ov);
+  }
+  document.querySelectorAll('figure.viz').forEach(f => { try{ hover(f); }catch(e){} });
+})();
 /* VISUALS:JS:END */<\/script>
 """
 s = re.sub(r'  /\\* VISUALS:CSS:BEGIN \\*/.*?/\\* VISUALS:CSS:END \\*/\\n', '', s, flags=re.S)
@@ -2879,24 +3003,53 @@ window.addEventListener('scroll', () => {   // hide only on a real page move, no
 sections.forEach(sec => {
   sec.querySelector('.sec-head').addEventListener('click', () => { sec.classList.toggle('open'); fitVisibleTables(); syncFloatingHeaders(); });
 });
-/* ---- one expand/collapse toggle (label + icon show the next action) ---- */
-const toggleAllBtn = document.getElementById('toggleAll');
-function syncToggleAll(){
-  const open = [...sections].length > 0 && [...sections].every(s => s.classList.contains('open'));
-  toggleAllBtn.classList.toggle('all-open', open);
-  toggleAllBtn.querySelector('.tl').textContent = open ? 'collapse all' : 'expand all';
-  toggleAllBtn.title = open ? 'Close every section and item' : 'Open every section and item';
-}
-toggleAllBtn.addEventListener('click', () => {
-  if(toggleAllBtn.classList.contains('all-open')){
-    sections.forEach(s=>s.classList.remove('open')); document.querySelectorAll('.citem').forEach(c=>c.classList.remove('open')); syncFloatingHeaders();
-  } else {
-    sections.forEach(s=>s.classList.add('open')); document.querySelectorAll('.citem').forEach(c=>c.classList.add('open')); fitVisibleTables(); syncFloatingHeaders();
+/* ---- toolbar patch v3 js ---- */
+/* top of page */
+document.getElementById('toTop').addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+/* expand all / collapse all: two buttons */
+document.getElementById('expandAll').addEventListener('click', () => {
+  sections.forEach(s => s.classList.add('open')); document.querySelectorAll('.citem').forEach(c => c.classList.add('open'));
+  fitVisibleTables(); syncFloatingHeaders(); });
+document.getElementById('collapseAll').addEventListener('click', () => {
+  sections.forEach(s => s.classList.remove('open')); document.querySelectorAll('.citem').forEach(c => c.classList.remove('open'));
+  syncFloatingHeaders(); });
+/* per-section expand/collapse: a small button in each section header (and Alt/Option-click on the header) */
+(function(){
+  const ICO = d => '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>';
+  const EXP = ICO('<path d="M7 9l5-5 5 5M7 15l5 5 5-5"/>').replace('class="ico"', 'class="ico i-exp"');
+  const COL = ICO('<path d="M7 4l5 5 5-5M7 20l5-5 5 5"/>').replace('class="ico"', 'class="ico i-col"');
+  const parts = sec => [...sec.querySelectorAll('.citem')];
+  const allOpen = sec => sec.classList.contains('open') && parts(sec).every(c => c.classList.contains('open'));
+  function toggle(sec){
+    if(allOpen(sec)){ parts(sec).forEach(c => c.classList.remove('open')); }
+    else { sec.classList.add('open'); parts(sec).forEach(c => c.classList.add('open')); fitVisibleTables(); }
+    syncFloatingHeaders(); syncAll();
   }
-  syncToggleAll();
-});
-document.addEventListener('click', () => setTimeout(syncToggleAll, 0));
-syncToggleAll();
+  function sync(b){
+    const o = allOpen(b.closest('.section'));
+    if(b.classList.contains('all-open') === o && b.dataset.synced) return;
+    b.dataset.synced = '1'; b.classList.toggle('all-open', o);
+    b.setAttribute('aria-label', o ? 'Collapse every part of this section' : 'Expand this section and every part in it');
+    b.title = o ? 'Close every part of this section (or Alt/Option-click the header)' : 'Open this section and every part in it (or Alt/Option-click the header)';
+  }
+  const btns = [];
+  sections.forEach(sec => {
+    const head = sec.querySelector('.sec-head'); if(!head || !parts(sec).length) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sec-all'; b.innerHTML = EXP + COL;
+    b.addEventListener('click', e => { e.stopPropagation(); toggle(sec); });
+    head.insertBefore(b, head.querySelector('.chevron')); btns.push(b);
+  });
+  function syncAll(){ btns.forEach(sync); }
+  document.addEventListener('click', e => {
+    if(!e.altKey) return;
+    const head = e.target.closest && e.target.closest('.section .sec-head'); if(!head || e.target.closest('.sec-all')) return;
+    const sec = head.closest('.section'); if(!parts(sec).length) return;
+    e.preventDefault(); e.stopPropagation(); toggle(sec);
+  }, true);
+  new MutationObserver(syncAll).observe(document.getElementById('content') || document.body, {subtree:true, attributes:true, attributeFilter:['class']});
+  syncAll();
+})();
+/* ---- end toolbar patch v3 js ---- */
 
 /* ---- runtime-measured sticky offset for data-target navigation ---- */
 const stack = document.getElementById('stickyStack');
@@ -2914,7 +3067,7 @@ updateStackH();
 window.addEventListener('resize', updateStackH);
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(updateStackH);
 
-/* ---- show/hide TOC (toolbar button left of the expand/collapse toggle); remembered per viewer ---- */
+/* ---- show/hide TOC (toolbar button left of expand all / collapse all); remembered per viewer ---- */
 (function(){
   const btn = document.getElementById('tocToggle'); if(!btn) return;
   const lab = btn.querySelector('.tl');
@@ -4248,6 +4401,62 @@ if(typeof jumpToEl === 'function'){ const _j = jumpToEl; jumpToEl = function(el)
 (function(){ const c = document.getElementById('content'); if(!c) return;
   new MutationObserver(ms => { for(const m of ms) for(const n of m.addedNodes) if(n.nodeName === 'MARK') openDetailsFor(n); })
     .observe(c, {childList:true, subtree:true}); })();
+/* Diagram hover: each box and arrow in a diagram (figure.viz) shows what it means in that diagram's Key, in the house
+   tooltip style. The diagram's own SVG is laid over the image as an invisible copy (no text, so page passes and searches
+   ignore it); boxes match a Key swatch by stroke colour, arrows match the Key's solid or dashed line sample. */
+(function(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const norm = c => { c = String(c || '').trim().toLowerCase(); if(/^#[0-9a-f]{3}$/.test(c)) c = '#' + [...c.slice(1)].map(x => x + x).join(''); return c; };
+  const sty = (el, k) => el.getAttribute(k) || ((el.getAttribute('style') || '').match(new RegExp('(?:^|;)\\s*' + k + '\\s*:\\s*([^;]+)')) || [])[1] || '';
+  const dashed = el => { for(let e = el; e && e.getAttribute; e = e.parentNode){ const d = sty(e, 'stroke-dasharray'); if(d && d !== 'none') return true; } return false; };
+  const stroke = el => { for(let e = el; e && e.getAttribute; e = e.parentNode){ const c = sty(e, 'stroke'); if(c && c !== 'none') return norm(c); } return ''; };
+  function hover(fig){
+    const img = fig.querySelector('img[src^="data:image/svg+xml"]'), lg = fig.querySelector('.viz-legend');
+    if(!img || !lg || fig.querySelector('.viz-hot')) return;
+    const sw = new Map(); let solidLab = '', dashLab = '';
+    lg.querySelectorAll('.lg').forEach(l => { const i = l.querySelector('i'); if(!i) return; const lab = l.textContent.replace(/\s+/g, ' ').trim();
+      if(i.classList.contains('lg-sw')) sw.set(norm(i.style.getPropertyValue('--c')), lab);
+      else if(i.classList.contains('lg-dashed')) dashLab = lab; else if(i.classList.contains('lg-line')) solidLab = lab; });
+    let src;
+    try{ const u = img.getAttribute('src'), d = u.slice(u.indexOf(',') + 1);
+      src = /;base64,/.test(u) ? new TextDecoder().decode(Uint8Array.from(atob(d), c => c.charCodeAt(0))) : decodeURIComponent(d); }catch(e){ return; }
+    const svg = new DOMParser().parseFromString(src, 'image/svg+xml').documentElement;
+    if(!svg || svg.nodeName.toLowerCase() !== 'svg') return;
+    const vb = (svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+    const W = vb.length === 4 ? vb[2] : parseFloat(svg.getAttribute('width')), H = vb.length === 4 ? vb[3] : parseFloat(svg.getAttribute('height'));
+    if(!(W > 0 && H > 0)) return;
+    const texts = [...svg.querySelectorAll('text')].map(t => ({x: parseFloat(t.getAttribute('x')) || 0, y: parseFloat(t.getAttribute('y')) || 0, s: t.textContent.replace(/\s+/g, ' ').trim()}));
+    const inDefs = el => !!el.closest('defs,marker,clipPath,mask,pattern,symbol');
+    svg.querySelectorAll('rect,circle,ellipse').forEach(el => {
+      if(inDefs(el)) return;
+      const n = el.nodeName.toLowerCase(), f = k => parseFloat(el.getAttribute(k)) || 0;
+      const box = n === 'rect' ? [f('x'), f('y'), f('width'), f('height')]
+                : [f('cx') - (f('r') || f('rx')), f('cy') - (f('r') || f('ry')), 2 * (f('r') || f('rx')), 2 * (f('r') || f('ry'))];
+      if(box[2] >= W * 0.9 && box[3] >= H * 0.8) return;                       // the background panel
+      const lab = sw.get(stroke(el)); if(!lab) return;
+      const t = texts.find(t => t.s && t.x >= box[0] - 2 && t.x <= box[0] + box[2] + 2 && t.y >= box[1] && t.y <= box[1] + box[3] + 2);
+      const opt = dashed(el) && dashLab ? ' (' + dashLab + ')' : '';
+      el.setAttribute('class', 'vh-box'); el.setAttribute('data-vtip', (t ? t.s + ' · ' : '') + 'Key: ' + lab + opt);
+    });
+    svg.querySelectorAll('path,line,polyline').forEach(el => {
+      if(inDefs(el) || !stroke(el)) return;
+      if(el.nodeName.toLowerCase() === 'path' && !(sty(el, 'fill') === 'none' || el.getAttribute('marker-end') || el.getAttribute('marker-start'))) return;
+      const col = sw.get(stroke(el)), line = dashed(el) ? dashLab : solidLab;
+      const lab = [col, line].filter(Boolean).join(', '); if(!lab) return;
+      el.setAttribute('class', 'vh-arrow'); el.setAttribute('data-vtip', 'Arrow · Key: ' + lab);
+      el.setAttribute('stroke-width', '14'); el.removeAttribute('marker-end'); el.removeAttribute('marker-start');
+    });
+    if(!svg.querySelector('[data-vtip]')) return;
+    svg.querySelectorAll('text,title,desc,image,foreignObject,script').forEach(e => e.remove());
+    const ov = document.importNode(svg, true);
+    ov.setAttribute('class', 'viz-hot'); ov.setAttribute('aria-hidden', 'true'); ov.removeAttribute('width'); ov.removeAttribute('height');
+    if(vb.length !== 4) ov.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const wrap = document.createElement('div'); wrap.className = 'viz-hotwrap';
+    if(img.style.maxWidth){ wrap.style.maxWidth = img.style.maxWidth; img.style.maxWidth = ''; }
+    img.parentNode.insertBefore(wrap, img); wrap.appendChild(img); wrap.appendChild(ov);
+  }
+  document.querySelectorAll('figure.viz').forEach(f => { try{ hover(f); }catch(e){} });
+})();
 /* VISUALS:JS:END */</script>
 <script>/* SRCVIEW:JS:BEGIN — Source Document: Markdown | Plain text (source_view_patch.py) */
 (function(){
