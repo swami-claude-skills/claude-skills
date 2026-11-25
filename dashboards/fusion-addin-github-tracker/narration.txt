@@ -6,7 +6,7 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. It has two paths: move, for an add-in that already exists, and new, for one built in its repo from day one. Every step has a copyable prompt and a done tick saved in the page's own database.
 
-Section four, What It Does. It gets the tracker kit from Swami's private repo, writes a small settings file, builds and patches the page, checks it in a browser, adds the audio overview, runs the privacy scan, and publishes it.
+Section four, What It Does. It gets the tracker kit from Swami's private repo, writes a small settings file, builds and patches the page, checks it in a browser, adds the audio overview, runs the privacy scan, and publishes it. A workflow diagram, with a colour key, shows every step and who does it.
 
 Section five, How to Use It. Ask for a tracker in the add-in's Claude project, answer any questions, add the tracker link to the project instructions, then work through the steps and tick each one when it's done.
 

@@ -407,7 +407,7 @@
     "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and you can switch it to plain text"
   },
   "meta": {
-    "card_version": 1,
+    "card_version": 2,
     "fingerprint": "sha256:325f2f4f2df8c296",
     "files": [
       "SKILL.md"
@@ -417,6 +417,132 @@
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-addin-github-tracker.zip",
     "draft_url": "https://claude.ai/artifact/RhR9Uy1sWHXyduhCY7wzmN",
-    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-addin-github-tracker/"
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-addin-github-tracker/",
+    "vibe_fingerprint": "sha256:134d18129b732c81",
+    "vibe_updated": "Tue Nov 24, 2026"
+  },
+  "flow": {
+    "heading": "FUSION ADD-IN GITHUB TRACKER · FROM NAME TO TESTED RELEASE",
+    "desc": "Workflow diagram of making and using a tracker",
+    "tip": "The steps from asking for a tracker in the add-in's project to working its steps and testing the release in Fusion.",
+    "alt": "Workflow diagram: 1 Swami asks for a tracker in the add-in's Claude project, uploading the add-in's zip for a move, 2 Claude works out the path, names, repo name, description and button location, asking only for what it can't work out, 3 gets the tracker kit from Swami's private repo, 4 builds the page with vibe-dashboard's patches, 5 checks the page and records the audio, 6 runs the privacy scan, 7 publishes the tracker with its owner-only database, 8 Swami adds the tracker link to the project instructions, 9 works each step from its prompt and ticks it done, 10 runs the Test in Fusion checks on his computer.",
+    "caption": "Read left to right along the top row, right to left along the middle row, then left to right along the bottom. Swami asks, links the tracker, works its steps and tests; Claude builds and publishes it.",
+    "dashed_label": "optional, or only sometimes",
+    "steps": [
+      {
+        "title": "Ask",
+        "kind": "swami",
+        "lines": [
+          "In the add-in's Claude",
+          "project, ask for a tracker"
+        ]
+      },
+      {
+        "title": "Inputs",
+        "kind": "claude",
+        "lines": [
+          "Path, names, repo name,",
+          "description, location;",
+          "asks only if unclear"
+        ]
+      },
+      {
+        "title": "Kit",
+        "kind": "repo",
+        "lines": [
+          "build_tracker.py and",
+          "friends from the private",
+          "vibe-dashboards repo"
+        ]
+      },
+      {
+        "title": "Build",
+        "kind": "claude",
+        "lines": [
+          "Builds the page, then",
+          "runs vibe-dashboard's",
+          "patches in order"
+        ]
+      },
+      {
+        "title": "Check & audio",
+        "kind": "claude",
+        "lines": [
+          "Diagram by eye, three",
+          "widths, then the audio",
+          "overview"
+        ]
+      },
+      {
+        "title": "Privacy",
+        "kind": "claude",
+        "lines": [
+          "Scans page, narration",
+          "and config; a real hit",
+          "stops the publish"
+        ]
+      },
+      {
+        "title": "Publish",
+        "kind": "claude",
+        "lines": [
+          "Tracker with an owner-",
+          "only database; step 2",
+          "ticked done"
+        ]
+      },
+      {
+        "title": "Link it",
+        "kind": "swami",
+        "lines": [
+          "Add the tracker link to",
+          "the project instructions"
+        ]
+      },
+      {
+        "title": "Work the steps",
+        "kind": "swami",
+        "lines": [
+          "Copy each step's prompt",
+          "into a chat; tick it",
+          "done on the page"
+        ]
+      },
+      {
+        "title": "Test in Fusion",
+        "kind": "computer",
+        "lines": [
+          "15 checks on Swami's",
+          "computer; 13 to 15 need",
+          "the second release"
+        ]
+      }
+    ],
+    "extras": [
+      {
+        "title": "Add-in zip",
+        "kind": "swami",
+        "lines": [
+          "Only for a move: the",
+          "existing add-in's zip"
+        ],
+        "step": 1,
+        "place": "above",
+        "to_step": true,
+        "optional": true
+      },
+      {
+        "title": "vibe-dashboard",
+        "kind": "handoff",
+        "lines": [
+          "Table-fit, toolbar,",
+          "Search, Mind Map, colour",
+          "and tooltip patches"
+        ],
+        "step": 4,
+        "place": "above",
+        "to_step": true
+      }
+    ]
   }
 }

@@ -14,6 +14,10 @@
       "text": "Asks only for the three things it can't guess: the add-in name, where the button goes (default DESIGN › Utilities › Add-Ins, several places allowed) and what the tool does. Everything else gets a house default."
     },
     {
+      "topic": "Repo and Project Name",
+      "text": "When the add-in gets its own GitHub repo and Claude project, both share one name: `fusion-addin-<tool-name>`, all lowercase with hyphens (`SelectionInspector` becomes `fusion-addin-selection-inspector`). The repo is public under `swami-claude-skills`, with its docs on GitHub Pages, and is modelled on `fusion-export-selected-to-dxf`. The add-in's own CamelCase name inside the folder stays as it is."
+    },
+    {
       "topic": "Add-in Code",
       "text": "Writes `ToolName.py` from `assets/addin_template.py`: the versioned title, buttons in one or more panels, the palette lifecycle, the JS↔Python bridge, settings load and save, reset, and teardown."
     },
@@ -312,6 +316,14 @@
       "text": "The folder, `.py` and `.manifest` must share one name or Fusion won't list the add-in. Renaming later touches about ten files, so the name is asked for first."
     },
     {
+      "topic": "Repo Name Is Only a Label",
+      "text": "Never rename the add-in's internal name (folder, `.py`, `.manifest`, command and palette IDs) to match its repo name: that resets users' settings and keyboard shortcuts."
+    },
+    {
+      "topic": "Pages Address Doesn't Redirect",
+      "text": "Pick the repo name once, before the repo is created. GitHub redirects the repo and its downloads after a rename, but not the GitHub Pages address."
+    },
+    {
       "topic": "Version Not Bumped",
       "text": "Every rebuild must bump the version (the `VERSION` constant and the manifest). An unchanged title after a reinstall makes it impossible to tell whether the new copy loaded."
     },
@@ -529,26 +541,41 @@
       "match": "keyboard shortcut|Change Keyboard Shortcut",
       "code": "",
       "def": "A hotkey Swami assigns in Fusion; only offered for commands that have an icon and a button."
+    },
+    {
+      "term": "Repo name",
+      "topic": "GitHub",
+      "match": "repo names?|repo and project name",
+      "code": "fusion-addin-<tool-name>",
+      "def": "The name shared by an add-in's GitHub repository and its Claude project: `fusion-addin-<tool-name>`, lowercase with hyphens. Only a label; the add-in's internal name stays CamelCase."
+    },
+    {
+      "term": "GitHub Pages",
+      "topic": "GitHub",
+      "match": "GitHub Pages",
+      "code": "",
+      "def": "GitHub's free website hosting for a public repo; an add-in's docs live at `swami-claude-skills.github.io/fusion-addin-<tool-name>/`."
     }
   ],
   "confirm": [],
   "spoken": {
     "_intro": "This page is the skill sheet for the Fusion palette add-in skill. It builds an Autodesk Fusion add-in to Swami's house spec: a dockable dark panel with a version in its title, saved settings with a [reset](/ɹˈiːsɛt/), and installers for the Mac and for Windows",
     "What It Is": "What the skill is, and why one fixed house spec means no tool ships without its version, its [reset](/ɹˈiːsɛt/), its error strip, or its installer",
-    "What It Does": "Nine jobs, from asking for the name, location, and idea, through the code, the palette, the manifest, and the icon, to settings, installers, a [preflight](/pɹˈiːflaɪt/) check, and the zip",
+    "What It Does": "Ten jobs, from asking for the name, location, and idea, and the shared name for its GitHub repo and Claude project, through the code, the palette, the manifest, and the icon, to settings, installers, a [preflight](/pɹˈiːflaɪt/) check, and the zip. A workflow diagram, with a colour key, shows every step and who does it",
     "How to Use It": "Eight steps on the Mac, from asking for the tool to setting its keyboard shortcut, then six steps on Windows, where you [extract](/ɪkstɹˈækt/) the zip first",
     "Skills It Depends On": "Two required skills: Fusion add-in scaffold for the Python rules, and Fusion add-in installer for the installers. Vibe dashboard is related, for write-ups",
     "Programs It Depends On": "Autodesk Fusion on your computer, plus Python, Pillow, zip, and bash in Claude's workspace. Terminal runs the Mac installer and PowerShell the Windows one",
     "Capabilities and Limitations": "It delivers a whole checked package that stays open while you work and keeps its settings. But Claude can't test it inside Fusion, and you set the keyboard shortcut yourself",
     "Scheduled Tasks": "None. The nightly skill library refresh only packs it into a zip",
     "Where It Runs": "Swami runs it in the Claude desktop app linked to his Mac. The other surfaces should work too, but are untested",
-    "Gotchas": "Fourteen traps, from mismatched names and forgotten version bumps to lost handlers, half [resets](/ɹˈiːsɛts/), Gatekeeper, and Windows execution policy",
+    "Gotchas": "Sixteen traps, from mismatched names, renamed repos, and forgotten version bumps to lost handlers, half [resets](/ɹˈiːsɛts/), Gatekeeper, and Windows execution policy",
     "Other Requirements": "Fusion on a Mac or on Windows ten or eleven, code execution in Claude, and the two companion skills. No admin rights are needed",
-    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint",
+    "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and you can switch it to plain text"
   },
   "meta": {
-    "card_version": 1,
-    "fingerprint": "sha256:31f741071943c1c5",
+    "card_version": 2,
+    "fingerprint": "sha256:7da3895bd4fac5fb",
     "files": [
       "SKILL.md",
       "assets/addin_template.py",
@@ -563,11 +590,140 @@
       "scripts/make_icons.py",
       "scripts/preflight.py"
     ],
-    "skill_updated": "Mon Nov 9, 2026",
-    "carded": "Mon Nov 9, 2026",
+    "skill_updated": "Tue Nov 24, 2026",
+    "carded": "Tue Nov 24, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-palette-addin.zip",
     "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq",
-    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-palette-addin/"
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-palette-addin/",
+    "vibe_fingerprint": "sha256:134d18129b732c81",
+    "vibe_updated": "Tue Nov 24, 2026"
+  },
+  "flow": {
+    "heading": "FUSION PALETTE ADD-IN · FROM REQUEST TO SHORTCUT",
+    "desc": "Workflow diagram of building a palette add-in",
+    "tip": "The steps from asking for a Fusion tool to running it with its own keyboard shortcut, with the scaffold rules feeding the code and the installer skill building the installers.",
+    "alt": "Workflow diagram: 1 Swami asks for a Fusion tool, 2 Claude asks for any missing name, location or description, 3 writes the add-in code, 4 writes the dark palette, 5 writes the manifest and draws the icon, 6 adds saved settings and reset, 7 the fusion-addin-installer skill builds the installers, 8 Claude runs preflight, 9 zips and sends the add-in, 10 Swami installs it on his computer, 11 runs and tests it in Fusion, 12 sets its keyboard shortcut. The fusion-addin-scaffold skill's Python rules feed the code, and later changes go back to step 3 with the version bumped.",
+    "caption": "Read left to right along the top row, right to left along the middle row, then left to right along the bottom. Swami asks, tests and sets the shortcut; Claude builds and checks everything in between.",
+    "dashed_label": "optional, or only sometimes",
+    "steps": [
+      {
+        "title": "Ask",
+        "kind": "swami",
+        "lines": [
+          "A Fusion tool, or the",
+          "request template with",
+          "its three blanks filled"
+        ]
+      },
+      {
+        "title": "Intake",
+        "kind": "claude",
+        "lines": [
+          "Asks only for a missing",
+          "name, location or",
+          "description"
+        ]
+      },
+      {
+        "title": "Add-in code",
+        "kind": "claude",
+        "lines": [
+          "ToolName.py: versioned",
+          "title, buttons, bridge,",
+          "teardown"
+        ]
+      },
+      {
+        "title": "Palette",
+        "kind": "claude",
+        "lines": [
+          "palette.html: dark,",
+          "dockable, collapsible,",
+          "error strip"
+        ]
+      },
+      {
+        "title": "Manifest & icon",
+        "kind": "claude",
+        "lines": [
+          "Fresh GUID, matching",
+          "version, 16/32/64 px icon"
+        ]
+      },
+      {
+        "title": "Settings",
+        "kind": "claude",
+        "lines": [
+          "Saved per user, outside",
+          "the add-in; Reset brings",
+          "back every default"
+        ]
+      },
+      {
+        "title": "Installers",
+        "kind": "handoff",
+        "lines": [
+          "fusion-addin-installer",
+          "builds the macOS and",
+          "Windows installers"
+        ]
+      },
+      {
+        "title": "Preflight",
+        "kind": "claude",
+        "lines": [
+          "Compiles, checks names,",
+          "versions, placeholders"
+        ]
+      },
+      {
+        "title": "Zip & send",
+        "kind": "claude",
+        "lines": [
+          "ToolName.zip, with the",
+          "install steps"
+        ]
+      },
+      {
+        "title": "Install",
+        "kind": "computer",
+        "lines": [
+          "Double-click the",
+          "installer on the Mac,",
+          "or Windows"
+        ]
+      },
+      {
+        "title": "Run & test",
+        "kind": "swami",
+        "lines": [
+          "Scripts and Add-Ins ›",
+          "Run; ask for changes",
+          "(the version is bumped)"
+        ]
+      },
+      {
+        "title": "Shortcut",
+        "kind": "swami",
+        "lines": [
+          "Change Keyboard Shortcut",
+          "on the toolbar button"
+        ]
+      }
+    ],
+    "extras": [
+      {
+        "title": "Scaffold rules",
+        "kind": "handoff",
+        "lines": [
+          "fusion-addin-scaffold's",
+          "Python API rules"
+        ],
+        "step": 3,
+        "place": "above",
+        "to_step": true
+      }
+    ]
   }
 }

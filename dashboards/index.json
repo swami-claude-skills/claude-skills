@@ -74,9 +74,9 @@
   "fusion-palette-addin": {
     "title": "Fusion Palette Add-in",
     "page": "dashboards/fusion-palette-addin/",
-    "fingerprint": "sha256:31f741071943c1c5",
-    "skill_updated": "Mon Nov 9, 2026",
-    "published": "2026-11-09",
+    "fingerprint": "sha256:7da3895bd4fac5fb",
+    "skill_updated": "Tue Nov 24, 2026",
+    "published": "2026-11-24",
     "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq"
   },
   "makerworld-reviews": {
