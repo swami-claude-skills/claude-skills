@@ -1,4 +1,20 @@
 {
+  "ai-rule-review": {
+    "title": "AI Rule Review",
+    "page": "dashboards/ai-rule-review/",
+    "fingerprint": "sha256:c7283ab75cfd36b6",
+    "skill_updated": "Sun Nov 22, 2026",
+    "published": "2026-11-24",
+    "draft_url": "https://claude.ai/artifact/HFEt245Bj8KHfoCCKiVxqu"
+  },
+  "ai-rules-manager": {
+    "title": "AI Rules Manager",
+    "page": "dashboards/ai-rules-manager/",
+    "fingerprint": "sha256:df5f2752b533c055",
+    "skill_updated": "Sun Nov 22, 2026",
+    "published": "2026-11-24",
+    "draft_url": "https://claude.ai/artifact/KGpiLJVkZM3nvbAB5Sb36s"
+  },
   "facebook-comments": {
     "title": "Facebook Comments",
     "page": "dashboards/facebook-comments/",

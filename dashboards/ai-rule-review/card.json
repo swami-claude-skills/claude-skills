@@ -1,0 +1,351 @@
+{
+  "skill": "ai-rule-review",
+  "title": "AI Rule Review",
+  "summary": "Reviews a batch of proposed Fusion AI rules against the existing set: maps each one, finds conflicts and gaps, recommends fixes, and gets Swami's decision.",
+  "what_it_is": [
+    "A Claude skill for checking new rule proposals for the **Fusion AI Rules** before they join the set. A proposal can come from the Rule Set page's Propose on GitHub button, a file, pasted text, or someone's dashboard.",
+    "Claude files each proposal as a candidate, compares it with every active rule, writes up each conflict with fix options, and asks Swami once on a decision card. It then builds the accepted batch on a branch with the AI Rules Manager steps, ready for Swami to merge."
+  ],
+  "why": "Proposals often overlap or contradict rules that already work. Izzy's Symmetry and Mirror batch clashed with two existing rules; this skill turns that kind of review into a repeatable process with one clear decision.",
+  "what_it_does": [
+    {
+      "topic": "Collect",
+      "text": "Copies each proposal verbatim into `candidates/<batch>/` with a C- ID, the author's own label, and the next free R number as its proposed ID."
+    },
+    {
+      "topic": "Map",
+      "text": "Marks each candidate as New, Tightens, Overlaps or Conflicts against every active rule, and records `conflicts_with` and `related`."
+    },
+    {
+      "topic": "Conflict Cards",
+      "text": "Writes up each conflict with both texts quoted and 2 or 3 fix options, recommending the one that keeps Must rules intact and changes the least."
+    },
+    {
+      "topic": "Fit Check",
+      "text": "Checks priority, clarity, Fusion feature names as they appear in the UI, which AIs it works in, and length (about 600 characters or less)."
+    },
+    {
+      "topic": "Build Check",
+      "text": "Runs `python3 build/build.py check` with the candidates in place, so IDs and references are valid."
+    },
+    {
+      "topic": "Decision",
+      "text": "Asks Swami once on a decision card, recommending \"accept with the recommended fixes\", and keeps working on that option meanwhile."
+    },
+    {
+      "topic": "Result Branch",
+      "text": "Builds the accepted batch with the AI Rules Manager steps and opens a pull request, unmerged until Swami decides and the author agrees to CC BY 4.0."
+    },
+    {
+      "topic": "Tests",
+      "text": "Makes sure each accepted rule gets a test question in `tests/prompts/`, following the AI Rules Manager steps."
+    },
+    {
+      "topic": "Review Page",
+      "text": "For a large batch, or to share with the author, builds a Rule Review dashboard with the vibe-dashboard skill."
+    }
+  ],
+  "triggers": [
+    "\"Review these candidate rules\"",
+    "\"Izzy proposed some rules, check them against the set\"",
+    "\"Look at the new proposals on GitHub\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Hand Over",
+      "step": "Point Claude at the proposals: GitHub issues, a file, pasted text, or a dashboard link.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Review",
+      "step": "Claude files the candidates, maps them, writes up conflicts and checks fit and the build.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Decide",
+      "step": "Pick an option on the decision card. The recommended one is accept with the recommended fixes.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Consent",
+      "step": "Confirm the author agrees to CC BY 4.0 for their rule text.",
+      "who": "Swami, with the author"
+    },
+    {
+      "topic": "Release",
+      "step": "Claude builds the branch and opens a pull request; you merge it, or tell Claude to.",
+      "who": "Claude, then Swami"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Same Steps",
+      "step": "Nothing runs on your computer, so the steps are the same on Windows 10 or 11.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "ai-rules-manager",
+      "need": "Required",
+      "why": "Step 7 builds the accepted batch with its steps: promote, version bump, change log, page text, audio and pull request."
+    },
+    {
+      "name": "vibe-dashboard",
+      "need": "Optional",
+      "why": "Builds the optional Rule Review page for a large batch or for sharing with the author."
+    }
+  ],
+  "programs": [
+    {
+      "name": "git",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Puts the candidate files and the result on a branch.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Already in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "gh (GitHub CLI)",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Reads proposal issues and opens the pull request through the REST API.",
+      "install": "Already in Claude's workspace, signed in through the GitHub connection.",
+      "install_windows": "Already in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Python 3 with PyYAML",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Runs the build check on the candidates.",
+      "install": "`pip install pyyaml jsonschema` if missing.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Autodesk Fusion",
+      "need": "Not needed",
+      "where": "—",
+      "why": "The review is about rule text; it never opens Fusion.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "One Decision",
+      "text": "Boils a batch down to a single decision card with a recommended option, so Swami answers once."
+    },
+    {
+      "topic": "Traceable",
+      "text": "Keeps the author's original text, labels and a decisions table in `sources/`, so every accepted rule can be traced back."
+    },
+    {
+      "topic": "Safe by Default",
+      "text": "The build check runs with the candidates in place, and nothing merges without Swami."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "Judgment Calls",
+      "text": "Mapping and fix options are Claude's recommendations; Swami makes the decision."
+    },
+    {
+      "topic": "No Testing",
+      "text": "It doesn't test a candidate in each AI; new rules start as Untested until test runs are recorded."
+    },
+    {
+      "topic": "Consent Needed",
+      "text": "An outside author's rules can't merge until they agree to CC BY 4.0."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. It runs when Swami asks for a rule change or a review. The repository's GitHub Action builds and publishes on every merge, but that is GitHub, not a Claude scheduled task.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Yes",
+      "notes": "Where it was built and used. Needs the fusion-ai-rules repo attached with push access, the `gh` CLI, and code execution. Decision cards need the Claude project."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "The work still happens in Claude's cloud workspace and on GitHub; linking the Mac adds nothing it needs."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Should work the same way, since nothing runs on the PC. Not tried yet."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "A cloud session started from the phone should work, and decision cards can be answered there. Not tried yet."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Would need a local clone, `gh` signed in with push access, and Python with PyYAML. The private Rule Set copy and project files are not there."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. It would also need write access to the GitHub repo, which ChatGPT doesn't normally have. Swami tests in Claude only."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Without GitHub write access it can only draft the YAML changes for someone else to commit. Swami tests in Claude only."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip (or the SKILL.md if refused). Same GitHub limits as the others. Swami tests in Claude only."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Verbatim First",
+      "text": "Never change the author's meaning while filing candidates; fixes come later, as recommendations."
+    },
+    {
+      "topic": "Fiddly Areas",
+      "text": "Check parameters and math (R08, R09), mirroring and timeline order, intersect or cut intent, and naming closely: that's where conflicts hide."
+    },
+    {
+      "topic": "Major Bumps",
+      "text": "Deprecating or rewording an existing rule to fit a candidate is a major version bump."
+    },
+    {
+      "topic": "Private Details",
+      "text": "Never put private links or names under NDA into anything that goes into the public repository."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "GitHub Access",
+      "text": "Swami's GitHub connected to Claude, with the fusion-ai-rules repository attached with push access."
+    },
+    {
+      "topic": "Windows",
+      "text": "Nothing extra: works the same from Windows 10 or 11."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Fusion AI Rules",
+      "topic": "System",
+      "match": "Fusion AI Rules",
+      "code": "",
+      "def": "Swami's set of good-practice rules for AIs that model in Autodesk Fusion, kept in a public GitHub repository."
+    },
+    {
+      "term": "Candidate",
+      "topic": "Rules",
+      "match": "[Cc]andidates?",
+      "code": "",
+      "def": "A proposed rule waiting for review, kept in `candidates/` with a C- ID and a proposed R number."
+    },
+    {
+      "term": "Batch",
+      "topic": "Rules",
+      "match": "[Bb]atch(?:es)?",
+      "code": "",
+      "def": "A group of proposals reviewed together, in one dated folder under `candidates/`."
+    },
+    {
+      "term": "Conflict",
+      "topic": "Rules",
+      "match": "[Cc]onflicts?",
+      "code": "",
+      "def": "A candidate that contradicts an existing rule; recorded in `conflicts_with` and resolved before release."
+    },
+    {
+      "term": "Tightens",
+      "topic": "Rules",
+      "match": "Tightens",
+      "code": "",
+      "def": "A candidate that makes an existing rule stricter or more specific."
+    },
+    {
+      "term": "Overlaps",
+      "topic": "Rules",
+      "match": "Overlaps",
+      "code": "",
+      "def": "A candidate that says the same thing as an existing rule."
+    },
+    {
+      "term": "Must",
+      "topic": "Rules",
+      "match": "Must",
+      "code": "",
+      "def": "The highest rule priority: something an AI gets wrong and that is costly. Shorter exports keep only Must rules."
+    },
+    {
+      "term": "Decision card",
+      "topic": "Claude",
+      "match": "decision card",
+      "code": "",
+      "def": "A multiple-choice card in the Claude project where Swami picks an option, with one recommended."
+    },
+    {
+      "term": "Pull request",
+      "topic": "GitHub",
+      "match": "pull requests?",
+      "code": "",
+      "def": "A proposed set of changes on a branch, reviewed and checked before it is merged into main."
+    },
+    {
+      "term": "Propose on GitHub",
+      "topic": "System",
+      "match": "Propose on GitHub",
+      "code": "",
+      "def": "The Rule Set page's button that opens a prefilled proposal form on GitHub."
+    },
+    {
+      "term": "CC BY 4.0",
+      "topic": "Rules",
+      "match": "CC BY 4\\.0",
+      "code": "",
+      "def": "The open licence for the rule text: anyone can reuse it with credit. Authors of new rules agree to it."
+    },
+    {
+      "term": "Rule Review page",
+      "topic": "System",
+      "match": "Rule Review (?:page|dashboard)",
+      "code": "",
+      "def": "An optional dashboard showing a batch's candidates, mapping, conflict cards and sign-off checklist."
+    },
+    {
+      "term": "Build check",
+      "topic": "Files",
+      "match": "build check",
+      "code": "python3 build/build.py check",
+      "def": "The script step that validates every rule and candidate, and fails on errors such as taken IDs or broken references."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This is the skill sheet for AI Rule Review, the skill that checks proposed rules before they join the Fusion AI Rules",
+    "What It Is": "It turns a batch of proposals into one clear decision for you, then builds the accepted rules on a branch",
+    "What It Does": "It files each proposal as a candidate, compares it with every active rule, writes up each conflict with fix options, checks fit and the build, and asks you once on a decision card",
+    "How to Use It": "Point Claude at the proposals, pick an option on the decision card, confirm the author's consent to the open licence, and merge the pull request",
+    "Capabilities and Limitations": "Claude recommends and you decide. It doesn't test candidates in each AI, so new rules start as untested"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:c7283ab75cfd36b6",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Sun Nov 22, 2026",
+    "carded": "Sun Nov 22, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/ai-rule-review.zip",
+    "draft_url": "https://claude.ai/artifact/HFEt245Bj8KHfoCCKiVxqu",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/ai-rule-review/"
+  }
+}

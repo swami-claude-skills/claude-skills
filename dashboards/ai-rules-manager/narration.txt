@@ -1,0 +1,33 @@
+This is the skill sheet for AI Rules Manager, the skill that makes every change to the Fusion AI Rules
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. It keeps the rule set's GitHub repository as the single source of truth, so every change is reviewed, versioned and exported the same way.
+
+Section four, What It Does. It edits rule files, picks the version bump, clears conflicts, promotes accepted candidates, adds tests and [records](/ɹᵻkˈɔːɹdz/) results, runs the build check, opens a pull request, and republishes the Rule Set page after the merge.
+
+Section five, How to Use It. You say what should change. Claude does the edits and opens a pull request, you merge it or tell Claude to, and GitHub publishes everything.
+
+Section six, Skills It Depends On. Other skills it calls or hands off to.
+
+Section seven, Programs It Depends On. Software outside Claude and where it runs.
+
+Section eight, Capabilities and Limitations. Every change goes through a pull request with a passing check, and Claude merges only when you ask.
+
+Section nine, Scheduled Tasks. Whether it needs or sets up scheduled tasks.
+
+Section ten, Where It Runs. Which Claude it runs in, plus notes for other AIs.
+
+Section eleven, Gotchas. Traps that cost time, and how to avoid them.
+
+Section twelve, Other Requirements. Accounts, settings, hardware and access it needs.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.

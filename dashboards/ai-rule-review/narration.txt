@@ -1,0 +1,33 @@
+This is the skill sheet for AI Rule Review, the skill that checks proposed rules before they join the Fusion AI Rules
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. It turns a batch of proposals into one clear decision for you, then builds the accepted rules on a branch.
+
+Section four, What It Does. It files each proposal as a candidate, compares it with every active rule, writes up each conflict with fix options, checks fit and the build, and asks you once on a decision card.
+
+Section five, How to Use It. Point Claude at the proposals, pick an option on the decision card, confirm the author's consent to the open licence, and merge the pull request.
+
+Section six, Skills It Depends On. Other skills it calls or hands off to.
+
+Section seven, Programs It Depends On. Software outside Claude and where it runs.
+
+Section eight, Capabilities and Limitations. Claude recommends and you decide. It doesn't test candidates in each AI, so new rules start as untested.
+
+Section nine, Scheduled Tasks. Whether it needs or sets up scheduled tasks.
+
+Section ten, Where It Runs. Which Claude it runs in, plus notes for other AIs.
+
+Section eleven, Gotchas. Traps that cost time, and how to avoid them.
+
+Section twelve, Other Requirements. Accounts, settings, hardware and access it needs.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
