@@ -1,581 +1,777 @@
 {
-  "skill": "vibe-dashboard",
-  "title": "Vibe Dashboard",
-  "summary": "Builds Swami's signature Vibe Coding dashboard: one self-contained dark-theme page with collapsible numbered sections, search, a mind map, a cross-linked glossary, and a spoken audio overview.",
-  "what_it_is": [
-    "The design system behind every page Swami publishes in his Vibe Coding style, and the skill that builds them. It turns a post, a video, a session, files, or notes into one browsable page whose look is locked: the same dark palette, fonts, and layout every time, so every page feels like part of one library.",
-    "Other skills hand their results to it: the web-conversation skills, the Fusion documentation skills, and the skill sheets (including this one) are all built on its template, patches, audio, and privacy rules. When this skill changes, all of them change with it."
-  ],
-  "why": "Dashboards built by hand drift: colors, fonts, and behaviors creep apart, and fixes made on one page never reach the next. Locking the design in one skill means every page gets the same features and every improvement reaches every new page.",
-  "what_it_does": [
-    {
-      "topic": "Locked look",
-      "text": "Background #0d0d0f, cyan accent #00e5ff, JetBrains Mono and DM Sans. Never new colors, fonts, or layouts; category accents come in order from one 8-color palette."
-    },
-    {
-      "topic": "One file",
-      "text": "Every page is one self-contained .html file. Google Fonts is the only outside dependency, and images go in as data URIs."
-    },
-    {
-      "topic": "Full width",
-      "text": "Header, table of contents, toolbar, sections, and footer all span the window; tables fit their width when opened and refit when it changes."
-    },
-    {
-      "topic": "Kicker and summary",
-      "text": "A short UPPERCASE kicker above the title, and section 01 is always the Dashboard Summary with a linked \"What each section covers\" table."
-    },
-    {
-      "topic": "Search",
-      "text": "Section 02 is always Search: words in any order, start of a word, small typos forgiven, \"phrases\" and -exclusions, filters, and a jump to every result."
-    },
-    {
-      "topic": "Mind Map",
-      "text": "Every page carries a Mind Map, built from the page itself, with zoom, pan, and hover cards on every bubble."
-    },
-    {
-      "topic": "Glossary",
-      "text": "Terms get a dotted underline that jumps to a Glossary with color-coded topics, and each term links back to every section that uses it."
-    },
-    {
-      "topic": "Collapsed start",
-      "text": "Every section and every item inside it starts collapsed; tables, callouts, cards, and (since Nov 13) every top-level bullet list fold into labeled items, such as `[LIST]`, listed in the table of contents."
-    },
-    {
-      "topic": "Tables",
-      "text": "Every table sorts, resizes, wraps words without breaking them, and keeps its header pinned under the section and item headers while you scroll."
-    },
-    {
-      "topic": "Comment dashboards",
-      "text": "Pages built from comments or reviews (Facebook, MakerWorld, YouTube, and the like) get four standard sections after Search: The Post, Discussion at a Glance, Themes & Takeaways, and one Comment Threads table with every message, color-coded by topic and opened sorted by Topic. A script writes them from a standard comment JSON file."
-    },
-    {
-      "topic": "Helper scripts",
-      "text": "Every patch and helper is a script in the skill's `scripts/` folder (table-fit, Search, Mind Map, comment sections, audio, stress audit, and browser-voice fallback), run in place and safe to re-run. Other skills' builders copy them from there."
-    },
-    {
-      "topic": "Audio overview",
-      "text": "A spoken overview (one female voice) sits under the title. Its narration follows Swami's pronunciation rules and a noun/verb stress check; if recording fails, a browser-voice player takes its place."
-    },
-    {
-      "topic": "Privacy check",
-      "text": "Before every publish, people under NDA are kept off the page, its narration, and its data files."
-    },
-    {
-      "topic": "House style",
-      "text": "Days, dates, and times bold and bright; cyan ● bullets; topic IDs on list items; the Oxford comma; the footer \"Vibe Coding: Swami · AI: Claude\" with a mail link built at runtime; no © anywhere."
-    },
-    {
-      "topic": "Publish as artifact",
-      "text": "Pages are written in the working directory and published as private artifacts, with no runtime capabilities unless a feature needs one. This rule also overrides other skills' older save locations."
-    },
-    {
-      "topic": "Version history",
-      "text": "A nightly scheduled task backs up every published page to Swami's private GitHub repo, and script-built pages commit their sources too."
-    }
-  ],
-  "triggers": [
-    "\"Make a vibe dashboard of this\" (a post, link, video, files, or notes)",
-    "\"Turn this Zoom session into a dashboard\" / \"a breakdown page in my style\"",
-    "\"Add a glossary\", \"update the audio overview\", \"add the mind map\" (on an existing dashboard)"
-  ],
-  "how_to_use": [
-    {
-      "topic": "Ask",
-      "step": "Give Claude the content (paste it, upload files, or share a link) and ask for a vibe dashboard.",
-      "who": "Swami"
-    },
-    {
-      "topic": "Structure",
-      "step": "Claude reads everything, breaks it into numbered sections, invents categories with their own colors, and picks glossary terms.",
-      "who": "Claude"
-    },
-    {
-      "topic": "Build",
-      "step": "Claude fills the locked template, then runs the table-fit, Search, and Mind Map patch scripts. Pages built from comments or reviews also get their four comment sections from a script.",
-      "who": "Claude"
-    },
-    {
-      "topic": "Audio",
-      "step": "Claude writes the narration, checks pronunciation and noun/verb stress, and records the audio overview.",
-      "who": "Claude"
-    },
-    {
-      "topic": "Check",
-      "step": "Claude runs the privacy check for people under NDA and tests the page in a browser.",
-      "who": "Claude"
-    },
-    {
-      "topic": "Publish",
-      "step": "Claude publishes the page as a private artifact and says what it is in a line.",
-      "who": "Claude"
-    },
-    {
-      "topic": "Share or refresh",
-      "step": "Share it from the page's Share menu when you're ready. Later, the ↻ button on the player (only you see it) re-records the audio.",
-      "who": "Swami"
-    }
-  ],
-  "how_to_use_windows": [
-    {
-      "topic": "Same steps",
-      "step": "Everything runs in Claude's workspace, not on your computer, so the steps are the same on Windows: give Claude the content and ask for a vibe dashboard.",
-      "who": "You"
-    },
-    {
-      "topic": "View",
-      "step": "Open the published page in any current browser (Chrome, Edge, Firefox).",
-      "who": "You"
-    },
-    {
-      "topic": "Grok version",
-      "step": "If you use Grok, add the skill directly to Grok's skills; installing it by chat tends to drift from the original.",
-      "who": "You"
-    }
-  ],
-  "skills": [
-    {
-      "name": "artifact-design",
-      "need": "Required",
-      "why": "Claude loads it before publishing any artifact; vibe-dashboard's locked design takes precedence over its defaults."
-    },
-    {
-      "name": "youtube-transcript",
-      "need": "Related",
-      "why": "Builds its video dashboards with this skill."
-    },
-    {
-      "name": "youtube-comments",
-      "need": "Related",
-      "why": "Builds its comment dashboards with this skill, using the standard comment JSON and its four comment sections."
-    },
-    {
-      "name": "facebook-comments",
-      "need": "Related",
-      "why": "Builds its comment dashboards with this skill, using the standard comment JSON and its four comment sections."
-    },
-    {
-      "name": "makerworld-reviews",
-      "need": "Related",
-      "why": "Builds its review dashboards with this skill, using the standard comment JSON and its four comment sections."
-    },
-    {
-      "name": "vibe-promptmaker",
-      "need": "Related",
-      "why": "Same design system, for input forms that output prompt text."
-    }
-  ],
-  "programs": [
-    {
-      "name": "Python 3",
-      "need": "Required",
-      "where": "Claude's workspace",
-      "why": "Runs the build scripts and the table-fit, Search, Mind Map, and audio scripts.",
-      "install": "Already in Claude's workspace; code execution must be on.",
-      "install_windows": "Same: nothing to install on the PC."
-    },
-    {
-      "name": "Kokoro voice (kokoro-onnx)",
-      "need": "Required",
-      "where": "Claude's workspace",
-      "why": "Speaks the audio overview in a single female voice. The first run installs it with pip and downloads a voice model of about 350 MB from GitHub.",
-      "install": "Automatic. Needs network access for pip and for GitHub's file servers (release-assets.githubusercontent.com and objects.githubusercontent.com).",
-      "install_windows": "Same: nothing to install on the PC."
-    },
-    {
-      "name": "ffmpeg",
-      "need": "Required",
-      "where": "Claude's workspace",
-      "why": "Encodes the narration as a small MP3 embedded in the page.",
-      "install": "Usually present in Claude's workspace; without it, the page gets the browser-voice player instead.",
-      "install_windows": "Same: nothing to install on the PC."
-    },
-    {
-      "name": "Playwright and Chromium",
-      "need": "Optional",
-      "where": "Claude's workspace",
-      "why": "Opens the finished page headlessly to check tables, links, search, and the console before publishing.",
-      "install": "Claude installs or skips it on its own.",
-      "install_windows": "Same: nothing to install on the PC."
-    },
-    {
-      "name": "A web browser",
-      "need": "Required",
-      "where": "Any computer or phone",
-      "why": "Shows the published page; the fonts load from Google Fonts.",
-      "install": "Safari, Chrome, or Firefox.",
-      "install_windows": "Edge, Chrome, or Firefox."
-    },
-    {
-      "name": "Claude Code Remote connector",
-      "need": "Optional",
-      "where": "Swami's Claude account",
-      "why": "Lets the owner-only ↻ button on a page fire the audio-refresh scheduled task.",
-      "install": "Already connected on Swami's account; the first click asks once to allow it.",
-      "install_windows": "Same."
-    },
-    {
-      "name": "GitHub (private vibe-dashboards repo)",
-      "need": "Optional",
-      "where": "GitHub",
-      "why": "Keeps every version of every published page for restoring.",
-      "install": "The nightly backup task handles it; nothing to do per page.",
-      "install_windows": "Same."
-    }
-  ],
-  "capabilities": [
-    {
-      "topic": "Any content",
-      "text": "Posts, videos, chats, Zoom sessions, CAD or PLC files, links, and notes all become the same kind of page."
-    },
-    {
-      "topic": "Same everywhere",
-      "text": "Every page has the same look, controls, and features, so readers learn it once."
-    },
-    {
-      "topic": "Large pages",
-      "text": "Index dashboards can search inside every dashboard they link to, with nightly refreshed data."
-    },
-    {
-      "topic": "Owner-only parts",
-      "text": "Rows, cards, or columns can be shown only to Swami, without any runtime capability."
-    },
-    {
-      "topic": "Self-updating parts",
-      "text": "Script-built pages can be rebuilt by scheduled tasks, keeping their audio when the narration hasn't changed."
-    }
-  ],
-  "limitations": [
-    {
-      "topic": "Recording needs network",
-      "text": "The first recording needs pip and GitHub downloads; on accounts that block them, the page falls back to the browser's own voice."
-    },
-    {
-      "topic": "Owner-only isn't private",
-      "text": "Hidden parts still sit in the page source, so they are never used for anything under NDA."
-    },
-    {
-      "topic": "Not a live view",
-      "text": "A page shows what was true when it was built; it changes only when it is rebuilt or refreshed."
-    },
-    {
-      "topic": "Size",
-      "text": "Pages with audio run around 2 MB, most of it the embedded recording."
-    },
-    {
-      "topic": "Dark only",
-      "text": "The design is deliberately dark; there is no light version."
-    }
-  ],
-  "scheduled_tasks": {
-    "summary": "It doesn't create a task for each page, but two of Swami's scheduled tasks exist for it, and other nightly tasks run it.",
-    "tasks": [
-      {
-        "name": "Vibe dashboard — refresh audio overview",
-        "schedule": "On demand (no schedule)",
-        "what": "Fired by the owner-only ↻ button on any page; re-records that page's audio overview."
-      },
-      {
-        "name": "Vibe dashboards — nightly GitHub backup",
-        "schedule": "Nightly, about 4:07 AM ET",
-        "what": "Saves every artifact created or changed that day to the private vibe-dashboards repo."
-      },
-      {
-        "name": "Skills dashboard nightly refresh",
-        "schedule": "Nightly, about 1:52 AM ET",
-        "what": "Rebuilds the Skill Library page and re-records its audio with this skill's stress helper."
-      }
-    ]
+ "skill": "vibe-dashboard",
+ "title": "Vibe Dashboard",
+ "summary": "Builds Swami's signature Vibe Coding dashboard: one self-contained dark-theme page with collapsible numbered sections, search, a mind map, a cross-linked glossary, and a spoken audio overview.",
+ "what_it_is": [
+  "The design system behind every page Swami publishes in his Vibe Coding style, and the skill that builds them. It turns a post, a video, a session, files, or notes into one browsable page whose look is locked: the same dark palette, fonts, and layout every time, so every page feels like part of one library.",
+  "Other skills hand their results to it: the web-conversation skills, the Fusion documentation skills, and the skill sheets (including this one) are all built on its template, patches, audio, and privacy rules. When this skill changes, all of them change with it."
+ ],
+ "why": "Dashboards built by hand drift: colors, fonts, and behaviors creep apart, and fixes made on one page never reach the next. Locking the design in one skill means every page gets the same features and every improvement reaches every new page.",
+ "what_it_does": [
+  {
+   "topic": "Locked look",
+   "text": "Background #0d0d0f, cyan accent #00e5ff, JetBrains Mono and DM Sans. Never new colors, fonts, or layouts; category accents come in order from one 8-color palette."
   },
-  "runs_in": [
-    {
-      "where": "Claude app, cloud session (web, desktop, mobile)",
-      "status": "Yes",
-      "notes": "Everything runs in Claude's workspace; dashboards and skill sheets were built and recorded this way."
-    },
-    {
-      "where": "Claude desktop app linked to the Mac",
-      "status": "Yes",
-      "notes": "Same as a cloud session; the linked Mac isn't needed for building."
-    },
-    {
-      "where": "Claude desktop app linked to a Windows PC",
-      "status": "Untested",
-      "notes": "Should work the same, since nothing runs on the PC."
-    },
-    {
-      "where": "Claude mobile app",
-      "status": "Untested",
-      "notes": "The build runs in Claude's workspace, so it should work; the finished page is easier to review on a bigger screen."
-    },
-    {
-      "where": "Claude Code on the Mac",
-      "status": "Untested",
-      "notes": "Would build on the Mac itself; the audio needs pip, ffmpeg, and the model download there."
-    }
-  ],
-  "other_ais": [
-    {
-      "ai": "ChatGPT",
-      "status": "Untested",
-      "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. Building needs code execution; publishing as an artifact is Claude-only, so the page would be a file. Swami tests in Claude only."
-    },
-    {
-      "ai": "Gemini",
-      "status": "Untested",
-      "notes": "Upload the unzipped skill folder. Needs code execution; artifacts and the audio refresh button are Claude-only. Swami tests in Claude only."
-    },
-    {
-      "ai": "Grok",
-      "status": "Untested",
-      "notes": "Add the skill directly to Grok's skills; installing by chat drifts from the original. Swami tests in Claude only."
-    }
-  ],
-  "gotchas": [
-    {
-      "topic": "Patch order",
-      "text": "Run the table-fit patch, then Search, then Mind Map (and, for comment pages, the comment sections script first), after the content sections are final; each is a script in `scripts/` and safe to re-run. Builders written before Nov 13 that pulled the patches out of SKILL.md code blocks no longer work."
-    },
-    {
-      "topic": "Double-escaped titles",
-      "text": "A section title with & must be escaped once; escaping it twice breaks the table of contents and section links."
-    },
-    {
-      "topic": "Bare # links",
-      "text": "Never use href=\"#id\" anchors; the artifact frame treats them as outside links. Navigation uses data-target and script."
-    },
-    {
-      "topic": "Self-links",
-      "text": "Body text that names a section becomes a link to it, so an intro starting \"Search …\" inside the Search section links to itself; reword it."
-    },
-    {
-      "topic": "Zero-count terms",
-      "text": "A glossary term whose matcher hits nothing shows 0; reword the matcher or drop the term."
-    },
-    {
-      "topic": "Acronyms",
-      "text": "Nothing in an acronym's spelling says whether it is said as letters or as a word. Written in capitals the voice spells it out, so write letter acronyms in capitals (`AI`) and word acronyms as the word (`cad`, `cam`); ask Swami when unsure and add it to the Pronunciation table."
-    },
-    {
-      "topic": "Stress check",
-      "text": "The voice often stresses two-syllable noun/verb words the wrong way (\"REC-ords\" for the verb); every narration gets the stress audit and phoneme markup."
-    },
-    {
-      "topic": "Recording blocked",
-      "text": "If pip or GitHub downloads are blocked, say why, use the browser-voice player, and point to Settings › Capabilities to allow GitHub's file servers."
-    },
-    {
-      "topic": "Owner-only data",
-      "text": "Never put anything under NDA in owner-only rows or columns: anyone with the link can read the page source."
-    },
-    {
-      "topic": "Category colors",
-      "text": "Two categories with similar colors trigger a console warning; a finished page has none."
-    },
-    {
-      "topic": "List labels",
-      "text": "Each top-level bullet list now becomes its own collapsible `[LIST]` item, so give every list a short `data-desc` label, like a table. Lists inside callouts, cards, tables, or tools stay as they are, and `class=\"no-collapse\"` opts one out only when Swami asks."
-    }
-  ],
-  "requirements": [
-    {
-      "topic": "Code execution",
-      "text": "Claude's code execution must be on, with network access to the package registries and GitHub's file servers for the audio."
-    },
-    {
-      "topic": "Artifacts",
-      "text": "Publishing needs Claude's artifacts; pages start private."
-    },
-    {
-      "topic": "Privacy list",
-      "text": "Memory names the people under NDA so every publish can check for them."
-    },
-    {
-      "topic": "Owner button",
-      "text": "The ↻ audio button needs the Claude Code Remote connector and the on-demand refresh task."
-    }
-  ],
-  "glossary": [
-    {
-      "term": "Locked design system",
-      "topic": "Design",
-      "match": "locked (?:look|design)|design system",
-      "code": "",
-      "def": "The fixed palette, fonts, and layout every Vibe Coding page uses; never changed per page."
-    },
-    {
-      "term": "Category",
-      "topic": "Design",
-      "match": "categor(?:y|ies)",
-      "code": "",
-      "def": "A named group of sections with its own color, assigned in order from an 8-color palette."
-    },
-    {
-      "term": "Kicker",
-      "topic": "Design",
-      "match": "kicker",
-      "code": "",
-      "def": "The short UPPERCASE label above a page's title naming what kind of page it is."
-    },
-    {
-      "term": "Topic ID",
-      "topic": "Design",
-      "match": "topic IDs?",
-      "code": "",
-      "def": "The small label at the start of each list item naming what it is about."
-    },
-    {
-      "term": "Search section",
-      "topic": "Sections",
-      "match": "Search",
-      "code": "search_patch.py|scripts/search_patch.py",
-      "def": "Section 02 of every page: full-text search with filters, added by search_patch.py."
-    },
-    {
-      "term": "Mind Map",
-      "topic": "Sections",
-      "match": "Mind Map",
-      "code": "mindmap_patch.py",
-      "def": "A clickable bubble map of the whole page, built from the page itself by mindmap_patch.py."
-    },
-    {
-      "term": "Glossary",
-      "topic": "Sections",
-      "match": "Glossary|glossary",
-      "code": "",
-      "def": "The table of terms, each linked to every place it is used and back."
-    },
-    {
-      "term": "Table-fit patch",
-      "topic": "Build",
-      "match": "table-fit",
-      "code": "fit_patch.py",
-      "def": "A script that makes every table fit its width without splitting words."
-    },
-    {
-      "term": "Template",
-      "topic": "Build",
-      "match": "template",
-      "code": "assets/template.html",
-      "def": "The skill's locked page file every dashboard starts from."
-    },
-    {
-      "term": "Artifact",
-      "topic": "Build",
-      "match": "artifacts?",
-      "code": "",
-      "def": "A page Claude publishes on claude.ai; private until shared."
-    },
-    {
-      "term": "Scheduled task",
-      "topic": "Build",
-      "match": "scheduled tasks?",
-      "code": "",
-      "def": "A saved Claude job that runs on a schedule or on demand, such as the nightly backup."
-    },
-    {
-      "term": "Audio overview",
-      "topic": "Audio",
-      "match": "audio overview|audio",
-      "code": "audio_overview.py",
-      "def": "The spoken summary under every page's title, recorded with the Kokoro voice."
-    },
-    {
-      "term": "Kokoro",
-      "topic": "Audio",
-      "match": "Kokoro",
-      "code": "kokoro-onnx",
-      "def": "The free text-to-speech voice used for audio overviews."
-    },
-    {
-      "term": "Stress audit",
-      "topic": "Audio",
-      "match": "stress (?:audit|check)|noun/verb",
-      "code": "stress_audio.py",
-      "def": "A check that every noun/verb word in the narration gets the right stressed syllable."
-    },
-    {
-      "term": "Browser-voice player",
-      "topic": "Audio",
-      "match": "browser-voice|browser's own voice",
-      "code": "",
-      "def": "The fallback player that reads the narration with the viewer's browser voice when no recording can be made."
-    },
-    {
-      "term": "Owner-only",
-      "topic": "Privacy",
-      "match": "owner-only|only you see",
-      "code": "",
-      "def": "Parts of a page shown only to Swami; still present in the page source."
-    },
-    {
-      "term": "NDA",
-      "topic": "Privacy",
-      "match": "NDA",
-      "code": "",
-      "def": "A non-disclosure agreement; people under one never appear on published pages."
-    },
-    {
-      "term": "ffmpeg",
-      "topic": "Audio",
-      "match": "ffmpeg",
-      "code": "",
-      "def": "The tool that turns the recorded speech into a small MP3."
-    },
-    {
-      "term": "Collapsible item",
-      "topic": "Sections",
-      "match": "collapsible|\\[LIST\\]",
-      "code": "exact",
-      "def": "A table, callout, card, subsection, or bullet list wrapped in a labeled shell that starts collapsed and opens on click."
-    },
-    {
-      "term": "Comment JSON",
-      "topic": "Build",
-      "match": "comment JSON",
-      "code": "exact",
-      "def": "The standard file of extracted comments or reviews (source, topics, themes, and items) that the comment sections script turns into four sections."
-    }
-  ],
-  "confirm": [],
-  "spoken": {
-    "_intro": "This page is the skill sheet for the vibe dashboard skill. It builds Swami's signature Vibe Coding dashboards: one dark page with numbered sections, search, a mind map, a glossary, and a spoken overview, all in one locked design.",
-    "Dashboard Summary": "A short intro and a table of every section",
-    "What It Is": "What the skill is, and why it exists: one locked design means every page looks and works the same, and every improvement reaches every new page",
-    "What It Does": "Sixteen house rules it enforces, from the locked look and the single file, through search, the mind map, the glossary, collapsible lists, and the standard comment sections, to the audio overview, the privacy check, and nightly backups",
-    "How to Use It": "Seven steps, from giving Claude the content to sharing the finished page. On Windows the steps are the same, because everything runs in Claude's workspace",
-    "Skills It Depends On": "The artifact design skill, plus the skills that build their pages on this one or share its design",
-    "Programs It Depends On": "Python, the Kokoro voice, and ffmpeg in Claude's workspace, a web browser to view the page, and optionally Playwright, the Claude Code Remote connector, and GitHub",
-    "Capabilities and Limitations": "It turns any kind of content into the same kind of page, with owner only parts and self updating pages. But recording needs network access, owner only parts are not private, and a page is not a lyve view",
-    "Scheduled Tasks": "Three of Swami's scheduled tasks use it: the on demand audio refresh, the nightly GitHub backup, and the nightly Skill Library refresh",
-    "Where It Runs": "It works in any Claude app session, since everything runs in Claude's workspace. Windows, mobile, Claude Code, and other assistants are untested",
-    "Gotchas": "Eleven traps, from patch order and double escaped titles to self links, acronyms, the stress check, blocked recordings, and labels for every bullet list",
-    "Other Requirements": "Code execution with network access, artifacts, the privacy list in memory, and the connector for the audio button",
-    "Card and Freshness": "Which version of the skill this page describes, and its fingerprint"
+  {
+   "topic": "One file",
+   "text": "Every page is one self-contained .html file. Google Fonts is the only outside dependency, and images go in as data URIs."
   },
-  "meta": {
-    "card_version": 2,
-    "fingerprint": "sha256:6e21be6ac9d1e62f",
-    "files": [
-      "SKILL.md",
-      "assets/audio-player.html",
-      "assets/fallback.html",
-      "assets/template.html",
-      "references/audio-refresh-task.md",
-      "references/patterns.md",
-      "references/search-scroll.md",
-      "scripts/add_fallback.py",
-      "scripts/audio_overview.py",
-      "scripts/comments_sections.py",
-      "scripts/fit_patch.py",
-      "scripts/mindmap_patch.py",
-      "scripts/search_patch.py",
-      "scripts/stress_audio.py"
-    ],
-    "skill_updated": "Fri Nov 13, 2026",
-    "carded": "Fri Nov 13, 2026",
-    "status": "published",
-    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-dashboard.zip",
-    "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx",
-    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/vibe-dashboard/"
+  {
+   "topic": "Full width",
+   "text": "Header, table of contents, toolbar, sections, and footer all span the window; tables fit their width when opened and refit when it changes."
+  },
+  {
+   "topic": "Kicker and summary",
+   "text": "A short UPPERCASE kicker above the title, and section 01 is always the Dashboard Summary with a linked \"What each section covers\" table."
+  },
+  {
+   "topic": "Search",
+   "text": "Section 02 is always Search: words in any order, start of a word, small typos forgiven, \"phrases\" and -exclusions, filters, and a jump to every result."
+  },
+  {
+   "topic": "Mind Map",
+   "text": "Every page carries a Mind Map, built from the page itself, with zoom, pan, and hover cards on every bubble."
+  },
+  {
+   "topic": "Glossary",
+   "text": "Terms get a dotted underline that jumps to a Glossary with color-coded topics, and each term links back to every section that uses it."
+  },
+  {
+   "topic": "Collapsed start",
+   "text": "Every section and every item inside it starts collapsed; tables, callouts, cards, and (since Nov 13) every top-level bullet list fold into labeled items, such as `[LIST]`, listed in the table of contents."
+  },
+  {
+   "topic": "Tables",
+   "text": "Every table sorts, resizes, wraps words without breaking them, and keeps its header pinned under the section and item headers while you scroll."
+  },
+  {
+   "topic": "Comment dashboards",
+   "text": "Pages built from comments or reviews (Facebook, MakerWorld, YouTube, and the like) get four standard sections after Search: The Post, Discussion at a Glance, Themes & Takeaways, and one Comment Threads table with every message, color-coded by topic and opened sorted by Topic. A script writes them from a standard comment JSON file."
+  },
+  {
+   "topic": "Helper scripts",
+   "text": "Every patch and helper is a script in the skill's `scripts/` folder (table-fit, Search, Mind Map, comment sections, audio, stress audit, and browser-voice fallback), run in place and safe to re-run. Five newer patches (toolbar, source colour, source view, tooltips, and visuals) are code blocks in its SKILL.md, saved and run the same way."
+  },
+  {
+   "topic": "Visuals",
+   "text": "Since Nov 24, every section gets the picture that explains it best: system, workflow, state, or decision diagrams drawn as SVG images, annotated schematics, illustrations, or screenshots, each with a colour key naming what every colour and line style means."
+  },
+  {
+   "topic": "Hierarchy trees",
+   "text": "Nested parts, menus, settings, and file layouts become collapsible trees, written as a plain nested list and built by the visuals patch: every branch starts closed, shows its child count in curly braces, and opens itself when a search or jump lands inside it."
+  },
+  {
+   "topic": "Toolbar",
+   "text": "A show/hide TOC button and one expand/collapse toggle sit left of the search box, whose clear × is at the start of the field."
+  },
+  {
+   "topic": "Source view",
+   "text": "The Source Document opens formatted as Markdown, with a switch to plain text; search results land on the same line in either view."
+  },
+  {
+   "topic": "House tooltips",
+   "text": "Every hover hint uses the house tooltip card, never the browser's own tooltip."
+  },
+  {
+   "topic": "Audio overview",
+   "text": "A spoken overview (one female voice) sits under the title. Its narration follows Swami's pronunciation rules and a noun/verb stress check; if recording fails, a browser-voice player takes its place."
+  },
+  {
+   "topic": "Privacy check",
+   "text": "Before every publish, people under NDA are kept off the page, its narration, and its data files."
+  },
+  {
+   "topic": "House style",
+   "text": "Days, dates, and times bold and bright; cyan ● bullets; topic IDs on list items; the Oxford comma; the Glossary, References, and Source Document badges in bright silver `#f2f2f2`; the footer \"Vibe Coding: Swami · AI: Claude\" with a mail link built at runtime; no © anywhere."
+  },
+  {
+   "topic": "Publish as artifact",
+   "text": "Pages are written in the working directory and published as private artifacts, with no runtime capabilities unless a feature needs one. This rule also overrides other skills' older save locations."
+  },
+  {
+   "topic": "Version history",
+   "text": "A nightly scheduled task backs up every published page to Swami's private GitHub repo, and script-built pages commit their sources too."
   }
+ ],
+ "triggers": [
+  "\"Make a vibe dashboard of this\" (a post, link, video, files, or notes)",
+  "\"Turn this Zoom session into a dashboard\" / \"a breakdown page in my style\"",
+  "\"Add a glossary\", \"update the audio overview\", \"add the mind map\" (on an existing dashboard)"
+ ],
+ "how_to_use": [
+  {
+   "topic": "Ask",
+   "step": "Give Claude the content (paste it, upload files, or share a link) and ask for a vibe dashboard.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Structure",
+   "step": "Claude reads everything, breaks it into numbered sections, invents categories with their own colors, and picks glossary terms.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Build",
+   "step": "Claude fills the locked template, adds diagrams, trees, and other visuals where they help, then runs the patches: table-fit, toolbar, visuals, Search, Mind Map, source colour, source view, and tooltips. Pages built from comments or reviews also get their four comment sections from a script.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Audio",
+   "step": "Claude writes the narration, checks pronunciation and noun/verb stress, and records the audio overview.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Check",
+   "step": "Claude runs the privacy check for people under NDA and tests the page in a browser.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Publish",
+   "step": "Claude publishes the page as a private artifact and says what it is in a line.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Share or refresh",
+   "step": "Share it from the page's Share menu when you're ready. Later, the ↻ button on the player (only you see it) re-records the audio.",
+   "who": "Swami"
+  }
+ ],
+ "how_to_use_windows": [
+  {
+   "topic": "Same steps",
+   "step": "Everything runs in Claude's workspace, not on your computer, so the steps are the same on Windows: give Claude the content and ask for a vibe dashboard.",
+   "who": "You"
+  },
+  {
+   "topic": "View",
+   "step": "Open the published page in any current browser (Chrome, Edge, Firefox).",
+   "who": "You"
+  },
+  {
+   "topic": "Grok version",
+   "step": "If you use Grok, add the skill directly to Grok's skills; installing it by chat tends to drift from the original.",
+   "who": "You"
+  }
+ ],
+ "skills": [
+  {
+   "name": "youtube-transcript",
+   "need": "Related",
+   "why": "Builds its video dashboards with this skill."
+  },
+  {
+   "name": "youtube-comments",
+   "need": "Related",
+   "why": "Builds its comment dashboards with this skill, using the standard comment JSON and its four comment sections."
+  },
+  {
+   "name": "facebook-comments",
+   "need": "Related",
+   "why": "Builds its comment dashboards with this skill, using the standard comment JSON and its four comment sections."
+  },
+  {
+   "name": "makerworld-reviews",
+   "need": "Related",
+   "why": "Builds its review dashboards with this skill, using the standard comment JSON and its four comment sections."
+  },
+  {
+   "name": "vibe-promptmaker",
+   "need": "Related",
+   "why": "Same design system, for input forms that output prompt text."
+  },
+  {
+   "name": "fusion-doc",
+   "need": "Related",
+   "why": "Builds its Fusion command documentation pages with this skill."
+  },
+  {
+   "name": "fusion-doc-json",
+   "need": "Related",
+   "why": "Builds its Fusion Doc to JSON page in this design system."
+  },
+  {
+   "name": "fusion-cam-settings",
+   "need": "Related",
+   "why": "Builds its CAM settings dashboards with this skill."
+  },
+  {
+   "name": "vector-bitmap-graphic-finder",
+   "need": "Related",
+   "why": "Its graphic finder page is a vibe-dashboard page."
+  }
+ ],
+ "programs": [
+  {
+   "name": "Python 3",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Runs the build scripts and the table-fit, Search, Mind Map, and audio scripts.",
+   "install": "Already in Claude's workspace; code execution must be on.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "Kokoro voice (kokoro-onnx)",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Speaks the audio overview in a single female voice. The first run installs it with pip and downloads a voice model of about 350 MB from GitHub.",
+   "install": "Automatic. Needs network access for pip and for GitHub's file servers (release-assets.githubusercontent.com and objects.githubusercontent.com).",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "ffmpeg",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Encodes the narration as a small MP3 embedded in the page.",
+   "install": "Usually present in Claude's workspace; without it, the page gets the browser-voice player instead.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "Playwright and Chromium",
+   "need": "Optional",
+   "where": "Claude's workspace",
+   "why": "Opens the finished page headlessly to check tables, links, search, and the console before publishing.",
+   "install": "Claude installs or skips it on its own.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "A web browser",
+   "need": "Required",
+   "where": "Any computer or phone",
+   "why": "Shows the published page; the fonts load from Google Fonts.",
+   "install": "Safari, Chrome, or Firefox.",
+   "install_windows": "Edge, Chrome, or Firefox."
+  },
+  {
+   "name": "Claude Code Remote connector",
+   "need": "Optional",
+   "where": "Swami's Claude account",
+   "why": "Lets the owner-only ↻ button on a page fire the audio-refresh scheduled task.",
+   "install": "Already connected on Swami's account; the first click asks once to allow it.",
+   "install_windows": "Same."
+  },
+  {
+   "name": "GitHub (private vibe-dashboards repo)",
+   "need": "Optional",
+   "where": "GitHub",
+   "why": "Keeps every version of every published page for restoring.",
+   "install": "The nightly backup task handles it; nothing to do per page.",
+   "install_windows": "Same."
+  }
+ ],
+ "capabilities": [
+  {
+   "topic": "Any content",
+   "text": "Posts, videos, chats, Zoom sessions, CAD or PLC files, links, and notes all become the same kind of page."
+  },
+  {
+   "topic": "Same everywhere",
+   "text": "Every page has the same look, controls, and features, so readers learn it once."
+  },
+  {
+   "topic": "Large pages",
+   "text": "Index dashboards can search inside every dashboard they link to, with nightly refreshed data."
+  },
+  {
+   "topic": "Owner-only parts",
+   "text": "Rows, cards, or columns can be shown only to Swami, without any runtime capability."
+  },
+  {
+   "topic": "Self-updating parts",
+   "text": "Script-built pages can be rebuilt by scheduled tasks, keeping their audio when the narration hasn't changed."
+  }
+ ],
+ "limitations": [
+  {
+   "topic": "Recording needs network",
+   "text": "The first recording needs pip and GitHub downloads; on accounts that block them, the page falls back to the browser's own voice."
+  },
+  {
+   "topic": "Owner-only isn't private",
+   "text": "Hidden parts still sit in the page source, so they are never used for anything under NDA."
+  },
+  {
+   "topic": "Not a live view",
+   "text": "A page shows what was true when it was built; it changes only when it is rebuilt or refreshed."
+  },
+  {
+   "topic": "Size",
+   "text": "Pages with audio run around 2 MB, most of it the embedded recording."
+  },
+  {
+   "topic": "Dark only",
+   "text": "The design is deliberately dark; there is no light version."
+  }
+ ],
+ "scheduled_tasks": {
+  "summary": "It doesn't create a task for each page, but two of Swami's scheduled tasks exist for it, and other nightly tasks run it.",
+  "tasks": [
+   {
+    "name": "Vibe dashboard — refresh audio overview",
+    "schedule": "On demand (no schedule)",
+    "what": "Fired by the owner-only ↻ button on any page; re-records that page's audio overview."
+   },
+   {
+    "name": "Vibe dashboards — nightly GitHub backup",
+    "schedule": "Nightly, about 4:07 AM ET",
+    "what": "Saves every artifact created or changed that day to the private vibe-dashboards repo."
+   },
+   {
+    "name": "Skills dashboard nightly refresh",
+    "schedule": "Nightly, about 1:52 AM ET",
+    "what": "Rebuilds the Skill Library page and re-records its audio with this skill's stress helper."
+   }
+  ]
+ },
+ "runs_in": [
+  {
+   "where": "Claude app, cloud session (web, desktop, mobile)",
+   "status": "Yes",
+   "notes": "Everything runs in Claude's workspace; dashboards and skill sheets were built and recorded this way."
+  },
+  {
+   "where": "Claude desktop app linked to the Mac",
+   "status": "Yes",
+   "notes": "Same as a cloud session; the linked Mac isn't needed for building."
+  },
+  {
+   "where": "Claude desktop app linked to a Windows PC",
+   "status": "Untested",
+   "notes": "Should work the same, since nothing runs on the PC."
+  },
+  {
+   "where": "Claude mobile app",
+   "status": "Untested",
+   "notes": "The build runs in Claude's workspace, so it should work; the finished page is easier to review on a bigger screen."
+  },
+  {
+   "where": "Claude Code on the Mac",
+   "status": "Untested",
+   "notes": "Would build on the Mac itself; the audio needs pip, ffmpeg, and the model download there."
+  }
+ ],
+ "other_ais": [
+  {
+   "ai": "ChatGPT",
+   "status": "Untested",
+   "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. Building needs code execution; publishing as an artifact is Claude-only, so the page would be a file. Swami tests in Claude only."
+  },
+  {
+   "ai": "Gemini",
+   "status": "Untested",
+   "notes": "Upload the unzipped skill folder. Needs code execution; artifacts and the audio refresh button are Claude-only. Swami tests in Claude only."
+  },
+  {
+   "ai": "Grok",
+   "status": "Untested",
+   "notes": "Add the skill directly to Grok's skills; installing by chat drifts from the original. Swami tests in Claude only."
+  }
+ ],
+ "gotchas": [
+  {
+   "topic": "Patch order",
+   "text": "After the content is final: table-fit and toolbar, then visuals (pages with a diagram or tree), Search, and Mind Map, then source colour, source view, and tooltips last before the audio. Comment pages run the comment sections script before Search. All are safe to re-run. Builders written before Nov 13 that pulled the patches out of SKILL.md code blocks no longer work."
+  },
+  {
+   "topic": "Double-escaped titles",
+   "text": "A section title with & must be escaped once; escaping it twice breaks the table of contents and section links."
+  },
+  {
+   "topic": "Bare # links",
+   "text": "Never use href=\"#id\" anchors; the artifact frame treats them as outside links. Navigation uses data-target and script."
+  },
+  {
+   "topic": "Self-links",
+   "text": "Body text that names a section becomes a link to it, so an intro starting \"Search …\" inside the Search section links to itself; reword it."
+  },
+  {
+   "topic": "Zero-count terms",
+   "text": "A glossary term whose matcher hits nothing shows 0; reword the matcher or drop the term."
+  },
+  {
+   "topic": "Acronyms",
+   "text": "Nothing in an acronym's spelling says whether it is said as letters or as a word. Written in capitals the voice spells it out, so write letter acronyms in capitals (`AI`) and word acronyms as the word (`cad`, `cam`); ask Swami when unsure and add it to the Pronunciation table."
+  },
+  {
+   "topic": "Stress check",
+   "text": "The voice often stresses two-syllable noun/verb words the wrong way (\"REC-ords\" for the verb); every narration gets the stress audit and phoneme markup."
+  },
+  {
+   "topic": "Recording blocked",
+   "text": "If pip or GitHub downloads are blocked, say why, use the browser-voice player, and point to Settings › Capabilities to allow GitHub's file servers."
+  },
+  {
+   "topic": "Owner-only data",
+   "text": "Never put anything under NDA in owner-only rows or columns: anyone with the link can read the page source."
+  },
+  {
+   "topic": "Category colors",
+   "text": "Two categories with similar colors trigger a console warning; a finished page has none."
+  },
+  {
+   "topic": "List labels",
+   "text": "Each top-level bullet list now becomes its own collapsible `[LIST]` item, so give every list a short `data-desc` label, like a table. Lists inside callouts, cards, tables, or tools stay as they are, and `class=\"no-collapse\"` opts one out only when Swami asks."
+  },
+  {
+   "topic": "Inline SVG",
+   "text": "Never put a diagram in the page as inline SVG: the glossary, section-link, and search passes would rewrite its text. Embed it as an SVG image instead, and look at a rendered copy for overlaps before publishing."
+  },
+  {
+   "topic": "Tree markup",
+   "text": "Never hand-write a tree's markup; write the nested list with `class=\"tree-src\"` and run the visuals patch, so every tree looks and behaves the same."
+  },
+  {
+   "topic": "Title attributes",
+   "text": "A `title` attribute shows the browser's own tooltip; the tooltip patch converts them all, so a finished page has none after load."
+  }
+ ],
+ "requirements": [
+  {
+   "topic": "Code execution",
+   "text": "Claude's code execution must be on, with network access to the package registries and GitHub's file servers for the audio."
+  },
+  {
+   "topic": "Artifacts",
+   "text": "Publishing needs Claude's artifacts; pages start private."
+  },
+  {
+   "topic": "Privacy list",
+   "text": "Memory names the people under NDA so every publish can check for them."
+  },
+  {
+   "topic": "Owner button",
+   "text": "The ↻ audio button needs the Claude Code Remote connector and the on-demand refresh task."
+  }
+ ],
+ "glossary": [
+  {
+   "term": "Locked design system",
+   "topic": "Design",
+   "match": "locked (?:look|design)|design system",
+   "code": "",
+   "def": "The fixed palette, fonts, and layout every Vibe Coding page uses; never changed per page."
+  },
+  {
+   "term": "Category",
+   "topic": "Design",
+   "match": "categor(?:y|ies)",
+   "code": "",
+   "def": "A named group of sections with its own color, assigned in order from an 8-color palette."
+  },
+  {
+   "term": "Kicker",
+   "topic": "Design",
+   "match": "kicker",
+   "code": "",
+   "def": "The short UPPERCASE label above a page's title naming what kind of page it is."
+  },
+  {
+   "term": "Topic ID",
+   "topic": "Design",
+   "match": "topic IDs?",
+   "code": "",
+   "def": "The small label at the start of each list item naming what it is about."
+  },
+  {
+   "term": "Search section",
+   "topic": "Sections",
+   "match": "Search",
+   "code": "search_patch.py|scripts/search_patch.py",
+   "def": "Section 02 of every page: full-text search with filters, added by search_patch.py."
+  },
+  {
+   "term": "Mind Map",
+   "topic": "Sections",
+   "match": "Mind Map",
+   "code": "mindmap_patch.py",
+   "def": "A clickable bubble map of the whole page, built from the page itself by mindmap_patch.py."
+  },
+  {
+   "term": "Glossary",
+   "topic": "Sections",
+   "match": "Glossary|glossary",
+   "code": "",
+   "def": "The table of terms, each linked to every place it is used and back."
+  },
+  {
+   "term": "Table-fit patch",
+   "topic": "Build",
+   "match": "table-fit",
+   "code": "fit_patch.py",
+   "def": "A script that makes every table fit its width without splitting words."
+  },
+  {
+   "term": "Template",
+   "topic": "Build",
+   "match": "template",
+   "code": "assets/template.html",
+   "def": "The skill's locked page file every dashboard starts from."
+  },
+  {
+   "term": "Artifact",
+   "topic": "Build",
+   "match": "artifacts?",
+   "code": "",
+   "def": "A page Claude publishes on claude.ai; private until shared."
+  },
+  {
+   "term": "Scheduled task",
+   "topic": "Build",
+   "match": "scheduled tasks?",
+   "code": "",
+   "def": "A saved Claude job that runs on a schedule or on demand, such as the nightly backup."
+  },
+  {
+   "term": "Audio overview",
+   "topic": "Audio",
+   "match": "audio overview|audio",
+   "code": "audio_overview.py",
+   "def": "The spoken summary under every page's title, recorded with the Kokoro voice."
+  },
+  {
+   "term": "Kokoro",
+   "topic": "Audio",
+   "match": "Kokoro",
+   "code": "kokoro-onnx",
+   "def": "The free text-to-speech voice used for audio overviews."
+  },
+  {
+   "term": "Stress audit",
+   "topic": "Audio",
+   "match": "stress (?:audit|check)|noun/verb",
+   "code": "stress_audio.py",
+   "def": "A check that every noun/verb word in the narration gets the right stressed syllable."
+  },
+  {
+   "term": "Browser-voice player",
+   "topic": "Audio",
+   "match": "browser-voice|browser's own voice",
+   "code": "",
+   "def": "The fallback player that reads the narration with the viewer's browser voice when no recording can be made."
+  },
+  {
+   "term": "Owner-only",
+   "topic": "Privacy",
+   "match": "owner-only|only you see",
+   "code": "",
+   "def": "Parts of a page shown only to Swami; still present in the page source."
+  },
+  {
+   "term": "NDA",
+   "topic": "Privacy",
+   "match": "NDA",
+   "code": "",
+   "def": "A non-disclosure agreement; people under one never appear on published pages."
+  },
+  {
+   "term": "ffmpeg",
+   "topic": "Audio",
+   "match": "ffmpeg",
+   "code": "",
+   "def": "The tool that turns the recorded speech into a small MP3."
+  },
+  {
+   "term": "Collapsible item",
+   "topic": "Sections",
+   "match": "collapsible|\\[LIST\\]",
+   "code": "exact",
+   "def": "A table, callout, card, subsection, or bullet list wrapped in a labeled shell that starts collapsed and opens on click."
+  },
+  {
+   "term": "Comment JSON",
+   "topic": "Build",
+   "match": "comment JSON",
+   "code": "exact",
+   "def": "The standard file of extracted comments or reviews (source, topics, themes, and items) that the comment sections script turns into four sections."
+  },
+  {
+   "term": "Visuals patch",
+   "topic": "Build",
+   "match": "visuals patch",
+   "code": "visuals_patch.py",
+   "def": "The patch that builds collapsible trees from tree sources and adds the styling and page fixes diagrams and trees need."
+  },
+  {
+   "term": "Hierarchy tree",
+   "topic": "Sections",
+   "match": "(?:hierarchy |collapsible )?trees?",
+   "code": "tree-src",
+   "def": "A collapsible outline of nested parts, menus, or files: branches open and close, and each shows its number of children."
+  },
+  {
+   "term": "Colour key",
+   "topic": "Sections",
+   "match": "colou?r keys?",
+   "code": "",
+   "def": "The one-line legend under a diagram naming what each colour and line style means in that diagram."
+  }
+ ],
+ "confirm": [],
+ "spoken": {
+  "_intro": "This page is the skill sheet for the vibe dashboard skill. It builds Swami's signature Vibe Coding dashboards: one dark page with numbered sections, search, a mind map, a glossary, diagrams, and a spoken overview, all in one locked design.",
+  "Dashboard Summary": "A short intro and a table of every section",
+  "What It Is": "What the skill is, and why it exists: one locked design means every page looks and works the same, and every improvement reaches every new page",
+  "What It Does": "Twenty-one house rules it enforces, from the locked look and the single file, through search, the mind map, the glossary, diagrams and collapsible trees, the toolbar, and the standard comment sections, to the audio overview, the privacy check, and nightly backups. A workflow diagram, with a colour key, shows every step and who does it",
+  "How to Use It": "Seven steps, from giving Claude the content to sharing the finished page. On Windows the steps are the same, because everything runs in Claude's workspace",
+  "Skills It Depends On": "The skills that build their pages on this one or share its design",
+  "Programs It Depends On": "Python, the Kokoro voice, and ffmpeg in Claude's workspace, a web browser to view the page, and optionally Playwright, the Claude Code Remote connector, and GitHub",
+  "Capabilities and Limitations": "It turns any kind of content into the same kind of page, with owner only parts and self updating pages. But recording needs network access, owner only parts are not private, and a page is not a lyve view",
+  "Scheduled Tasks": "Three of Swami's scheduled tasks use it: the on demand audio refresh, the nightly GitHub backup, and the nightly Skill Library refresh",
+  "Where It Runs": "It works in any Claude app session, since everything runs in Claude's workspace. Windows, mobile, Claude Code, and other assistants are untested",
+  "Gotchas": "Fourteen traps, from patch order and double escaped titles to self links, acronyms, the stress check, blocked recordings, labels for every bullet list, inline diagrams, tree markup, and title attributes",
+  "Other Requirements": "Code execution with network access, artifacts, the privacy list in memory, and the connector for the audio button",
+  "Card and Freshness": "Which version of the skill this page describes, and its fingerprint",
+  "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text"
+ },
+ "meta": {
+  "card_version": 3,
+  "fingerprint": "sha256:74cce392c3128643",
+  "files": [
+   "SKILL.md",
+   "assets/audio-player.html",
+   "assets/fallback.html",
+   "assets/template.html",
+   "references/audio-refresh-task.md",
+   "references/patterns.md",
+   "references/search-scroll.md",
+   "scripts/add_fallback.py",
+   "scripts/audio_overview.py",
+   "scripts/comments_sections.py",
+   "scripts/fit_patch.py",
+   "scripts/mindmap_patch.py",
+   "scripts/search_patch.py",
+   "scripts/stress_audio.py"
+  ],
+  "skill_updated": "Tue Nov 24, 2026",
+  "carded": "Tue Nov 24, 2026",
+  "status": "published",
+  "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/vibe-dashboard.zip",
+  "draft_url": "https://claude.ai/artifact/XC324D6b5qkE8qUE4veTNx",
+  "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/vibe-dashboard/"
+ },
+ "flow": {
+  "heading": "VIBE DASHBOARD · FROM CONTENT TO A PUBLISHED PAGE",
+  "desc": "Workflow diagram of a build",
+  "tip": "The ten steps from handing Claude the content to sharing the finished page, with other skills feeding in and the nightly backup after publishing.",
+  "alt": "Workflow diagram: 1 Swami gives the content, 2 Claude structures it into sections, categories and glossary terms, 3 fills the locked template and runs the table-fit and toolbar patches, 4 adds diagrams and trees with the visuals patch, 5 runs the Search and Mind Map patches, 6 runs the source colour, source view and tooltip patches, 7 writes and records the audio overview, 8 runs the privacy check and browser tests, 9 publishes a private artifact, 10 Swami shares it. Other skills can hand their results in at step 1, and a nightly task backs the page up to GitHub after step 9.",
+  "caption": "Read left to right along the top row, right to left along the middle row, then left to right along the bottom. Swami starts it and decides when to share; everything else is Claude's work in its workspace.",
+  "kinds": {
+   "repo": [
+    "#38fa79",
+    "automatic GitHub backup"
+   ]
+  },
+  "dashed_label": "only sometimes, or automatic",
+  "steps": [
+   {
+    "title": "Content",
+    "kind": "swami",
+    "lines": [
+     "Paste a post, share a link,",
+     "upload files, or give notes"
+    ]
+   },
+   {
+    "title": "Structure",
+    "kind": "claude",
+    "lines": [
+     "Numbered sections, own",
+     "category colours, and",
+     "glossary terms"
+    ]
+   },
+   {
+    "title": "Template",
+    "kind": "claude",
+    "lines": [
+     "Fill the locked template;",
+     "table-fit and toolbar",
+     "patches"
+    ]
+   },
+   {
+    "title": "Visuals",
+    "kind": "claude",
+    "lines": [
+     "Diagrams with colour keys",
+     "and trees, built by the",
+     "visuals patch"
+    ]
+   },
+   {
+    "title": "Search + Map",
+    "kind": "claude",
+    "lines": [
+     "Search becomes section 02;",
+     "the Mind Map goes in",
+     "before the Glossary"
+    ]
+   },
+   {
+    "title": "Finish patches",
+    "kind": "claude",
+    "lines": [
+     "Source colour, source view",
+     "switch, and house tooltips"
+    ]
+   },
+   {
+    "title": "Audio",
+    "kind": "claude",
+    "lines": [
+     "Narration, pronunciation",
+     "and stress audit, then",
+     "the recording"
+    ]
+   },
+   {
+    "title": "Check",
+    "kind": "claude",
+    "lines": [
+     "Privacy scan for NDA",
+     "names; browser tests at",
+     "three widths"
+    ]
+   },
+   {
+    "title": "Publish",
+    "kind": "claude",
+    "lines": [
+     "A private artifact,",
+     "no capabilities unless",
+     "a feature needs one"
+    ]
+   },
+   {
+    "title": "Share",
+    "kind": "swami",
+    "lines": [
+     "From the page's Share",
+     "menu, when you're ready"
+    ]
+   }
+  ],
+  "extras": [
+   {
+    "title": "From other skills",
+    "kind": "handoff",
+    "optional": true,
+    "place": "above",
+    "step": 1,
+    "lines": [
+     "Transcripts, comments,",
+     "reviews, and Fusion docs",
+     "hand their results in"
+    ]
+   },
+   {
+    "title": "Nightly backup",
+    "kind": "repo",
+    "optional": true,
+    "step": 9,
+    "lines": [
+     "Every changed page saved",
+     "to the private GitHub repo"
+    ]
+   }
+  ]
+ }
 }
