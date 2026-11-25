@@ -6,7 +6,7 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. It turns a batch of proposals into one clear decision for you, then builds the accepted rules on a branch.
 
-Section four, What It Does. It files each proposal as a candidate, compares it with every active rule, writes up each conflict with fix options, checks fit and the build, and asks you once on a decision card.
+Section four, What It Does. It files each proposal as a candidate, compares it with every active rule, writes up each conflict with fix options, checks fit and the build, and asks you once on a decision card. A workflow diagram, with a colour key, shows every step and who does it.
 
 Section five, How to Use It. Point Claude at the proposals, pick an option on the decision card, confirm the author's consent to the open licence, and merge the pull request.
 
@@ -30,4 +30,4 @@ Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a 
 
 Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
 
-Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text.

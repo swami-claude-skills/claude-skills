@@ -6,7 +6,7 @@ Section two, Search. Type a few words to find anything on this page, in any orde
 
 Section three, What It Is. It keeps the rule set's GitHub repository as the single source of truth, so every change is reviewed, versioned and exported the same way.
 
-Section four, What It Does. It edits rule files, picks the version bump, clears conflicts, promotes accepted candidates, adds tests and [records](/ɹᵻkˈɔːɹdz/) results, runs the build check, opens a pull request, and republishes the Rule Set page after the merge.
+Section four, What It Does. It edits rule files, picks the version bump, clears conflicts, promotes accepted candidates, adds tests and [records](/ɹᵻkˈɔːɹdz/) results, runs the build check, opens a pull request, and republishes the Rule Set page after the merge. A workflow diagram, with a colour key, shows every step and who does it.
 
 Section five, How to Use It. You say what should change. Claude does the edits and opens a pull request, you merge it or tell Claude to, and GitHub publishes everything.
 
@@ -30,4 +30,4 @@ Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a 
 
 Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
 
-Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text.
