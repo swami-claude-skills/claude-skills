@@ -403,11 +403,12 @@
     "What It Is": "It has two paths: move, for an add-in that already exists, and new, for one built in its repo from day one. Every step has a copyable prompt and a done tick saved in the page's own database",
     "What It Does": "It gets the tracker kit from Swami's private repo, writes a small settings file, builds and patches the page, checks it in a browser, adds the audio overview, runs the privacy scan, and publishes it",
     "How to Use It": "Ask for a tracker in the add-in's Claude project, answer any questions, add the tracker link to the project instructions, then work through the steps and tick each one when it's done",
-    "Gotchas": "The first public release always includes the update check, and the update banner tests only work from the second release"
+    "Gotchas": "The first public release always includes the update check, and the update banner tests only work from the second release",
+    "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and you can switch it to plain text"
   },
   "meta": {
     "card_version": 1,
-    "fingerprint": "sha256:0a97fa1ab9cbab0e",
+    "fingerprint": "sha256:325f2f4f2df8c296",
     "files": [
       "SKILL.md"
     ],

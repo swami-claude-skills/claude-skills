@@ -30,4 +30,4 @@ Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a 
 
 Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
 
-Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word.
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word. It opens formatted, and you can switch it to plain text.
