@@ -591,12 +591,12 @@
       "scripts/preflight.py"
     ],
     "skill_updated": "Tue Nov 24, 2026",
-    "carded": "Tue Nov 24, 2026",
+    "carded": "Wed Nov 25, 2026",
     "status": "published",
     "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/fusion-palette-addin.zip",
     "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq",
     "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/fusion-palette-addin/",
-    "vibe_fingerprint": "sha256:134d18129b732c81",
+    "vibe_fingerprint": "sha256:650379b0eea6f9fc",
     "vibe_updated": "Tue Nov 24, 2026"
   },
   "flow": {

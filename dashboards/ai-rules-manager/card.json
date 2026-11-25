@@ -1,521 +1,523 @@
 {
- "skill": "ai-rules-manager",
- "title": "AI Rules Manager",
- "summary": "Makes every change to the Fusion AI Rules repository: adds, changes, deprecates or accepts rules, bumps the version, builds, opens a pull request, and republishes the Rule Set page.",
- "what_it_is": [
-  "A Claude skill for maintaining Swami's **Fusion AI Rules**: good-practice rules for AIs that model in Autodesk Fusion. The public GitHub repository `swami-claude-skills/fusion-ai-rules` is the single source of truth, with one YAML file per rule.",
-  "Swami asks for a change in plain words. Claude edits the files on a branch, runs the build checks, picks the version bump, updates the change log and page text, and opens a pull request. Swami approves the merge, and GitHub then builds the exports, the GitHub Pages site and the release by itself."
- ],
- "why": "The rules are used by several AIs and by other people. Keeping them in one repository with a fixed process means every change is reviewed, versioned and exported the same way, and nobody has to remember the steps.",
- "what_it_does": [
-  {
-   "topic": "Rule Edits",
-   "text": "Adds a new rule as `rules/R##-slug.yaml`, or changes one, in the existing field order. Rule IDs are permanent and never reused."
-  },
-  {
-   "topic": "Versioning",
-   "text": "Bumps `ruleset.yaml`: patch for a wording fix, minor for a new rule or export target, major for a rule removed or deprecated, a meaning changed, or a priority raised to Must."
-  },
-  {
-   "topic": "Deprecation",
-   "text": "Never deletes a rule: marks it Deprecated and points to the replacement, which lists it under `supersedes`."
-  },
-  {
-   "topic": "Conflicts",
-   "text": "Clears `conflicts_with` between active rules, since the build check fails while two active rules name each other."
-  },
-  {
-   "topic": "Candidates",
-   "text": "Promotes accepted candidates from `candidates/` to `rules/` under their proposed IDs, records the decisions in `sources/`, and checks the author has agreed to CC BY 4.0."
-  },
-  {
-   "topic": "Build Check",
-   "text": "Runs `python3 build/build.py check` and `build`, and reports any export target that falls back to a smaller selection or titles only."
-  },
-  {
-   "topic": "Tests",
-   "text": "Adds a test question for each new rule in `tests/prompts/`, turns results from the Test result form into `tests/results/` files, and changes a rule's status only when the results back it."
-  },
-  {
-   "topic": "Page and Audio",
-   "text": "Updates the Rule Set page text and its spoken overview when the rule count or meaning changes, re-recording with the vibe-dashboard skill."
-  },
-  {
-   "topic": "Pull Request",
-   "text": "Scans for private details, pushes a branch, opens a pull request through the GitHub REST API with the repository's template, and watches it."
-  },
-  {
-   "topic": "Republish",
-   "text": "After the merge, checks the Action and Pages deploy, then rebuilds Swami's Claude copy of the Rule Set page with its private links and republishes it."
-  },
-  {
-   "topic": "Admin Page",
-   "text": "Refreshes Swami's private Rules Admin page after rules or results change."
-  }
- ],
- "flow": {
-  "heading": "AI RULES MANAGER · ONE CHANGE, START TO FINISH",
-  "desc": "Workflow diagram of one change",
-  "tip": "How one change moves from a branch through the build check, privacy scan and pull request to Swami's merge, the GitHub Action and the republished pages, with proposals and test results feeding in.",
-  "alt": "Workflow diagram: proposals from the issue form become candidate files reviewed with ai-rule-review, and test results become results files. A change goes 1 branch from main, 2 edit the rule YAML, 3 bump the version and add a changelog entry and tests, 4 run the build check, 5 privacy scan and open a pull request, 6 Swami merges, 7 the GitHub Action builds, deploys Pages and creates a release, 8 Claude republishes the Rule Set page and refreshes the Rules Admin page.",
-  "caption": "Read left to right along the middle row, then right to left along the bottom row. The dashed boxes on top are the two ways outside input arrives. Only step 6 is Swami's; nothing on GitHub can authorize a merge.",
-  "kinds": {
-   "repo": [
-    "#38fa79",
-    "GitHub repo, build and Action"
-   ]
-  },
-  "dashed_label": "input that arrives sometimes",
-  "steps": [
-   {
-    "title": "BRANCH",
-    "kind": "claude",
-    "lines": [
-     "Branch from main:",
-     "rules/<short-topic>"
-    ]
-   },
-   {
-    "title": "EDIT RULES",
-    "kind": "claude",
-    "lines": [
-     "Edit the YAML; deprecate,",
-     "never delete; reword to",
-     "clear conflicts"
-    ]
-   },
-   {
-    "title": "VERSION + LOG",
-    "kind": "claude",
-    "lines": [
-     "Patch, minor or major bump;",
-     "CHANGELOG entry; a test",
-     "for every new rule"
-    ]
-   },
-   {
-    "title": "BUILD CHECK",
-    "kind": "repo",
-    "lines": [
-     "build.py check, then build;",
-     "update page text and audio",
-     "if the meaning changed"
-    ]
-   },
-   {
-    "title": "SCAN + PR",
-    "kind": "claude",
-    "lines": [
-     "Privacy scan, push the",
-     "branch, open the PR with",
-     "the REST API"
-    ]
-   },
-   {
-    "title": "MERGE",
-    "kind": "swami",
-    "lines": [
-     "Swami merges, or Claude",
-     "merges when he asks in",
-     "his own words"
-    ]
-   },
-   {
-    "title": "GITHUB ACTION",
-    "kind": "repo",
-    "lines": [
-     "Builds the exports, deploys",
-     "Pages, creates release",
-     "v<version> if it is new"
-    ]
-   },
-   {
-    "title": "REPUBLISH",
-    "kind": "claude",
-    "lines": [
-     "Claude republishes the",
-     "Rule Set page and refreshes",
-     "the Rules Admin page"
-    ]
-   }
+  "skill": "ai-rules-manager",
+  "title": "AI Rules Manager",
+  "summary": "Makes every change to the Fusion AI Rules repository: adds, changes, deprecates or accepts rules, bumps the version, builds, opens a pull request, and republishes the Rule Set page.",
+  "what_it_is": [
+    "A Claude skill for maintaining Swami's **Fusion AI Rules**: good-practice rules for AIs that model in Autodesk Fusion. The public GitHub repository `swami-claude-skills/fusion-ai-rules` is the single source of truth, with one YAML file per rule.",
+    "Swami asks for a change in plain words. Claude edits the files on a branch, runs the build checks, picks the version bump, updates the change log and page text, and opens a pull request. Swami approves the merge, and GitHub then builds the exports, the GitHub Pages site and the release by itself."
   ],
-  "extras": [
-   {
-    "title": "PROPOSALS",
-    "kind": "handoff",
-    "optional": true,
-    "lines": [
-     "Propose on GitHub issue form",
-     "becomes a candidate file,",
-     "reviewed with ai-rule-review"
-    ],
-    "step": 1,
-    "place": "above"
-   },
-   {
-    "title": "TEST RESULTS",
-    "kind": "repo",
-    "optional": true,
-    "lines": [
-     "Test result issue form",
-     "becomes a tests/results file;",
-     "status changes only if backed"
-    ],
-    "step": 3,
-    "place": "above"
-   }
-  ]
- },
- "triggers": [
-  "\"Add a rule about chamfers\"",
-  "\"Reword R12 so it's clearer\"",
-  "\"Deprecate R05\"",
-  "\"Accept the candidates we reviewed\"",
-  "\"Record these test results\""
- ],
- "how_to_use": [
-  {
-   "topic": "Ask",
-   "step": "In the Fusion AI Rules project, say what should change in plain words.",
-   "who": "Swami"
-  },
-  {
-   "topic": "Edit",
-   "step": "Claude makes a branch, edits the YAML files, bumps the version and updates `CHANGELOG.md`.",
-   "who": "Claude"
-  },
-  {
-   "topic": "Check",
-   "step": "Claude runs the build check and build, updates page text and audio if needed, and scans for private details.",
-   "who": "Claude"
-  },
-  {
-   "topic": "Review",
-   "step": "Claude opens a pull request and sends the link. Read it on GitHub.",
-   "who": "Swami"
-  },
-  {
-   "topic": "Merge",
-   "step": "Merge it on GitHub, or tell Claude to merge it; Claude merges only when you ask. Branch protection requires the `check` to pass first.",
-   "who": "Swami"
-  },
-  {
-   "topic": "Publish",
-   "step": "The GitHub Action builds the exports, deploys Pages and makes a release if the version is new. Claude checks it and republishes the Claude copy of the Rule Set page.",
-   "who": "GitHub, then Claude"
-  }
- ],
- "how_to_use_windows": [
-  {
-   "topic": "Same Steps",
-   "step": "Nothing runs on your computer, so the steps are the same on Windows 10 or 11: ask in the project, review the pull request on GitHub in Edge or Chrome, and merge.",
-   "who": "Swami"
-  }
- ],
- "skills": [
-  {
-   "name": "ai-rule-review",
-   "need": "Related",
-   "why": "Reviews proposed rules first; it hands accepted batches to this skill to promote and release."
-  },
-  {
-   "name": "vibe-dashboard",
-   "need": "Optional",
-   "why": "Its `stress_audio.py` re-records the Rule Set page's audio overview when the page text changes."
-  }
- ],
- "programs": [
-  {
-   "name": "git",
-   "need": "Required",
-   "where": "Claude's workspace",
-   "why": "Branches, commits and pushes the rule changes.",
-   "install": "Already in Claude's workspace.",
-   "install_windows": "Already in Claude's workspace; nothing to install on Windows."
-  },
-  {
-   "name": "gh (GitHub CLI)",
-   "need": "Required",
-   "where": "Claude's workspace",
-   "why": "Opens and merges pull requests and checks Action runs through the REST API.",
-   "install": "Already in Claude's workspace, signed in through the GitHub connection.",
-   "install_windows": "Already in Claude's workspace; nothing to install on Windows."
-  },
-  {
-   "name": "Python 3 with PyYAML",
-   "need": "Required",
-   "where": "Claude's workspace and GitHub Actions",
-   "why": "Runs `build/build.py`, which checks and builds everything.",
-   "install": "`pip install pyyaml jsonschema` if missing.",
-   "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
-  },
-  {
-   "name": "GitHub Actions and Pages",
-   "need": "Required",
-   "where": "GitHub",
-   "why": "Builds, deploys the public site and makes the release on every merge.",
-   "install": "Set up in the repository already.",
-   "install_windows": "Set up in the repository already."
-  },
-  {
-   "name": "Kokoro voice",
-   "need": "Optional",
-   "where": "Claude's workspace",
-   "why": "Records the page's audio overview, through vibe-dashboard.",
-   "install": "Downloaded by vibe-dashboard's audio script on first use.",
-   "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
-  },
-  {
-   "name": "Autodesk Fusion",
-   "need": "Not needed",
-   "where": "—",
-   "why": "The skill edits rule text only; it never opens Fusion.",
-   "install": "—",
-   "install_windows": "—"
-  }
- ],
- "capabilities": [
-  {
-   "topic": "Safe Changes",
-   "text": "Every change goes through a branch, a passing build check and a pull request, so main never breaks."
-  },
-  {
-   "topic": "Clear Versions",
-   "text": "Picks the version bump from the kind of change, so a release number tells readers how big the change is."
-  },
-  {
-   "topic": "Hands-Off Publishing",
-   "text": "Exports for all AIs, the public site and the release are rebuilt automatically from the merged files."
-  }
- ],
- "limitations": [
-  {
-   "topic": "No Self-Merge",
-   "text": "Claude never merges without Swami's own go-ahead; a GitHub comment can't authorize it."
-  },
-  {
-   "topic": "Blocked APIs",
-   "text": "GitHub's GraphQL API, Pages settings and branch protection settings are blocked from Claude sessions, so it uses the REST API and Swami changes settings himself."
-  },
-  {
-   "topic": "No Live Site Check",
-   "text": "The github.io site can't be opened from Claude's workspace; deploys are checked through the GitHub deployments API instead."
-  }
- ],
- "scheduled_tasks": {
-  "summary": "None. It runs when Swami asks for a rule change or a review. The repository's GitHub Action builds and publishes on every merge, but that is GitHub, not a Claude scheduled task.",
-  "tasks": []
- },
- "runs_in": [
-  {
-   "where": "Claude app, cloud session (web, desktop, mobile)",
-   "status": "Yes",
-   "notes": "Where it was built and used. Needs the fusion-ai-rules repo attached with push access, the `gh` CLI, and code execution. Republishing the Claude copy also needs this project's files."
-  },
-  {
-   "where": "Claude desktop app linked to the Mac",
-   "status": "Yes",
-   "notes": "The work still happens in Claude's cloud workspace and on GitHub; linking the Mac adds nothing it needs."
-  },
-  {
-   "where": "Claude desktop app linked to a Windows PC",
-   "status": "Untested",
-   "notes": "Should work the same way, since nothing runs on the PC. Not tried yet."
-  },
-  {
-   "where": "Claude mobile app",
-   "status": "Untested",
-   "notes": "A cloud session started from the phone should work, and decision cards can be answered there. Not tried yet."
-  },
-  {
-   "where": "Claude Code on the Mac",
-   "status": "Untested",
-   "notes": "Would need a local clone, `gh` signed in with push access, and Python with PyYAML. The private Rule Set copy and project files are not there."
-  }
- ],
- "other_ais": [
-  {
-   "ai": "ChatGPT",
-   "status": "Untested",
-   "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. It would also need write access to the GitHub repo, which ChatGPT doesn't normally have. Swami tests in Claude only."
-  },
-  {
-   "ai": "Gemini",
-   "status": "Untested",
-   "notes": "Upload the unzipped skill folder. Without GitHub write access it can only draft the YAML changes for someone else to commit. Swami tests in Claude only."
-  },
-  {
-   "ai": "Grok",
-   "status": "Untested",
-   "notes": "Import the .zip (or the SKILL.md if refused). Same GitHub limits as the others. Swami tests in Claude only."
-  }
- ],
- "gotchas": [
-  {
-   "topic": "Never Delete",
-   "text": "Deleting a rule file breaks links and history. Deprecate it instead."
-  },
-  {
-   "topic": "Private File",
-   "text": "`private.json` holds the private links for the Claude copy. It lives only in project files and must never be committed."
-  },
-  {
-   "topic": "Size Limits",
-   "text": "Long rules push size-limited export targets down to Must only or titles only. The build allows it, but say so in the pull request."
-  },
-  {
-   "topic": "No Test Pushes",
-   "text": "Never test branch protection by pushing to main; it records a commit that can't be cleanly removed."
-  }
- ],
- "requirements": [
-  {
-   "topic": "GitHub Access",
-   "text": "Swami's GitHub connected to Claude, with the fusion-ai-rules repository attached with push access."
-  },
-  {
-   "topic": "Project",
-   "text": "The Fusion AI Rules Claude project, for `private.json` and project memory."
-  },
-  {
-   "topic": "Windows",
-   "text": "Nothing extra: works the same from Windows 10 or 11."
-  }
- ],
- "glossary": [
-  {
-   "term": "Fusion AI Rules",
-   "topic": "System",
-   "match": "Fusion AI Rules",
-   "code": "",
-   "def": "Swami's set of good-practice rules for AIs that model in Autodesk Fusion, kept in a public GitHub repository."
-  },
-  {
-   "term": "Rule Set page",
-   "topic": "System",
-   "match": "Rule Set page",
-   "code": "",
-   "def": "The dashboard that shows every rule and exports them for each AI. A public copy is on GitHub Pages and a Claude copy has Swami's private links."
-  },
-  {
-   "term": "Repository",
-   "topic": "GitHub",
-   "match": "repositor(?:y|ies)",
-   "code": "swami-claude-skills/fusion-ai-rules",
-   "def": "The GitHub project that holds every rule file, the build script and the site; the single source of truth."
-  },
-  {
-   "term": "Pull request",
-   "topic": "GitHub",
-   "match": "pull requests?",
-   "code": "",
-   "def": "A proposed set of changes on a branch, reviewed and checked before it is merged into main."
-  },
-  {
-   "term": "Branch protection",
-   "topic": "GitHub",
-   "match": "[Bb]ranch protection",
-   "code": "",
-   "def": "A GitHub setting on main that requires a pull request and a passing check before anything is merged, for everyone."
-  },
-  {
-   "term": "GitHub Action",
-   "topic": "GitHub",
-   "match": "GitHub Action|Action",
-   "code": "",
-   "def": "The automated job that checks every change, and on merge builds the exports, deploys GitHub Pages and makes a release."
-  },
-  {
-   "term": "GitHub Pages",
-   "topic": "GitHub",
-   "match": "GitHub Pages|Pages",
-   "code": "",
-   "def": "GitHub's free web hosting, which serves the public Rule Set page and downloads."
-  },
-  {
-   "term": "REST API",
-   "topic": "GitHub",
-   "match": "REST API",
-   "code": "",
-   "def": "GitHub's web interface for scripts; used because the GraphQL API is blocked from Claude sessions."
-  },
-  {
-   "term": "YAML",
-   "topic": "Files",
-   "match": "YAML",
-   "code": "",
-   "def": "A plain-text file format; each rule is one YAML file with fixed fields."
-  },
-  {
-   "term": "Candidate",
-   "topic": "Rules",
-   "match": "[Cc]andidates?",
-   "code": "",
-   "def": "A proposed rule waiting for review, kept in `candidates/` with a proposed ID."
-  },
-  {
-   "term": "Deprecated",
-   "topic": "Rules",
-   "match": "[Dd]eprecat(?:e|ed|es|ion)",
-   "code": "",
-   "def": "A rule that is retired but kept, pointing to the rule that replaces it."
-  },
-  {
-   "term": "Semantic version",
-   "topic": "Rules",
-   "match": "[Vv]ersion bump|patch|minor|major",
-   "code": "",
-   "def": "The rule set's version number: patch for wording, minor for new rules or targets, major for removals or meaning changes."
-  },
-  {
-   "term": "Export target",
-   "topic": "Exports",
-   "match": "export targets?",
-   "code": "",
-   "def": "One place a rule file goes, such as a Claude project or a ChatGPT custom GPT, each with its own format and size limit."
-  },
-  {
-   "term": "CC BY 4.0",
-   "topic": "Rules",
-   "match": "CC BY 4\\.0",
-   "code": "",
-   "def": "The open licence for the rule text: anyone can reuse it with credit. Authors of new rules agree to it."
-  },
-  {
-   "term": "Build check",
-   "topic": "Files",
-   "match": "build check|check",
-   "code": "python3 build/build.py check",
-   "def": "The script step that validates every rule, test and setting, and fails on errors such as conflicting active rules."
-  },
-  {
-   "term": "Test result form",
-   "topic": "Tests",
-   "match": "Test result form",
-   "code": "",
-   "def": "A GitHub issue form for sending the results of a test kit run in one AI; Claude turns each into a results file."
-  }
- ],
- "confirm": [],
- "spoken": {
-  "_intro": "This is the skill sheet for AI Rules Manager, the skill that makes every change to the Fusion AI Rules",
-  "What It Is": "It keeps the rule set's GitHub repository as the single source of truth, so every change is reviewed, versioned and exported the same way",
-  "What It Does": "It edits rule files, picks the version bump, clears conflicts, promotes accepted candidates, adds tests and [records](/ɹᵻkˈɔːɹdz/) results, runs the build check, opens a pull request, and republishes the Rule Set page after the merge. A workflow diagram, with a colour key, shows every step and who does it",
-  "How to Use It": "You say what should change. Claude does the edits and opens a pull request, you merge it or tell Claude to, and GitHub publishes everything",
-  "Capabilities and Limitations": "Every change goes through a pull request with a passing check, and Claude merges only when you ask",
-  "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text"
- },
- "meta": {
-  "card_version": 1,
-  "fingerprint": "sha256:df5f2752b533c055",
-  "files": [
-   "SKILL.md"
+  "why": "The rules are used by several AIs and by other people. Keeping them in one repository with a fixed process means every change is reviewed, versioned and exported the same way, and nobody has to remember the steps.",
+  "what_it_does": [
+    {
+      "topic": "Rule Edits",
+      "text": "Adds a new rule as `rules/R##-slug.yaml`, or changes one, in the existing field order. Rule IDs are permanent and never reused."
+    },
+    {
+      "topic": "Versioning",
+      "text": "Bumps `ruleset.yaml`: patch for a wording fix, minor for a new rule or export target, major for a rule removed or deprecated, a meaning changed, or a priority raised to Must."
+    },
+    {
+      "topic": "Deprecation",
+      "text": "Never deletes a rule: marks it Deprecated and points to the replacement, which lists it under `supersedes`."
+    },
+    {
+      "topic": "Conflicts",
+      "text": "Clears `conflicts_with` between active rules, since the build check fails while two active rules name each other."
+    },
+    {
+      "topic": "Candidates",
+      "text": "Promotes accepted candidates from `candidates/` to `rules/` under their proposed IDs, records the decisions in `sources/`, and checks the author has agreed to CC BY 4.0."
+    },
+    {
+      "topic": "Build Check",
+      "text": "Runs `python3 build/build.py check` and `build`, and reports any export target that falls back to a smaller selection or titles only."
+    },
+    {
+      "topic": "Tests",
+      "text": "Adds a test question for each new rule in `tests/prompts/`, turns results from the Test result form into `tests/results/` files, and changes a rule's status only when the results back it."
+    },
+    {
+      "topic": "Page and Audio",
+      "text": "Updates the Rule Set page text and its spoken overview when the rule count or meaning changes, re-recording with the vibe-dashboard skill."
+    },
+    {
+      "topic": "Pull Request",
+      "text": "Scans for private details, pushes a branch, opens a pull request through the GitHub REST API with the repository's template, and watches it."
+    },
+    {
+      "topic": "Republish",
+      "text": "After the merge, checks the Action and Pages deploy, then rebuilds Swami's Claude copy of the Rule Set page with its private links and republishes it."
+    },
+    {
+      "topic": "Admin Page",
+      "text": "Refreshes Swami's private Rules Admin page after rules or results change."
+    }
   ],
-  "skill_updated": "Sun Nov 22, 2026",
-  "carded": "Tue Nov 24, 2026",
-  "status": "published",
-  "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/ai-rules-manager.zip",
-  "draft_url": "https://claude.ai/artifact/KGpiLJVkZM3nvbAB5Sb36s",
-  "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/ai-rules-manager/"
- }
+  "flow": {
+    "heading": "AI RULES MANAGER · ONE CHANGE, START TO FINISH",
+    "desc": "Workflow diagram of one change",
+    "tip": "How one change moves from a branch through the build check, privacy scan and pull request to Swami's merge, the GitHub Action and the republished pages, with proposals and test results feeding in.",
+    "alt": "Workflow diagram: proposals from the issue form become candidate files reviewed with ai-rule-review, and test results become results files. A change goes 1 branch from main, 2 edit the rule YAML, 3 bump the version and add a changelog entry and tests, 4 run the build check, 5 privacy scan and open a pull request, 6 Swami merges, 7 the GitHub Action builds, deploys Pages and creates a release, 8 Claude republishes the Rule Set page and refreshes the Rules Admin page.",
+    "caption": "Read left to right along the middle row, then right to left along the bottom row. The dashed boxes on top are the two ways outside input arrives. Only step 6 is Swami's; nothing on GitHub can authorize a merge.",
+    "kinds": {
+      "repo": [
+        "#38fa79",
+        "GitHub repo, build and Action"
+      ]
+    },
+    "dashed_label": "input that arrives sometimes",
+    "steps": [
+      {
+        "title": "BRANCH",
+        "kind": "claude",
+        "lines": [
+          "Branch from main:",
+          "rules/<short-topic>"
+        ]
+      },
+      {
+        "title": "EDIT RULES",
+        "kind": "claude",
+        "lines": [
+          "Edit the YAML; deprecate,",
+          "never delete; reword to",
+          "clear conflicts"
+        ]
+      },
+      {
+        "title": "VERSION + LOG",
+        "kind": "claude",
+        "lines": [
+          "Patch, minor or major bump;",
+          "CHANGELOG entry; a test",
+          "for every new rule"
+        ]
+      },
+      {
+        "title": "BUILD CHECK",
+        "kind": "repo",
+        "lines": [
+          "build.py check, then build;",
+          "update page text and audio",
+          "if the meaning changed"
+        ]
+      },
+      {
+        "title": "SCAN + PR",
+        "kind": "claude",
+        "lines": [
+          "Privacy scan, push the",
+          "branch, open the PR with",
+          "the REST API"
+        ]
+      },
+      {
+        "title": "MERGE",
+        "kind": "swami",
+        "lines": [
+          "Swami merges, or Claude",
+          "merges when he asks in",
+          "his own words"
+        ]
+      },
+      {
+        "title": "GITHUB ACTION",
+        "kind": "repo",
+        "lines": [
+          "Builds the exports, deploys",
+          "Pages, creates release",
+          "v<version> if it is new"
+        ]
+      },
+      {
+        "title": "REPUBLISH",
+        "kind": "claude",
+        "lines": [
+          "Claude republishes the",
+          "Rule Set page and refreshes",
+          "the Rules Admin page"
+        ]
+      }
+    ],
+    "extras": [
+      {
+        "title": "PROPOSALS",
+        "kind": "handoff",
+        "optional": true,
+        "lines": [
+          "Propose on GitHub issue form",
+          "becomes a candidate file,",
+          "reviewed with ai-rule-review"
+        ],
+        "step": 1,
+        "place": "above"
+      },
+      {
+        "title": "TEST RESULTS",
+        "kind": "repo",
+        "optional": true,
+        "lines": [
+          "Test result issue form",
+          "becomes a tests/results file;",
+          "status changes only if backed"
+        ],
+        "step": 3,
+        "place": "above"
+      }
+    ]
+  },
+  "triggers": [
+    "\"Add a rule about chamfers\"",
+    "\"Reword R12 so it's clearer\"",
+    "\"Deprecate R05\"",
+    "\"Accept the candidates we reviewed\"",
+    "\"Record these test results\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Ask",
+      "step": "In the Fusion AI Rules project, say what should change in plain words.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Edit",
+      "step": "Claude makes a branch, edits the YAML files, bumps the version and updates `CHANGELOG.md`.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Check",
+      "step": "Claude runs the build check and build, updates page text and audio if needed, and scans for private details.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Review",
+      "step": "Claude opens a pull request and sends the link. Read it on GitHub.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Merge",
+      "step": "Merge it on GitHub, or tell Claude to merge it; Claude merges only when you ask. Branch protection requires the `check` to pass first.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Publish",
+      "step": "The GitHub Action builds the exports, deploys Pages and makes a release if the version is new. Claude checks it and republishes the Claude copy of the Rule Set page.",
+      "who": "GitHub, then Claude"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Same Steps",
+      "step": "Nothing runs on your computer, so the steps are the same on Windows 10 or 11: ask in the project, review the pull request on GitHub in Edge or Chrome, and merge.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "ai-rule-review",
+      "need": "Related",
+      "why": "Reviews proposed rules first; it hands accepted batches to this skill to promote and release."
+    },
+    {
+      "name": "vibe-dashboard",
+      "need": "Optional",
+      "why": "Its `stress_audio.py` re-records the Rule Set page's audio overview when the page text changes."
+    }
+  ],
+  "programs": [
+    {
+      "name": "git",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Branches, commits and pushes the rule changes.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Already in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "gh (GitHub CLI)",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Opens and merges pull requests and checks Action runs through the REST API.",
+      "install": "Already in Claude's workspace, signed in through the GitHub connection.",
+      "install_windows": "Already in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Python 3 with PyYAML",
+      "need": "Required",
+      "where": "Claude's workspace and GitHub Actions",
+      "why": "Runs `build/build.py`, which checks and builds everything.",
+      "install": "`pip install pyyaml jsonschema` if missing.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "GitHub Actions and Pages",
+      "need": "Required",
+      "where": "GitHub",
+      "why": "Builds, deploys the public site and makes the release on every merge.",
+      "install": "Set up in the repository already.",
+      "install_windows": "Set up in the repository already."
+    },
+    {
+      "name": "Kokoro voice",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Records the page's audio overview, through vibe-dashboard.",
+      "install": "Downloaded by vibe-dashboard's audio script on first use.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Autodesk Fusion",
+      "need": "Not needed",
+      "where": "—",
+      "why": "The skill edits rule text only; it never opens Fusion.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Safe Changes",
+      "text": "Every change goes through a branch, a passing build check and a pull request, so main never breaks."
+    },
+    {
+      "topic": "Clear Versions",
+      "text": "Picks the version bump from the kind of change, so a release number tells readers how big the change is."
+    },
+    {
+      "topic": "Hands-Off Publishing",
+      "text": "Exports for all AIs, the public site and the release are rebuilt automatically from the merged files."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "No Self-Merge",
+      "text": "Claude never merges without Swami's own go-ahead; a GitHub comment can't authorize it."
+    },
+    {
+      "topic": "Blocked APIs",
+      "text": "GitHub's GraphQL API, Pages settings and branch protection settings are blocked from Claude sessions, so it uses the REST API and Swami changes settings himself."
+    },
+    {
+      "topic": "No Live Site Check",
+      "text": "The github.io site can't be opened from Claude's workspace; deploys are checked through the GitHub deployments API instead."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. It runs when Swami asks for a rule change or a review. The repository's GitHub Action builds and publishes on every merge, but that is GitHub, not a Claude scheduled task.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Yes",
+      "notes": "Where it was built and used. Needs the fusion-ai-rules repo attached with push access, the `gh` CLI, and code execution. Republishing the Claude copy also needs this project's files."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Yes",
+      "notes": "The work still happens in Claude's cloud workspace and on GitHub; linking the Mac adds nothing it needs."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Should work the same way, since nothing runs on the PC. Not tried yet."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "A cloud session started from the phone should work, and decision cards can be answered there. Not tried yet."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Would need a local clone, `gh` signed in with push access, and Python with PyYAML. The private Rule Set copy and project files are not there."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu, or Healthcare plan. It would also need write access to the GitHub repo, which ChatGPT doesn't normally have. Swami tests in Claude only."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Without GitHub write access it can only draft the YAML changes for someone else to commit. Swami tests in Claude only."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip (or the SKILL.md if refused). Same GitHub limits as the others. Swami tests in Claude only."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Never Delete",
+      "text": "Deleting a rule file breaks links and history. Deprecate it instead."
+    },
+    {
+      "topic": "Private File",
+      "text": "`private.json` holds the private links for the Claude copy. It lives only in project files and must never be committed."
+    },
+    {
+      "topic": "Size Limits",
+      "text": "Long rules push size-limited export targets down to Must only or titles only. The build allows it, but say so in the pull request."
+    },
+    {
+      "topic": "No Test Pushes",
+      "text": "Never test branch protection by pushing to main; it records a commit that can't be cleanly removed."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "GitHub Access",
+      "text": "Swami's GitHub connected to Claude, with the fusion-ai-rules repository attached with push access."
+    },
+    {
+      "topic": "Project",
+      "text": "The Fusion AI Rules Claude project, for `private.json` and project memory."
+    },
+    {
+      "topic": "Windows",
+      "text": "Nothing extra: works the same from Windows 10 or 11."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Fusion AI Rules",
+      "topic": "System",
+      "match": "Fusion AI Rules",
+      "code": "",
+      "def": "Swami's set of good-practice rules for AIs that model in Autodesk Fusion, kept in a public GitHub repository."
+    },
+    {
+      "term": "Rule Set page",
+      "topic": "System",
+      "match": "Rule Set page",
+      "code": "",
+      "def": "The dashboard that shows every rule and exports them for each AI. A public copy is on GitHub Pages and a Claude copy has Swami's private links."
+    },
+    {
+      "term": "Repository",
+      "topic": "GitHub",
+      "match": "repositor(?:y|ies)",
+      "code": "swami-claude-skills/fusion-ai-rules",
+      "def": "The GitHub project that holds every rule file, the build script and the site; the single source of truth."
+    },
+    {
+      "term": "Pull request",
+      "topic": "GitHub",
+      "match": "pull requests?",
+      "code": "",
+      "def": "A proposed set of changes on a branch, reviewed and checked before it is merged into main."
+    },
+    {
+      "term": "Branch protection",
+      "topic": "GitHub",
+      "match": "[Bb]ranch protection",
+      "code": "",
+      "def": "A GitHub setting on main that requires a pull request and a passing check before anything is merged, for everyone."
+    },
+    {
+      "term": "GitHub Action",
+      "topic": "GitHub",
+      "match": "GitHub Action|Action",
+      "code": "",
+      "def": "The automated job that checks every change, and on merge builds the exports, deploys GitHub Pages and makes a release."
+    },
+    {
+      "term": "GitHub Pages",
+      "topic": "GitHub",
+      "match": "GitHub Pages|Pages",
+      "code": "",
+      "def": "GitHub's free web hosting, which serves the public Rule Set page and downloads."
+    },
+    {
+      "term": "REST API",
+      "topic": "GitHub",
+      "match": "REST API",
+      "code": "",
+      "def": "GitHub's web interface for scripts; used because the GraphQL API is blocked from Claude sessions."
+    },
+    {
+      "term": "YAML",
+      "topic": "Files",
+      "match": "YAML",
+      "code": "",
+      "def": "A plain-text file format; each rule is one YAML file with fixed fields."
+    },
+    {
+      "term": "Candidate",
+      "topic": "Rules",
+      "match": "[Cc]andidates?",
+      "code": "",
+      "def": "A proposed rule waiting for review, kept in `candidates/` with a proposed ID."
+    },
+    {
+      "term": "Deprecated",
+      "topic": "Rules",
+      "match": "[Dd]eprecat(?:e|ed|es|ion)",
+      "code": "",
+      "def": "A rule that is retired but kept, pointing to the rule that replaces it."
+    },
+    {
+      "term": "Semantic version",
+      "topic": "Rules",
+      "match": "[Vv]ersion bump|patch|minor|major",
+      "code": "",
+      "def": "The rule set's version number: patch for wording, minor for new rules or targets, major for removals or meaning changes."
+    },
+    {
+      "term": "Export target",
+      "topic": "Exports",
+      "match": "export targets?",
+      "code": "",
+      "def": "One place a rule file goes, such as a Claude project or a ChatGPT custom GPT, each with its own format and size limit."
+    },
+    {
+      "term": "CC BY 4.0",
+      "topic": "Rules",
+      "match": "CC BY 4\\.0",
+      "code": "",
+      "def": "The open licence for the rule text: anyone can reuse it with credit. Authors of new rules agree to it."
+    },
+    {
+      "term": "Build check",
+      "topic": "Files",
+      "match": "build check|check",
+      "code": "python3 build/build.py check",
+      "def": "The script step that validates every rule, test and setting, and fails on errors such as conflicting active rules."
+    },
+    {
+      "term": "Test result form",
+      "topic": "Tests",
+      "match": "Test result form",
+      "code": "",
+      "def": "A GitHub issue form for sending the results of a test kit run in one AI; Claude turns each into a results file."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This is the skill sheet for AI Rules Manager, the skill that makes every change to the Fusion AI Rules",
+    "What It Is": "It keeps the rule set's GitHub repository as the single source of truth, so every change is reviewed, versioned and exported the same way",
+    "What It Does": "It edits rule files, picks the version bump, clears conflicts, promotes accepted candidates, adds tests and [records](/ɹᵻkˈɔːɹdz/) results, runs the build check, opens a pull request, and republishes the Rule Set page after the merge. A workflow diagram, with a colour key, shows every step and who does it",
+    "How to Use It": "You say what should change. Claude does the edits and opens a pull request, you merge it or tell Claude to, and GitHub publishes everything",
+    "Capabilities and Limitations": "Every change goes through a pull request with a passing check, and Claude merges only when you ask",
+    "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:df5f2752b533c055",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Sun Nov 22, 2026",
+    "carded": "Wed Nov 25, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/ai-rules-manager.zip",
+    "draft_url": "https://claude.ai/artifact/KGpiLJVkZM3nvbAB5Sb36s",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/ai-rules-manager/",
+    "vibe_fingerprint": "sha256:650379b0eea6f9fc",
+    "vibe_updated": "Tue Nov 24, 2026"
+  }
 }

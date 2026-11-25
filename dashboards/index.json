@@ -12,7 +12,7 @@
     "page": "dashboards/ai-rules-manager/",
     "fingerprint": "sha256:df5f2752b533c055",
     "skill_updated": "Sun Nov 22, 2026",
-    "published": "2026-11-24",
+    "published": "2026-11-25",
     "draft_url": "https://claude.ai/artifact/KGpiLJVkZM3nvbAB5Sb36s"
   },
   "facebook-comments": {
@@ -28,7 +28,7 @@
     "page": "dashboards/fusion-addin-github-tracker/",
     "fingerprint": "sha256:325f2f4f2df8c296",
     "skill_updated": "Tue Nov 24, 2026",
-    "published": "2026-11-24",
+    "published": "2026-11-25",
     "draft_url": "https://claude.ai/artifact/RhR9Uy1sWHXyduhCY7wzmN"
   },
   "fusion-addin-installer": {
@@ -76,7 +76,7 @@
     "page": "dashboards/fusion-palette-addin/",
     "fingerprint": "sha256:7da3895bd4fac5fb",
     "skill_updated": "Tue Nov 24, 2026",
-    "published": "2026-11-24",
+    "published": "2026-11-25",
     "draft_url": "https://claude.ai/artifact/XgkRXTSPxJKvFjow2WEcsq"
   },
   "makerworld-reviews": {
