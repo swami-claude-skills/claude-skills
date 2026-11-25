@@ -45,6 +45,113 @@
    "text": "For a large batch, or to share with the author, builds a Rule Review dashboard with the vibe-dashboard skill."
   }
  ],
+ "flow": {
+  "heading": "AI RULE REVIEW · FROM PROPOSALS TO A READY PULL REQUEST",
+  "desc": "Workflow diagram of a review",
+  "tip": "The eight review steps from collecting proposals to a ready pull request, plus the optional review page and the record kept after the merge.",
+  "alt": "Workflow diagram: 1 collect proposals as candidate files, 2 map each against the active rules, 3 write up conflicts with fix options, 4 check fit, 5 run the build check, 6 Swami decides on one decision card, 7 the result is built on a branch and pull request with ai-rules-manager, 8 the branch is amended if his choice differs. An optional review page feeds the decision, and after the merge the decisions, changelog and a test are recorded.",
+  "caption": "Read left to right along the top row, then right to left along the middle row. Swami makes one decision (step 6); everything else is Claude's work in the repo. The pull request stays unmerged until he decides and the author agrees to CC BY 4.0.",
+  "steps": [
+   {
+    "title": "COLLECT",
+    "kind": "claude",
+    "lines": [
+     "Copy each proposal verbatim",
+     "into a candidate YAML file",
+     "with the next free R number"
+    ]
+   },
+   {
+    "title": "MAP",
+    "kind": "claude",
+    "lines": [
+     "Compare with every active rule:",
+     "New, Tightens, Overlaps",
+     "or Conflicts"
+    ]
+   },
+   {
+    "title": "CONFLICTS",
+    "kind": "claude",
+    "lines": [
+     "Write up each conflict with",
+     "2 or 3 fix options and",
+     "a recommended one"
+    ]
+   },
+   {
+    "title": "CHECK FIT",
+    "kind": "claude",
+    "lines": [
+     "Priority, clarity, UI names,",
+     "works per AI, and length",
+     "(about 600 characters)"
+    ]
+   },
+   {
+    "title": "BUILD CHECK",
+    "kind": "repo",
+    "lines": [
+     "build.py check must pass",
+     "with the candidates",
+     "in place"
+    ]
+   },
+   {
+    "title": "DECISION CARD",
+    "kind": "swami",
+    "lines": [
+     "Swami picks once; the",
+     "recommended option is accept",
+     "with the recommended fixes"
+    ]
+   },
+   {
+    "title": "BRANCH + PR",
+    "kind": "handoff",
+    "lines": [
+     "Built with ai-rules-manager:",
+     "promote, bump the version,",
+     "changelog, page and audio"
+    ]
+   },
+   {
+    "title": "AMEND",
+    "kind": "claude",
+    "lines": [
+     "If Swami's choice differs,",
+     "amend the branch and",
+     "say what changed"
+    ],
+    "optional": true
+   }
+  ],
+  "extras": [
+   {
+    "title": "OPTIONAL · REVIEW PAGE",
+    "kind": "handoff",
+    "optional": true,
+    "lines": [
+     "A vibe-dashboard page for",
+     "a large batch, or to share",
+     "the review with the author"
+    ],
+    "step": 6,
+    "to_step": true
+   },
+   {
+    "title": "MERGE + RECORD",
+    "kind": "repo",
+    "lines": [
+     "After Swami's decision and",
+     "the author's CC BY 4.0 OK:",
+     "batch README in sources/,",
+     "CHANGELOG and a test"
+    ],
+    "step": 7
+   }
+  ]
+ },
  "triggers": [
   "\"Review these candidate rules\"",
   "\"Izzy proposed some rules, check them against the set\"",

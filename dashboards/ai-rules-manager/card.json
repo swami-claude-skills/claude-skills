@@ -53,6 +53,119 @@
    "text": "Refreshes Swami's private Rules Admin page after rules or results change."
   }
  ],
+ "flow": {
+  "heading": "AI RULES MANAGER · ONE CHANGE, START TO FINISH",
+  "desc": "Workflow diagram of one change",
+  "tip": "How one change moves from a branch through the build check, privacy scan and pull request to Swami's merge, the GitHub Action and the republished pages, with proposals and test results feeding in.",
+  "alt": "Workflow diagram: proposals from the issue form become candidate files reviewed with ai-rule-review, and test results become results files. A change goes 1 branch from main, 2 edit the rule YAML, 3 bump the version and add a changelog entry and tests, 4 run the build check, 5 privacy scan and open a pull request, 6 Swami merges, 7 the GitHub Action builds, deploys Pages and creates a release, 8 Claude republishes the Rule Set page and refreshes the Rules Admin page.",
+  "caption": "Read left to right along the middle row, then right to left along the bottom row. The dashed boxes on top are the two ways outside input arrives. Only step 6 is Swami's; nothing on GitHub can authorize a merge.",
+  "kinds": {
+   "repo": [
+    "#38fa79",
+    "GitHub repo, build and Action"
+   ]
+  },
+  "dashed_label": "input that arrives sometimes",
+  "steps": [
+   {
+    "title": "BRANCH",
+    "kind": "claude",
+    "lines": [
+     "Branch from main:",
+     "rules/<short-topic>"
+    ]
+   },
+   {
+    "title": "EDIT RULES",
+    "kind": "claude",
+    "lines": [
+     "Edit the YAML; deprecate,",
+     "never delete; reword to",
+     "clear conflicts"
+    ]
+   },
+   {
+    "title": "VERSION + LOG",
+    "kind": "claude",
+    "lines": [
+     "Patch, minor or major bump;",
+     "CHANGELOG entry; a test",
+     "for every new rule"
+    ]
+   },
+   {
+    "title": "BUILD CHECK",
+    "kind": "repo",
+    "lines": [
+     "build.py check, then build;",
+     "update page text and audio",
+     "if the meaning changed"
+    ]
+   },
+   {
+    "title": "SCAN + PR",
+    "kind": "claude",
+    "lines": [
+     "Privacy scan, push the",
+     "branch, open the PR with",
+     "the REST API"
+    ]
+   },
+   {
+    "title": "MERGE",
+    "kind": "swami",
+    "lines": [
+     "Swami merges, or Claude",
+     "merges when he asks in",
+     "his own words"
+    ]
+   },
+   {
+    "title": "GITHUB ACTION",
+    "kind": "repo",
+    "lines": [
+     "Builds the exports, deploys",
+     "Pages, creates release",
+     "v<version> if it is new"
+    ]
+   },
+   {
+    "title": "REPUBLISH",
+    "kind": "claude",
+    "lines": [
+     "Claude republishes the",
+     "Rule Set page and refreshes",
+     "the Rules Admin page"
+    ]
+   }
+  ],
+  "extras": [
+   {
+    "title": "PROPOSALS",
+    "kind": "handoff",
+    "optional": true,
+    "lines": [
+     "Propose on GitHub issue form",
+     "becomes a candidate file,",
+     "reviewed with ai-rule-review"
+    ],
+    "step": 1,
+    "place": "above"
+   },
+   {
+    "title": "TEST RESULTS",
+    "kind": "repo",
+    "optional": true,
+    "lines": [
+     "Test result issue form",
+     "becomes a tests/results file;",
+     "status changes only if backed"
+    ],
+    "step": 3,
+    "place": "above"
+   }
+  ]
+ },
  "triggers": [
   "\"Add a rule about chamfers\"",
   "\"Reword R12 so it's clearer\"",
