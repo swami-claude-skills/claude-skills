@@ -1,0 +1,31 @@
+This is the Client Desk launch page, the front door for Swami's whole client tracking system. It explains how the skills fit together, how a client moves from setup to closed and back, every naming rule, the Drive folders, and what gets shared. Every example uses a made-up client, Jane Doe. Most sections carry a diagram or a collapsible tree.
+
+Section one, Dashboard Summary. A table lists every section with what it covers and when to use it, plus a colour key for names and dates.
+
+Section two, Search. Type a few words to find anything on the page, in any order, with small typos forgiven. Narrow the results with filters, and click a result to jump straight to it.
+
+Section three, How It Fits Together. A system diagram shows Swami talking to the client-desk skill, which calls one module skill per channel. The modules write into three places for each client: a private repo, a Drive folder, and the pages. A tree shows the same system branch by branch.
+
+Section four, Skills and Modules. Two skills are live: client-desk, version one point oh, and client-messenger, version two point oh point one. Five more modules are planned and get built the first time a client needs one. A second table lists exactly what to say for each job.
+
+Section five, Client Lifecycle. A client is Active, Paused or Closed. Every change is logged with its date and reason, the hub shows a badge, and nothing is ever renamed or moved. Reopening sets the client back to Active and catches up from where each channel stopped.
+
+Section six, Setup and Daily Use. Nine numbered steps take a new client from intake to a first report, in about ten to twenty minutes of Swami's time, followed by the intake questions and the everyday commands.
+
+Section seven, Naming Rules. Every format with an example, from the project name with its source tag, to the repo name in lower case with hyphens and underscores, Fusion design versions, and dates written year, month, day.
+
+Section eight, Drive Folders. A tree of the numbered folders inside Projects, and a table of what each holds and whether the client sees it.
+
+Section nine, Drive for Desktop Workflow. A diagram of how Claude, Google Drive, your computer, Fusion and the client share one folder, with the one-time setup steps.
+
+Section ten, Sharing Rules. Four lanes: always private, shared by email, your call each time, and a public link, which is only for a launch page that both sides agree on.
+
+Section eleven, Data and Build Kit. The shared data files every module follows, and trees of the kit repo and a client repo.
+
+Section twelve, Skill Pages and Links. Cards for the two skill sheets, the plan, and the options page.
+
+Section thirteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fourteen, Glossary. Each term with its topic and definition, and links to every section that uses it.
+
+Section fifteen, References. The pages this one draws on, each with a link.
