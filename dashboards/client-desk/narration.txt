@@ -1,0 +1,33 @@
+This is the skill sheet for Client Desk, the orchestrator of Swami's client system. It sets up each client with their own Claude project, Drive folder, private repo, hub and tracker, all named in Swami's format, and then handles status, update all, and close and reopen
+
+Section one, Dashboard Summary. A short intro and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. One skill owns the shared setup and data, and a module skill handles each channel. This page describes version one point oh point one.
+
+Section four, What It Does. It runs the intake, builds every name, asks Swami to create the repo, writes the three shared data files, makes the Drive folders, copies the build kit, builds the hub and tracker, and runs the first update. A workflow diagram, with a colour key, shows every step and who does it.
+
+Section five, How to Use It. Say set up client and the client's name, answer nine questions in one reply, check the names, and create the repo from the link. Windows steps are the same, apart from where Drive for desktop keeps the folder.
+
+Section six, Skills It Depends On. It needs vibe-dashboard for every page, and the client messenger module for Messenger clients. The other modules are still planned.
+
+Section seven, Programs It Depends On. The Google Drive connector, GitHub, and Python in Claude's workspace. Drive for desktop is optional, and Fusion is not needed.
+
+Section eight, Capabilities and Limitations. Every client gets the same setup, even before the repo exists, and status changes never move anything. Only one module is live so far, and Claude can't create repos.
+
+Section nine, Scheduled Tasks. None. Update all runs only when Swami asks.
+
+Section ten, Where It Runs. It is built for a cloud session in the client's Claude project. Every surface is marked untested until the first real setup run.
+
+Section eleven, Gotchas. Traps that cost time, and how to avoid them.
+
+Section twelve, Other Requirements. Accounts, settings, hardware and access it needs.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text.

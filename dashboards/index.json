@@ -15,6 +15,14 @@
   "published": "2026-11-25",
   "draft_url": "https://claude.ai/artifact/KGpiLJVkZM3nvbAB5Sb36s"
  },
+ "client-desk": {
+  "title": "Client Desk",
+  "page": "dashboards/client-desk/",
+  "fingerprint": "sha256:4e856f89a046393c",
+  "skill_updated": "Fri Nov 27, 2026",
+  "published": "2026-11-28",
+  "draft_url": "https://claude.ai/artifact/5Ekt76XXLDS3SG8AZHhPvu"
+ },
  "facebook-comments": {
   "title": "Facebook Comments",
   "page": "dashboards/facebook-comments/",

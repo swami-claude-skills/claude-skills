@@ -1,0 +1,685 @@
+{
+  "skill": "client-desk",
+  "title": "Client Desk",
+  "summary": "Sets up and runs Swami's client system: one Claude project, Drive folder, private repo, hub and tracker per client, all named in his format, with status, \"update all\", and close and reopen.",
+  "what_it_is": [
+    "Client Desk is the **orchestrator** of Swami's client system (Option B of the client-system plan): one skill that owns the shared setup and data, plus one **module** skill per channel or feature. Swami is the consultant; the person he helps is the client.",
+    "For every client, new or previous, it builds the same setup: its own Claude project, a Drive folder inside Swami's `Projects` folder, a private GitHub repo, a hub page and a tracker page. It keeps the shared data files in step and calls the modules a client uses. It never touches a channel itself: Messenger, email and meetings belong to the modules.",
+    "Version **1.0.1**, saved on **Fri Nov 27, 2026** (Eastern). One module is live today, `client-messenger`; the others are planned."
+  ],
+  "why": "Every client used to get a hand-built setup. Client Desk makes the names, folders, data files and pages the same every time, so any client can be picked up, updated or reopened months later without guessing where anything is.",
+  "what_it_does": [
+    {
+      "topic": "Intake",
+      "text": "Asks nine setup questions in one message (name, new or previous, title and details, source tag, channels, email, time zone, sharing, NDA), each with a default."
+    },
+    {
+      "topic": "Names",
+      "text": "Builds every name from the answers in Swami's format, for example `TestWidget(DemoPart)(JaneDoe,FB)` and repo `test-widget_demo-part_jane-doe_fb` (a made-up client), and shows them all once before creating anything."
+    },
+    {
+      "topic": "Repo Ask",
+      "text": "Gives Swami a one-click link to create the private repo, waits for his OK on the name, and keeps working in \"no repo yet\" mode meanwhile. Claude can't create a GitHub repo."
+    },
+    {
+      "topic": "Data Contract",
+      "text": "Writes `project.json` (schema 2), `comms/tracker.json` and `state/channels.json`, the shared data contract every module reads and writes."
+    },
+    {
+      "topic": "Drive",
+      "text": "Creates the client's top folder inside `Projects` and the numbered subfolders (01 From the client … 07 Launch, 99 Archive), reusing a folder that already exists, and records every id."
+    },
+    {
+      "topic": "Build Kit",
+      "text": "Copies the page builders from the private kit repo `client-desk-kit` into the client repo and records the kit version."
+    },
+    {
+      "topic": "Hub and Tracker",
+      "text": "Builds both pages with the kit and vibe-dashboard and publishes each as a new private artifact."
+    },
+    {
+      "topic": "First Update",
+      "text": "Runs each enabled channel module; for a previous client that is a backfill of the whole history."
+    },
+    {
+      "topic": "Status",
+      "text": "Reports status, each channel's last update, open tasks by owner, open questions and links, in a few lines."
+    },
+    {
+      "topic": "Update All",
+      "text": "Only when Swami asks: runs every enabled module's \"since last\" update, then rebuilds the hub and tracker once. Never scheduled."
+    },
+    {
+      "topic": "Close and Reopen",
+      "text": "Pause, close or reopen a client with a dated, reasoned status log entry. Nothing is renamed or moved; reopening runs a catch-up from where each channel stopped."
+    },
+    {
+      "topic": "Adopt",
+      "text": "Migrates a client set up before this skill in place, adding the schema 2 fields and rebuilding its pages to the same URLs."
+    },
+    {
+      "topic": "Sharing",
+      "text": "Follows the agreed rules: tracker, memory, repo, rates and NDA material always private; the client's two Drive folders and a client hub shared by email; everything else Swami's call each time."
+    }
+  ],
+  "flow": {
+    "heading": "CLIENT DESK · SETTING UP ONE CLIENT",
+    "desc": "Workflow diagram of setting up one client",
+    "tip": "How a client goes from Swami's intake answers through names, repo, data files, Drive, kit, hub and tracker, memory and the first channel update to the report, with update all and close or reopen afterwards.",
+    "alt": "Workflow diagram of Setup: 1 Swami answers the intake questions, 2 Claude builds every name and shows them, 3 Swami creates the private repo from a one-click link, 4 Claude writes project.json, 5 Claude creates the Drive folders in Projects, 6 Claude copies the kit and data files into the repo and pushes, 7 vibe-dashboard builds the hub and tracker as private pages, 8 Claude saves the client's facts to project memory, 9 client-messenger and other modules run the first update or full backfill, 10 Claude reports names, links and what is waiting. Afterwards, update all runs only when Swami asks, and pause, close or reopen changes the status without renaming anything.",
+    "caption": "Read left to right along the top row, right to left along the middle row, then left to right along the bottom row. Swami answers the intake and creates the repo; everything else is Claude or another skill. The dashed boxes happen later, only when Swami asks.",
+    "dashed_label": "later, only when Swami asks",
+    "steps": [
+      {
+        "title": "Intake",
+        "kind": "swami",
+        "lines": [
+          "Swami answers 9 questions:",
+          "client, title, source,",
+          "channels, sharing, NDA"
+        ]
+      },
+      {
+        "title": "Names",
+        "kind": "claude",
+        "lines": [
+          "Project, Drive, repo, Fusion",
+          "and page names in Swami's",
+          "format, shown once"
+        ]
+      },
+      {
+        "title": "Create Repo",
+        "kind": "swami",
+        "lines": [
+          "Swami OKs the name and",
+          "creates the private repo",
+          "from a one-click link"
+        ]
+      },
+      {
+        "title": "project.json",
+        "kind": "claude",
+        "lines": [
+          "Schema 2 from the answers,",
+          "status Active, first",
+          "status log entry"
+        ]
+      },
+      {
+        "title": "Drive",
+        "kind": "web",
+        "lines": [
+          "Top folder in Projects,",
+          "numbered subfolders,",
+          "ids saved"
+        ]
+      },
+      {
+        "title": "Repo + Kit",
+        "kind": "repo",
+        "lines": [
+          "Copy client-desk-kit,",
+          "README and data files,",
+          "commit and push"
+        ]
+      },
+      {
+        "title": "Hub + Tracker",
+        "kind": "handoff",
+        "lines": [
+          "Built with vibe-dashboard,",
+          "published as new",
+          "private pages"
+        ]
+      },
+      {
+        "title": "Memory",
+        "kind": "claude",
+        "lines": [
+          "Client's names, links,",
+          "channels and sharing in",
+          "one project memory file"
+        ]
+      },
+      {
+        "title": "First Update",
+        "kind": "handoff",
+        "lines": [
+          "client-messenger and other",
+          "modules; a previous client",
+          "gets the whole history"
+        ]
+      },
+      {
+        "title": "Report",
+        "kind": "claude",
+        "lines": [
+          "Names, links, what is",
+          "still waiting, next step"
+        ]
+      }
+    ],
+    "extras": [
+      {
+        "title": "Update All",
+        "kind": "swami",
+        "optional": true,
+        "step": 9,
+        "place": "below",
+        "to_step": true,
+        "lines": [
+          "Only when Swami asks:",
+          "every module since last,",
+          "then hub and tracker"
+        ]
+      },
+      {
+        "title": "Pause · Close · Reopen",
+        "kind": "swami",
+        "optional": true,
+        "step": 10,
+        "place": "below",
+        "to_step": true,
+        "lines": [
+          "Status and dated log;",
+          "nothing renamed; reopen",
+          "catches up since last"
+        ]
+      }
+    ],
+    "kinds": {
+      "web": [
+        "#fa3899",
+        "Google Drive (connector)"
+      ],
+      "handoff": [
+        "#7938fa",
+        "another skill does it"
+      ]
+    }
+  },
+  "triggers": [
+    "\"set up client <name>\" / \"new client\" / \"add previous client <name>\"",
+    "\"client status\" / \"where are we with <client>\"",
+    "\"update all\" (only when asked; never scheduled)",
+    "\"pause client\" / \"close client\" / \"reopen client\"",
+    "\"adopt this client\" (a client set up before this skill)",
+    "\"what can the client see?\""
+  ],
+  "how_to_use": [
+    {
+      "topic": "Start",
+      "step": "In a new Claude project for the client (or this project's thread), say \"set up client\" plus the client's name.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Intake",
+      "step": "Answer the nine questions in one reply. \"default\" accepts the shown default (source FB, Eastern time, everything private).",
+      "who": "Swami"
+    },
+    {
+      "topic": "Names",
+      "step": "Check the block of names Claude shows, the repo name included, and say OK or correct them.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Repo",
+      "step": "Click the one-click GitHub link to create the private repo, then add it to the Claude project under Project settings. Claude keeps going in \"no repo yet\" mode meanwhile.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Drive",
+      "step": "Claude creates the folder inside `Projects`. On the Mac, Google Drive for desktop syncs it, with `Projects` kept offline, so it is also the local working folder.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Pages",
+      "step": "Claude builds the hub and tracker, saves memory, runs the first update and reports links and what is waiting.",
+      "who": "Claude"
+    },
+    {
+      "topic": "Later",
+      "step": "Say \"client status\", \"update all\", \"pause client\", \"close client\" or \"reopen client\" whenever needed.",
+      "who": "Swami"
+    }
+  ],
+  "how_to_use_windows": [
+    {
+      "topic": "Start",
+      "step": "Same as on the Mac: in the client's Claude project, say \"set up client\" plus the client's name. Everything runs in Claude, on Drive and on GitHub.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Intake",
+      "step": "Answer the nine questions in one reply; \"default\" accepts the defaults.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Repo",
+      "step": "Open the one-click GitHub link in Edge or Chrome, create the private repo, and add it to the Claude project.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Drive",
+      "step": "Google Drive for desktop on Windows shows `Projects` under the Google Drive letter (usually `G:\\My Drive\\Projects`). Right-click `Projects` › Offline access › Available offline to keep it local.",
+      "who": "Swami"
+    },
+    {
+      "topic": "Later",
+      "step": "Status, update all, pause, close and reopen work the same way by asking in chat.",
+      "who": "Swami"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vibe-dashboard",
+      "need": "Required",
+      "why": "Every hub, tracker and chat page is built and checked with it, including the NDA check before each publish."
+    },
+    {
+      "name": "client-messenger",
+      "need": "Optional",
+      "why": "The live module (v2.0.0): Facebook Messenger ranges into chat pages, images to Drive, tracker rows. Needed for any client who uses Messenger."
+    },
+    {
+      "name": "client-email, client-meetings, client-files, client-launch, client-share",
+      "need": "Related",
+      "why": "Planned modules, not saved yet. When a client needs one, the skill says so and offers to build it in the skill-building project."
+    },
+    {
+      "name": "skill-dashboard",
+      "need": "Related",
+      "why": "Makes this skill sheet."
+    }
+  ],
+  "programs": [
+    {
+      "name": "Google Drive connector",
+      "need": "Required",
+      "where": "Claude (connector)",
+      "why": "Finds `Projects`, creates the client folder and subfolders, and uploads files.",
+      "install": "Connect Google Drive in Claude's connectors.",
+      "install_windows": "Same; nothing to install on Windows."
+    },
+    {
+      "name": "GitHub (Claude GitHub app)",
+      "need": "Required",
+      "where": "GitHub and Claude's workspace",
+      "why": "Holds the private client repo and the kit repo; Claude attaches them with add_repo, commits and pushes.",
+      "install": "Swami creates each repo from the one-click link and adds it to the Claude project.",
+      "install_windows": "Same, in Edge or Chrome."
+    },
+    {
+      "name": "git and Python 3",
+      "need": "Required",
+      "where": "Claude's workspace",
+      "why": "Run the kit's `build.py` and patch scripts and push the repo.",
+      "install": "Already in Claude's workspace.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Google Drive for desktop",
+      "need": "Optional",
+      "where": "Swami's computer",
+      "why": "Syncs `Projects` so the client folder is also the local working folder. There is no separate local folder.",
+      "install": "Install from google.com/drive/download, sign in, and set `Projects` to available offline (or Mirror).",
+      "install_windows": "`winget install Google.GoogleDrive`, or the installer from google.com/drive/download; then right-click `Projects` › Offline access › Available offline."
+    },
+    {
+      "name": "Kokoro voice",
+      "need": "Optional",
+      "where": "Claude's workspace",
+      "why": "Records each page's audio overview, through vibe-dashboard.",
+      "install": "Downloaded by vibe-dashboard on first use.",
+      "install_windows": "Runs in Claude's workspace; nothing to install on Windows."
+    },
+    {
+      "name": "Autodesk Fusion",
+      "need": "Not needed",
+      "where": "—",
+      "why": "The skill only records Fusion project and design names; it never opens Fusion. Designs stay in Autodesk's cloud.",
+      "install": "—",
+      "install_windows": "—"
+    },
+    {
+      "name": "Browser",
+      "need": "Not needed",
+      "where": "—",
+      "why": "Client Desk itself uses none. Browser steps (Messenger) belong to client-messenger.",
+      "install": "—",
+      "install_windows": "—"
+    }
+  ],
+  "capabilities": [
+    {
+      "topic": "Same Every Time",
+      "text": "Every client gets the same names, folders, data files and pages, built from one intake."
+    },
+    {
+      "topic": "New or Previous",
+      "text": "Works for new clients and previous ones; a previous client gets a whole-history backfill."
+    },
+    {
+      "topic": "No Repo Yet",
+      "text": "Keeps working before the repo exists, holding files in the project folder and pushing them later."
+    },
+    {
+      "topic": "Safe Status Changes",
+      "text": "Pause, close and reopen never rename or move anything, so every link keeps working, and reopening loses and duplicates nothing."
+    },
+    {
+      "topic": "One Data Contract",
+      "text": "Every module reads and writes the same three files, so modules can be added without changing the others."
+    }
+  ],
+  "limitations": [
+    {
+      "topic": "One Live Module",
+      "text": "Only `client-messenger` exists. Email, meetings, files, launch and the client-facing hub (`client-share`) are planned."
+    },
+    {
+      "topic": "No Repo Creation",
+      "text": "Claude can't create or rename GitHub repos; Swami does that from the link or in GitHub settings."
+    },
+    {
+      "topic": "Not Yet Run End to End",
+      "text": "Setup hasn't been run on a client yet. The next steps are a made-up test client and then adopting the first real client."
+    },
+    {
+      "topic": "Hiding Isn't Privacy",
+      "text": "A hidden row stays in the page source, so anything the client must not see goes on a page never shared with them."
+    }
+  ],
+  "scheduled_tasks": {
+    "summary": "None. \"Update all\" runs only when Swami asks and is never scheduled, by his choice. No scheduled task names this skill.",
+    "tasks": []
+  },
+  "runs_in": [
+    {
+      "where": "Claude app, cloud session (web, desktop, mobile)",
+      "status": "Untested",
+      "notes": "What it is built for: a cloud session in the client's Claude project, with the Drive connector and GitHub. The kit was tested here; a full setup run hasn't been done yet. It will be marked Yes once the test client run passes."
+    },
+    {
+      "where": "Claude desktop app linked to the Mac",
+      "status": "Untested",
+      "notes": "Works like the cloud session; linking the Mac adds nothing the skill needs. The built-in browser there matters only to client-messenger."
+    },
+    {
+      "where": "Claude desktop app linked to a Windows PC",
+      "status": "Untested",
+      "notes": "Nothing runs on the PC, so it should work the same. Not tried yet."
+    },
+    {
+      "where": "Claude mobile app",
+      "status": "Untested",
+      "notes": "Status, update all and close or reopen should work from a phone; setup is easier at a desk because of the repo step."
+    },
+    {
+      "where": "Claude Code on the Mac",
+      "status": "Untested",
+      "notes": "Would need the Drive connector and GitHub access there, and has no project threads or project files."
+    }
+  ],
+  "other_ais": [
+    {
+      "ai": "ChatGPT",
+      "status": "Untested",
+      "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. It would also need Google Drive and GitHub write access, and vibe-dashboard installed for the pages. Swami tests in Claude only."
+    },
+    {
+      "ai": "Gemini",
+      "status": "Untested",
+      "notes": "Upload the unzipped skill folder. Drive access is natural there; GitHub and the vibe-dashboard pages are not. Swami tests in Claude only."
+    },
+    {
+      "ai": "Grok",
+      "status": "Untested",
+      "notes": "Import the .zip (or the SKILL.md if refused); installing by chat drifts. Same Drive, GitHub and page limits. Swami tests in Claude only."
+    }
+  ],
+  "gotchas": [
+    {
+      "topic": "Repo Name First",
+      "text": "Swami asked to be advised before any repo naming action: always show the exact repo name and wait for his OK."
+    },
+    {
+      "topic": "Exact Spellings",
+      "text": "Store the client's and product's spellings at intake and use them everywhere."
+    },
+    {
+      "topic": "JPEG Bytes",
+      "text": "Copy each upload into `/home/claude/…` first, not `/mnt/project-files`, which rewrites JPEG bytes; hash that copy, upload it, then log the Drive link."
+    },
+    {
+      "topic": "No Second Folder",
+      "text": "Never create a second Drive top folder with the same name; reuse the one that exists."
+    },
+    {
+      "topic": "Old State File",
+      "text": "A repo with `state/chat-state.json` keeps it until the next successful run after its contents move into `state/channels.json`."
+    },
+    {
+      "topic": "Planned Modules",
+      "text": "Don't improvise a planned module's job inside this skill; offer to build the module instead."
+    },
+    {
+      "topic": "Windows Paths",
+      "text": "On Windows, Drive for desktop uses a drive letter (usually `G:`), not `~/Library/CloudStorage`; reopen PowerShell after a winget install."
+    }
+  ],
+  "requirements": [
+    {
+      "topic": "Connectors",
+      "text": "Google Drive connected in Claude, and the Claude GitHub app with access to the client repo and `client-desk-kit`."
+    },
+    {
+      "topic": "Drive Folder",
+      "text": "Swami's Drive folder `Projects` must exist; client folders go inside it."
+    },
+    {
+      "topic": "One Project per Client",
+      "text": "Each client has its own Claude project; the skill uses the repo already attached there."
+    },
+    {
+      "topic": "Code Execution",
+      "text": "Needed to run the kit's builders and push the repo."
+    },
+    {
+      "topic": "Computer",
+      "text": "Optional: a Mac or a Windows 10 or 11 PC with Google Drive for desktop for local access to client files."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Client",
+      "topic": "Roles",
+      "match": "clients?",
+      "code": "",
+      "def": "The person Swami helps. Each client gets their own Claude project, Drive folder, repo, hub and tracker."
+    },
+    {
+      "term": "Consultant",
+      "topic": "Roles",
+      "match": "consultant",
+      "code": "",
+      "def": "Swami's role in the client system."
+    },
+    {
+      "term": "Orchestrator",
+      "topic": "System",
+      "match": "orchestrator",
+      "code": "",
+      "def": "This skill: it owns the shared setup and data and calls the module skills, but never handles a channel itself."
+    },
+    {
+      "term": "Module",
+      "topic": "System",
+      "match": "modules?",
+      "code": "client-messenger",
+      "def": "A skill for one channel or feature (Messenger, email, meetings, files, launch, sharing) that follows the shared data contract."
+    },
+    {
+      "term": "Option B",
+      "topic": "System",
+      "match": "Option B",
+      "code": "",
+      "def": "The plan Swami chose: one orchestrator skill plus module skills, rather than one large skill."
+    },
+    {
+      "term": "Build kit",
+      "topic": "System",
+      "match": "kit(?: repo)?",
+      "code": "client-desk-kit",
+      "def": "The private repo of generic page builders and patch scripts that setup copies into each client repo."
+    },
+    {
+      "term": "Data contract",
+      "topic": "Data",
+      "match": "data contract",
+      "code": "",
+      "def": "The agreed shape of the three shared files every module reads and writes."
+    },
+    {
+      "term": "project.json",
+      "topic": "Data",
+      "match": "project\\.json",
+      "code": "project.json",
+      "def": "The client's settings file (schema 2): names, client, status, modules, channels, repo, Drive ids, pages and sharing."
+    },
+    {
+      "term": "Schema 2",
+      "topic": "Data",
+      "match": "schema 2",
+      "code": "",
+      "def": "The current version of project.json's layout, introduced with this skill."
+    },
+    {
+      "term": "Tracker data",
+      "topic": "Data",
+      "match": "tracker\\.json",
+      "code": "comms/tracker.json",
+      "def": "The tracker's rows: comms, files, tasks and questions. Modules add rows and never drop them."
+    },
+    {
+      "term": "Channel state",
+      "topic": "Data",
+      "match": "channels\\.json",
+      "code": "state/channels.json",
+      "def": "One \"since last\" mark per channel, so the next update starts where the last one stopped."
+    },
+    {
+      "term": "Since last",
+      "topic": "Updates",
+      "match": "since last",
+      "code": "",
+      "def": "An update covering everything after the previous run's mark for that channel."
+    },
+    {
+      "term": "Update all",
+      "topic": "Updates",
+      "match": "update all",
+      "code": "",
+      "def": "Runs every enabled module's since-last update, then rebuilds the hub and tracker once. Only on request."
+    },
+    {
+      "term": "Backfill",
+      "topic": "Updates",
+      "match": "backfill",
+      "code": "",
+      "def": "A previous client's first update, covering the whole history from the first message."
+    },
+    {
+      "term": "Hub",
+      "topic": "Pages",
+      "match": "hubs?",
+      "code": "",
+      "def": "The client's index page: status badge, every page, the Drive tree and the repo."
+    },
+    {
+      "term": "Tracker",
+      "topic": "Pages",
+      "match": "trackers?",
+      "code": "",
+      "def": "The always-private page of comms, files, tasks and open questions."
+    },
+    {
+      "term": "Intake",
+      "topic": "Setup",
+      "match": "intake",
+      "code": "",
+      "def": "The nine setup questions Swami answers in one reply."
+    },
+    {
+      "term": "Source tag",
+      "topic": "Setup",
+      "match": "source tags?",
+      "code": "",
+      "def": "Where the client came from: FB, Email, Referral, Web, InPerson or Other."
+    },
+    {
+      "term": "No repo yet",
+      "topic": "Setup",
+      "match": "no repo yet",
+      "code": "",
+      "def": "Working mode before the repo exists: files wait in the project folder and are pushed later."
+    },
+    {
+      "term": "Adopt",
+      "topic": "Setup",
+      "match": "adopt(?:ing|s)?",
+      "code": "",
+      "def": "Migrating a client set up before this skill in place, without renaming or moving anything unasked."
+    },
+    {
+      "term": "Status log",
+      "topic": "Status",
+      "match": "status log",
+      "code": "",
+      "def": "Dated entries with a reason for every change between Active, Paused and Closed."
+    },
+    {
+      "term": "Drive for desktop",
+      "topic": "Setup",
+      "match": "Drive for desktop",
+      "code": "",
+      "def": "Google's sync app; with Projects kept offline, the client's Drive folder is also its local folder."
+    },
+    {
+      "term": "NDA",
+      "topic": "Status",
+      "match": "NDA",
+      "code": "",
+      "def": "A non-disclosure agreement; NDA material is always private and checked before every publish."
+    }
+  ],
+  "confirm": [],
+  "spoken": {
+    "_intro": "This is the skill sheet for Client Desk, the orchestrator of Swami's client system. It sets up each client with their own Claude project, Drive folder, private repo, hub and tracker, all named in Swami's format, and then handles status, update all, and close and reopen",
+    "What It Is": "One skill owns the shared setup and data, and a module skill handles each channel. This page describes version one point oh point one",
+    "What It Does": "It runs the intake, builds every name, asks Swami to create the repo, writes the three shared data files, makes the Drive folders, copies the build kit, builds the hub and tracker, and runs the first update. A workflow diagram, with a colour key, shows every step and who does it",
+    "How to Use It": "Say set up client and the client's name, answer nine questions in one reply, check the names, and create the repo from the link. Windows steps are the same, apart from where Drive for desktop keeps the folder",
+    "Skills It Depends On": "It needs vibe-dashboard for every page, and the client messenger module for Messenger clients. The other modules are still planned",
+    "Programs It Depends On": "The Google Drive connector, GitHub, and Python in Claude's workspace. Drive for desktop is optional, and Fusion is not needed",
+    "Capabilities and Limitations": "Every client gets the same setup, even before the repo exists, and status changes never move anything. Only one module is live so far, and Claude can't create repos",
+    "Scheduled Tasks": "None. Update all runs only when Swami asks",
+    "Where It Runs": "It is built for a cloud session in the client's Claude project. Every surface is marked untested until the first real setup run",
+    "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text"
+  },
+  "meta": {
+    "card_version": 1,
+    "fingerprint": "sha256:4e856f89a046393c",
+    "files": [
+      "SKILL.md"
+    ],
+    "skill_updated": "Fri Nov 27, 2026",
+    "carded": "Fri Nov 27, 2026",
+    "status": "published",
+    "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/client-desk.zip",
+    "draft_url": "https://claude.ai/artifact/5Ekt76XXLDS3SG8AZHhPvu",
+    "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/client-desk/",
+    "vibe_fingerprint": "sha256:4f2ca84d1060b77b",
+    "vibe_updated": "Thu Nov 26, 2026"
+  }
+}
