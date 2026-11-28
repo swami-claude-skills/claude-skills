@@ -1,0 +1,754 @@
+{
+ "skill": "client-messenger",
+ "title": "Client Messenger",
+ "summary": "The client-desk module for Facebook Messenger: it pulls one client's chat for a range into the client's private repo, files the images in Drive, builds a new chat page, and updates the tracker, hub and launch page.",
+ "what_it_is": [
+  "A Claude skill that turns a stretch of one client's Facebook Messenger conversation (\"since last\", a date range, one day, or the whole history) into a new private chat page. It reads the chat in the Claude desktop app's built-in browser while Swami is signed in, saves every message and image to the client's private GitHub repo, files images and attachments in the client's Google Drive folder, and builds the page with the vibe-dashboard look. This page describes version 2.0.1, saved on Fri Nov 27, 2026.",
+  "It is a module of the **client-desk** skill, which owns setup, naming, the data contract (`project.json`, schema 2) and the sharing rules. Version 2 replaces the retired messenger-chat-dashboard skill and keeps its extraction steps, which were proven on the first client's run of Fri Nov 27, 2026."
+ ],
+ "why": "Messenger keeps only about 20 messages in the page at a time, hides full-size photos inside encrypted chats, and has no export that fits a client file. This skill gives every client the same record: each update gets its own chat page, the tracker and hub stay current, and a \"since last\" mark means the next run picks up exactly where the last one stopped.",
+ "what_it_does": [
+  {
+   "topic": "Project check",
+   "text": "Clones the client's repo, confirms it is private, and reads `project.json`. It stops if the project isn't set up, offers client-desk's Adopt steps for an older schema, and asks before running on a Paused or Closed client or one with Messenger switched off."
+  },
+  {
+   "topic": "Range",
+   "text": "Works out the range from what Swami says: since the last mark in `state/channels.json`, a from-to range, one day, or a backfill of the whole history as one chat page. Times are read in the client's time zone, Eastern by default."
+  },
+  {
+   "topic": "Harvest",
+   "text": "Opens the chat on facebook.com (not messenger.com), scrolls the virtualized message list 250 px at a time and collects every message by its `data-message-id`: sender, time, text, reply-to quote and reactions. It is read-only and never sends, reacts or marks anything."
+  },
+  {
+   "topic": "Images",
+   "text": "Takes full-size photos out of encrypted chats as data URIs, in 200,000-character slices to fit the browser bridge, and saves them as numbered JPEGs named by sender and time. Avatars, read receipts and reply thumbnails are skipped, and no image is ever faked."
+  },
+  {
+   "topic": "Chat data",
+   "text": "Writes `messages.json` (every message with its exact time, topic, images, files, links and reactions) and `content.json` (highlights, decisions, specs, action items, open questions, captions, glossary and references) into `chats/<start>--<end>/`. Unconfirmed values say \"Pending from\" the client."
+  },
+  {
+   "topic": "Drive filing",
+   "text": "Files chat images in 03 Chat images, the client's files in 01 From the client and Swami's files in 02 From Swami, each in a dated subfolder, and records every Drive link. Large files go only to Drive. It never overwrites or trashes anything."
+  },
+  {
+   "topic": "Chat page",
+   "text": "Builds a new private page with the kit's `chat/build.py` and vibe-dashboard's rules: Highlights, the Conversation as chat bubbles with inline images, a Messages table, an Images and Files gallery, then Mind Map, Glossary, References and the verbatim transcript, plus an audio overview."
+  },
+  {
+   "topic": "Related pages",
+   "text": "Adds a row, files, tasks and questions to `comms/tracker.json`, rebuilds and republishes the tracker and hub to their same links, and updates the launch page when the chat touched the product."
+  },
+  {
+   "topic": "Mark and commit",
+   "text": "Moves the Messenger mark forward to the newest message, runs the NDA check, commits with a message that doesn't name the client, pushes, and reports the range, counts and links in a few sentences."
+  }
+ ],
+ "flow": {
+  "heading": "CLIENT MESSENGER: ONE UPDATE",
+  "desc": "Workflow diagram of one Messenger update",
+  "tip": "Ten steps from checking the client project to the report, with setup and a saved-page fallback above and Swami's sharing call below.",
+  "alt": "Workflow diagram in ten numbered steps. Row one, left to right: 1 Check project (Claude clones the private client repo and reads project.json), 2 Pick range (Swami says since last, a date range or backfill), 3 Open Messenger (the built-in browser on Swami's Mac, where he is signed in), 4 Harvest (Claude scrolls the chat and collects messages and images). Row two, right to left: 5 Write data (messages.json, images and content.json in the client repo), 6 File in Drive (images and files into dated Drive folders), 7 Build chat page (vibe-dashboard rules through the kit builder, published private), 8 Update pages (tracker, hub and launch page at the same links). Row three, left to right: 9 Mark and commit (move the since-last mark, NDA check, push), 10 Report. Above step 1, an optional client-desk setup or adopt box feeds in; above step 3, an optional saved page or Facebook export fallback feeds in. Below step 10, an optional box: Swami decides whether to share the page.",
+  "caption": "Read the top row left to right, the middle row right to left, then the bottom row left to right. Dashed boxes happen only sometimes. Swami picks the range and decides any sharing; everything else is Claude's work, on his Mac's browser, in the client repo and in Drive.",
+  "steps": [
+   {
+    "title": "Check project",
+    "kind": "claude",
+    "lines": [
+     "Clone the private client repo,",
+     "read project.json, status",
+     "and modules"
+    ]
+   },
+   {
+    "title": "Pick range",
+    "kind": "swami",
+    "lines": [
+     "Since last, a date range,",
+     "one day, or the whole",
+     "history (backfill)"
+    ]
+   },
+   {
+    "title": "Open Messenger",
+    "kind": "computer",
+    "lines": [
+     "Built-in browser pane on",
+     "the Mac, Swami signed in",
+     "to facebook.com"
+    ]
+   },
+   {
+    "title": "Harvest",
+    "kind": "claude",
+    "lines": [
+     "Scroll the chat, collect",
+     "messages, reactions and",
+     "full-size images"
+    ]
+   },
+   {
+    "title": "Write data",
+    "kind": "repo",
+    "lines": [
+     "messages.json, images and",
+     "content.json in",
+     "chats/<range>/"
+    ]
+   },
+   {
+    "title": "File in Drive",
+    "kind": "web",
+    "lines": [
+     "Images to 03 Chat images,",
+     "files to 01 and 02,",
+     "in dated folders"
+    ]
+   },
+   {
+    "title": "Build chat page",
+    "kind": "handoff",
+    "lines": [
+     "Kit chat/build.py with",
+     "vibe-dashboard rules,",
+     "a new private page"
+    ]
+   },
+   {
+    "title": "Update pages",
+    "kind": "claude",
+    "lines": [
+     "Tracker, hub and launch",
+     "page, same links"
+    ]
+   },
+   {
+    "title": "Mark and commit",
+    "kind": "repo",
+    "lines": [
+     "Move the since-last mark,",
+     "NDA check, push to main"
+    ]
+   },
+   {
+    "title": "Report",
+    "kind": "claude",
+    "lines": [
+     "Range, counts, links,",
+     "new tasks, any failures"
+    ]
+   }
+  ],
+  "extras": [
+   {
+    "title": "Optional · Setup",
+    "kind": "handoff",
+    "lines": [
+     "client-desk sets up or",
+     "adopts the client first"
+    ],
+    "step": 1,
+    "place": "above",
+    "optional": true
+   },
+   {
+    "title": "Fallback · Saved page",
+    "kind": "swami",
+    "lines": [
+     "Saved .html or a Facebook",
+     "export if the pane fails"
+    ],
+    "step": 3,
+    "place": "above",
+    "optional": true
+   },
+   {
+    "title": "Optional · Share",
+    "kind": "swami",
+    "lines": [
+     "Swami decides, case by",
+     "case, whether to share"
+    ],
+    "step": 10,
+    "place": "below",
+    "optional": true
+   }
+  ],
+  "kinds": {
+   "repo": [
+    "#38fa79",
+    "the client's private repo"
+   ],
+   "web": [
+    "#fa3899",
+    "Google Drive"
+   ],
+   "computer": [
+    "#dafa38",
+    "Swami's Mac (browser pane)"
+   ]
+  }
+ },
+ "triggers": [
+  "\"Messenger update since last\" (or \"Messenger chat update since last\", \"new messages\")",
+  "\"Messenger chat update from <date time> to <date time>\"",
+  "\"Messenger chat update for today\" or \"for Nov 27\"",
+  "\"Messenger backfill\" (the whole history, as one chat page)",
+  "\"update all\" in client-desk runs it as \"since last\""
+ ],
+ "how_to_use": [
+  {
+   "topic": "Open the project",
+   "step": "Open the client's own Claude project (set up by client-desk). In a cloud thread, link the Mac so Claude can use the desktop app's browser pane.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Ask",
+   "step": "Say **Messenger update since last**, or give a range, a day, or ask for a backfill.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Check",
+   "step": "Claude clones the private client repo, reads `project.json` and checks the client is Active with Messenger switched on.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Sign in",
+   "step": "If the pane shows Facebook's sign-in, sign in yourself. Claude never types a password.",
+   "who": "Swami"
+  },
+  {
+   "topic": "Harvest",
+   "step": "Claude opens the chat on facebook.com and collects every message and image in the range.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Save and file",
+   "step": "Claude writes the chat data to the repo and files images and attachments in the client's Drive folders.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Build and update",
+   "step": "Claude builds the new chat page and republishes the tracker, hub and (when relevant) the launch page.",
+   "who": "Claude"
+  },
+  {
+   "topic": "Review",
+   "step": "Read the report, open the new chat page, and decide whether to share it.",
+   "who": "Swami"
+  }
+ ],
+ "how_to_use_windows": [
+  {
+   "topic": "Open the app",
+   "step": "Open the client's Claude project in the **Claude desktop app for Windows**, or link the PC to a cloud thread. Whether the built-in browser pane works there is untested.",
+   "who": "You"
+  },
+  {
+   "topic": "Or use Chrome",
+   "step": "If there's no pane, use real **Google Chrome** with Claude in Chrome. Edge is not supported.",
+   "who": "You"
+  },
+  {
+   "topic": "Ask",
+   "step": "Say **Messenger update since last**, or give a range.",
+   "who": "You"
+  },
+  {
+   "topic": "Sign in",
+   "step": "Sign in to Facebook yourself in the pane or in Chrome.",
+   "who": "You"
+  },
+  {
+   "topic": "Saved page",
+   "step": "If the browser won't cooperate, save the chat page with Ctrl+S as Web Page, Complete, and upload the .html.",
+   "who": "You"
+  },
+  {
+   "topic": "The rest",
+   "step": "Claude saves, files, builds and updates exactly as on the Mac; everything after the harvest runs in Claude's workspace.",
+   "who": "Claude"
+  }
+ ],
+ "skills": [
+  {
+   "name": "client-desk",
+   "need": "Required",
+   "why": "The orchestrator: sets up the client project, repo, Drive folders, hub and tracker, owns `project.json` and the sharing rules, and runs this skill for \"update all\" and backfills."
+  },
+  {
+   "name": "vibe-dashboard",
+   "need": "Required",
+   "why": "The chat page follows its current version exactly: template, patches, Search, Mind Map, Glossary, names colours, audio overview and NDA check."
+  },
+  {
+   "name": "built-in-browser",
+   "need": "Required",
+   "why": "Read before driving the desktop app's browser pane, where the Messenger harvest runs."
+  },
+  {
+   "name": "chrome-browser",
+   "need": "Optional",
+   "why": "Read before using Claude in Chrome, the fallback when the pane can't be seen or used."
+  },
+  {
+   "name": "google-workspace",
+   "need": "Optional",
+   "why": "Read first only when the run creates Google Docs or Sheets; plain file uploads to Drive don't need it."
+  },
+  {
+   "name": "facebook-comments",
+   "need": "Related",
+   "why": "Sibling skill that reads Facebook in the same browser pane, for a post's comments rather than a chat."
+  }
+ ],
+ "programs": [
+  {
+   "name": "Claude desktop app",
+   "need": "Required (Mac)",
+   "where": "Swami's Mac",
+   "why": "Hosts the built-in browser pane, signed in to Facebook, where the chat is read.",
+   "install": "Download from claude.ai/download and drag it to Applications.",
+   "install_windows": "Download the Windows installer from claude.ai/download. Whether it offers the browser pane is untested; Chrome with Claude in Chrome is the alternative."
+  },
+  {
+   "name": "Google Chrome + Claude in Chrome",
+   "need": "Optional",
+   "where": "Mac or Windows PC",
+   "why": "Fallback browser when the pane won't cooperate.",
+   "install": "Install Chrome from google.com/chrome, then add the Claude in Chrome extension and sign in.",
+   "install_windows": "`winget install Google.Chrome` in PowerShell (or the installer), then add the Claude in Chrome extension."
+  },
+  {
+   "name": "client-desk-kit",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "The shared builders: `chat/parse.py` turns the harvest into `messages.json`, `chat/build.py` builds the chat page, and the kit's `build.py` and `patch.sh` rebuild the tracker and hub.",
+   "install": "Copied into each client repo by client-desk setup (`kit/`), or taken from the private client-desk-kit repo.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "Python, Pillow and zoneinfo",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Runs the kit, shrinks images to 1600 px for the page, and converts times to the client's zone.",
+   "install": "Nothing to install; code execution must be on.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "BeautifulSoup",
+   "need": "Optional",
+   "where": "Claude's workspace",
+   "why": "Parses a saved Messenger page in the fallback.",
+   "install": "Claude installs it when needed.",
+   "install_windows": "Same."
+  },
+  {
+   "name": "git and GitHub",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Clones the client's private repo, checks it is private, commits and pushes the chat data and the mark.",
+   "install": "Built into Claude's workspace; the Claude GitHub app needs access to the client repo.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "Google Drive connector",
+   "need": "Required",
+   "where": "claude.ai connector",
+   "why": "Files images and attachments in the client's Drive folders.",
+   "install": "Connect Google Drive under Settings, Connectors.",
+   "install_windows": "Same."
+  },
+  {
+   "name": "Kokoro voice",
+   "need": "Required",
+   "where": "Claude's workspace",
+   "why": "Records the chat page's audio overview, through vibe-dashboard.",
+   "install": "vibe-dashboard downloads it on first use; network access to GitHub's file servers is needed.",
+   "install_windows": "Same: nothing to install on the PC."
+  },
+  {
+   "name": "messenger.com",
+   "need": "Not needed",
+   "where": "—",
+   "why": "The skill always opens chats on facebook.com, because messenger.com shows an account picker.",
+   "install": "—",
+   "install_windows": "—"
+  }
+ ],
+ "capabilities": [
+  {
+   "topic": "Since last",
+   "text": "Picks up exactly after the last message of the previous run, using the saved message id, so nothing is pulled twice or missed."
+  },
+  {
+   "topic": "Any range",
+   "text": "Since last, a from-to range, one day, or the whole history, in the client's own time zone."
+  },
+  {
+   "topic": "Full images",
+   "text": "Gets full-size photos even from end-to-end encrypted chats, and embeds them in the page."
+  },
+  {
+   "topic": "One record",
+   "text": "Repo, Drive, chat page, tracker and hub all agree after each run, and the pages keep their links."
+  },
+  {
+   "topic": "Read-only",
+   "text": "Never sends, reacts, marks read or opens message requests on Facebook."
+  },
+  {
+   "topic": "Any client",
+   "text": "Reads every value from `project.json`, so it works the same for every client set up by client-desk."
+  },
+  {
+   "topic": "Safe retries",
+   "text": "The mark is committed only after every publish succeeds, so a failed run is pulled again next time."
+  }
+ ],
+ "limitations": [
+  {
+   "topic": "Needs a browser",
+   "text": "The harvest needs the desktop app's pane on a linked computer, or Chrome with Claude in Chrome; a plain cloud session can't read Messenger."
+  },
+  {
+   "topic": "Needs sign-in",
+   "text": "Swami must be signed in to Facebook in that browser."
+  },
+  {
+   "topic": "Page layout",
+   "text": "It reads Facebook's page structure (`aria-label`, `data-message-id`), which Facebook can change without notice."
+  },
+  {
+   "topic": "Long backfills",
+   "text": "Very long histories are slow to scroll; Facebook's Download your information export is the better source then."
+  },
+  {
+   "topic": "v2 untested",
+   "text": "The version 2 flow (schema 2, new mark file, kit builders) has not had a real Messenger run yet; only the extraction steps were proven with the old skill."
+  },
+  {
+   "topic": "Windows untested",
+   "text": "The Windows app and Chrome on Windows haven't been tried."
+  },
+  {
+   "topic": "Messenger only",
+   "text": "Other channels (email, Zoom) need their own client-desk modules."
+  }
+ ],
+ "scheduled_tasks": {
+  "summary": "None. The skill runs only when Swami asks; \"update all\" is on request too, never scheduled. The nightly \"Skills dashboard nightly refresh\" repackages its zip for GitHub but never runs it.",
+  "tasks": []
+ },
+ "runs_in": [
+  {
+   "where": "Claude app, cloud session (web, desktop, mobile)",
+   "status": "Partial",
+   "notes": "The repo, Drive, build and publish steps run in the cloud. The harvest needs the session linked to the Mac's desktop app browser, or an uploaded saved page."
+  },
+  {
+   "where": "Claude desktop app linked to the Mac",
+   "status": "Yes",
+   "notes": "Where the harvest runs. The extraction steps ran end to end on the first client with the old skill; the version 2 flow is not yet tried."
+  },
+  {
+   "where": "Claude desktop app linked to a Windows PC",
+   "status": "Untested",
+   "notes": "Same steps if the pane is offered; otherwise Chrome with Claude in Chrome."
+  },
+  {
+   "where": "Claude mobile app",
+   "status": "Partial",
+   "notes": "Can ask for a run that uses a linked computer or an uploaded saved page; the phone has no browser tool."
+  },
+  {
+   "where": "Claude Code on the Mac",
+   "status": "Untested",
+   "notes": "Would need Claude in Chrome connected, plus the Drive connector."
+  }
+ ],
+ "other_ais": [
+  {
+   "ai": "ChatGPT",
+   "status": "Untested",
+   "notes": "Skills need a Business, Enterprise, Edu or Healthcare plan. Needs a signed-in browser agent, code execution, GitHub and Drive access, and vibe-dashboard installed there."
+  },
+  {
+   "ai": "Gemini",
+   "status": "Untested",
+   "notes": "Upload the unzipped skill folder. Needs a signed-in browser, code execution, and vibe-dashboard and client-desk installed there."
+  },
+  {
+   "ai": "Grok",
+   "status": "Untested",
+   "notes": "Import the .zip (or the SKILL.md if refused); installing by chat drifts. Same tool needs as the others."
+  }
+ ],
+ "gotchas": [
+  {
+   "topic": "facebook.com",
+   "text": "Open chats on facebook.com/messages, never messenger.com, which stops at an account picker."
+  },
+  {
+   "topic": "You is Swami",
+   "text": "In message labels, \"You\" is the signed-in consultant; the other name is the client."
+  },
+  {
+   "topic": "Relative times",
+   "text": "Labels say \"At 2:39 PM\" for today and a weekday for this week; Claude resolves them against the capture date and the pane's time zone."
+  },
+  {
+   "topic": "Virtualized list",
+   "text": "Only about 20 messages are in the page at once, so Claude harvests while scrolling, not at the end."
+  },
+  {
+   "topic": "Big images",
+   "text": "Image bytes come out in 200,000-character slices, 3 to 4 per call, because the device bridge caps a call near 1 MB."
+  },
+  {
+   "topic": "Drive uploads",
+   "text": "Upload from a copy under `/home/claude`: the project files folder rewrites JPEG bytes, so a hash taken there won't match."
+  },
+  {
+   "topic": "Mark order",
+   "text": "Update `state/channels.json` before rebuilding the tracker (it reads the mark), but commit it only after every publish succeeds."
+  },
+  {
+   "topic": "New page",
+   "text": "Every update makes a new chat page; only \"add it to the last chat page\" appends to the latest one."
+  },
+  {
+   "topic": "Personal details",
+   "text": "Phone numbers, addresses and emails in messages stay in the private repo; Claude asks before showing them on a page Swami will share."
+  },
+  {
+   "topic": "On Windows",
+   "text": "Save the chat page with Ctrl+S as Web Page, Complete for the fallback; install Chrome with one `winget` line in PowerShell, then reopen PowerShell."
+  }
+ ],
+ "requirements": [
+  {
+   "topic": "Client project",
+   "text": "A client set up by client-desk: its own Claude project, a private repo with `project.json` schema 2 and Messenger switched on."
+  },
+  {
+   "topic": "A computer",
+   "text": "A Mac (or a Windows 10 or 11 PC, untested) with the Claude desktop app, or Chrome with Claude in Chrome."
+  },
+  {
+   "topic": "Facebook",
+   "text": "Swami signed in to Facebook in that browser, in the chat with the client."
+  },
+  {
+   "topic": "Connectors",
+   "text": "Google Drive connected, and the Claude GitHub app given access to the client repo."
+  },
+  {
+   "topic": "Code execution",
+   "text": "\"Create and edit files\" on, with network access for the voice model."
+  }
+ ],
+ "glossary": [
+  {
+   "term": "client-desk",
+   "topic": "Client system",
+   "match": "client-desk",
+   "code": "",
+   "def": "Swami's orchestrator skill that sets up and runs each client's project; this skill is one of its modules."
+  },
+  {
+   "term": "Module",
+   "topic": "Client system",
+   "match": "modules?",
+   "code": "modules.messenger|modules.launch",
+   "def": "A client-desk skill for one channel or job, switched on per client in project.json."
+  },
+  {
+   "term": "project.json",
+   "topic": "Client system",
+   "match": "project file",
+   "code": "project.json",
+   "def": "The client repo's main data file: names, time zone, Drive folders, modules, status and page links."
+  },
+  {
+   "term": "Schema 2",
+   "topic": "Client system",
+   "match": "schema",
+   "code": "",
+   "def": "The current version of project.json's layout; older client repos are adopted up to it first."
+  },
+  {
+   "term": "Adopt",
+   "topic": "Client system",
+   "match": "Adopt",
+   "code": "",
+   "def": "client-desk's steps that bring an existing client repo up to the current schema."
+  },
+  {
+   "term": "Status",
+   "topic": "Client system",
+   "match": "Paused|Closed|Active",
+   "code": "",
+   "def": "A client's state in project.json: Active, Paused or Closed; the skill asks before running on the last two."
+  },
+  {
+   "term": "Since-last mark",
+   "topic": "Ranges",
+   "match": "since[- ]last|mark",
+   "code": "state/channels.json",
+   "def": "The newest message time and id from the previous run, kept in state/channels.json, where the next run starts."
+  },
+  {
+   "term": "Backfill",
+   "topic": "Ranges",
+   "match": "backfill",
+   "code": "",
+   "def": "A run over the whole chat history, made into one chat page like any other update."
+  },
+  {
+   "term": "Range",
+   "topic": "Ranges",
+   "match": "ranges?",
+   "code": "",
+   "def": "The stretch of the chat one run covers, in the client's time zone."
+  },
+  {
+   "term": "Built-in browser",
+   "topic": "Messenger",
+   "match": "built-in browser|browser pane|the pane",
+   "code": "",
+   "def": "The browser pane inside the Claude desktop app, where Swami stays signed in to Facebook."
+  },
+  {
+   "term": "E2EE",
+   "topic": "Messenger",
+   "match": "encrypted",
+   "code": "",
+   "def": "End-to-end encrypted Messenger chats, whose photos appear in the page as full-size data URIs."
+  },
+  {
+   "term": "Virtualized list",
+   "topic": "Messenger",
+   "match": "virtualized",
+   "code": "",
+   "def": "A list that keeps only the rows on screen in the page, so messages must be collected while scrolling."
+  },
+  {
+   "term": "Message id",
+   "topic": "Messenger",
+   "match": "message id",
+   "code": "data-message-id",
+   "def": "Facebook's id for each message; its number after msgr. is in time order."
+  },
+  {
+   "term": "Harvest",
+   "topic": "Messenger",
+   "match": "harvest(?:s|ed)?",
+   "code": "",
+   "def": "Collecting every message and image from the chat while scrolling it."
+  },
+  {
+   "term": "messages.json",
+   "topic": "Data",
+   "match": "chat data",
+   "code": "messages.json",
+   "def": "Every message in the range with its exact time, sender, topic, images, files, links and reactions."
+  },
+  {
+   "term": "content.json",
+   "topic": "Data",
+   "match": "highlights",
+   "code": "content.json",
+   "def": "Claude's write-up for the page: decisions, specs, action items, open questions, captions, glossary and references."
+  },
+  {
+   "term": "Kit",
+   "topic": "Data",
+   "match": "kit",
+   "code": "chat/build.py|chat/parse.py",
+   "def": "client-desk-kit, the shared builders copied into each client repo for the chat page, tracker and hub."
+  },
+  {
+   "term": "Chat page",
+   "topic": "Pages",
+   "match": "chat pages?",
+   "code": "",
+   "def": "The new private vibe-dashboard page each update makes for its range."
+  },
+  {
+   "term": "Tracker",
+   "topic": "Pages",
+   "match": "tracker",
+   "code": "comms/tracker.json",
+   "def": "The client's private page of messages, files, tasks and questions, built from comms/tracker.json."
+  },
+  {
+   "term": "Hub",
+   "topic": "Pages",
+   "match": "hub",
+   "code": "",
+   "def": "The client's main page linking every other page."
+  },
+  {
+   "term": "Launch page",
+   "topic": "Pages",
+   "match": "launch page",
+   "code": "",
+   "def": "The product page, updated only when the chat touched the product."
+  },
+  {
+   "term": "Drive",
+   "topic": "Pages",
+   "match": "Drive",
+   "code": "",
+   "def": "The client's Google Drive folder, where images and files are filed in numbered, dated subfolders."
+  },
+  {
+   "term": "Chatter",
+   "topic": "Data",
+   "match": "Chatter|topics?",
+   "code": "",
+   "def": "The topic for small talk; every chat page tags messages with 6 to 9 topics and always includes Chatter."
+  },
+  {
+   "term": "NDA check",
+   "topic": "Pages",
+   "match": "NDA",
+   "code": "",
+   "def": "The privacy scan that keeps anyone under NDA off pages, narration and data files before anything is published or committed."
+  }
+ ],
+ "confirm": [],
+ "spoken": {
+  "_intro": "This page is the skill sheet for the client messenger skill. It is the client desk module for Facebook Messenger: it pulls one client's chat for a range into the client's private repo, files the images in Drive, builds a new chat page, and [updates](/ʌpdˈeɪts/) the tracker, hub and launch page.",
+  "Dashboard Summary": "A short intro, a colour key, and a table of every section",
+  "What It Is": "What the skill is, a module of client desk that replaces the old Messenger chat dashboard skill, and why it exists: Messenger hides most of a chat at any moment and has no export that fits a client file",
+  "What It Does": "Nine things it handles, from checking the client project and working out the range, through the harvest, images, chat data and Drive filing, to the new chat page, the related pages, and moving the mark forward",
+  "How to Use It": "The phrases that start it, then eight steps on the Mac, from opening the client's project to reviewing the report. A second table gives the Windows steps, which have not been tried yet",
+  "Skills It Depends On": "Client desk and vibe dashboard are required, with the built in browser skill for the harvest, the Chrome browser skill as a fallback, and Google workspace when it makes Google files",
+  "Programs It Depends On": "The Claude desktop app on the Mac, or Chrome with Claude in Chrome, plus the client desk kit, Python, git, the Google Drive connector and the Kokoro voice in Claude's workspace",
+  "Capabilities and Limitations": "It picks up exactly where the last run stopped, handles any range, gets full size images even from encrypted chats, and only reads. But it needs a signed in browser, depends on Facebook's page layout, and the new version has not had a real run yet",
+  "Scheduled Tasks": "None. It runs only when Swami asks",
+  "Where It Runs": "The harvest runs in the desktop app linked to the Mac. Cloud sessions do everything else, and Windows, Claude Code and other assistants are untested",
+  "Gotchas": "Ten traps, from opening chats on facebook dot com instead of messenger dot com, to big images, Drive uploads, and the order of the mark",
+  "Other Requirements": "A client set up by client desk, a computer with the desktop app or Chrome, a signed in Facebook account, Google Drive and GitHub access, and code execution",
+  "Card and Freshness": "Which version of the skill this page describes, and its fingerprint",
+  "Source Document (Verbatim)": "The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text"
+ },
+ "meta": {
+  "card_version": 2,
+  "fingerprint": "sha256:29e15c2ac773861f",
+  "files": [
+   "SKILL.md"
+  ],
+  "skill_updated": "Fri Nov 27, 2026",
+  "carded": "Fri Nov 27, 2026",
+  "status": "published",
+  "zip": "https://github.com/swami-claude-skills/claude-skills/raw/main/zips/client-messenger.zip",
+  "draft_url": "https://claude.ai/artifact/QjYytG1b37KiB9Dh9C5qda",
+  "public_url": "https://swami-claude-skills.github.io/claude-skills/dashboards/client-messenger/",
+  "vibe_fingerprint": "sha256:c207c414f93860aa",
+  "vibe_updated": "Thu Nov 26, 2026"
+ }
+}

@@ -23,6 +23,14 @@
   "published": "2026-11-28",
   "draft_url": "https://claude.ai/artifact/5Ekt76XXLDS3SG8AZHhPvu"
  },
+ "client-messenger": {
+  "title": "Client Messenger",
+  "page": "dashboards/client-messenger/",
+  "fingerprint": "sha256:29e15c2ac773861f",
+  "skill_updated": "Fri Nov 27, 2026",
+  "published": "2026-11-27",
+  "draft_url": "https://claude.ai/artifact/QjYytG1b37KiB9Dh9C5qda"
+ },
  "facebook-comments": {
   "title": "Facebook Comments",
   "page": "dashboards/facebook-comments/",

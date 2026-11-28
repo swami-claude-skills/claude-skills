@@ -1,0 +1,33 @@
+This page is the skill sheet for the client messenger skill. It is the client desk module for Facebook Messenger: it pulls one client's chat for a range into the client's private repo, files the images in Drive, builds a new chat page, and [updates](/ʌpdˈeɪts/) the tracker, hub and launch page.
+
+Section one, Dashboard Summary. A short intro, a colour key, and a table of every section.
+
+Section two, Search. Type a few words to find anything on this page, in any order and with small typos forgiven. Narrow the results with filters, and click a result to jump to it.
+
+Section three, What It Is. What the skill is, a module of client desk that replaces the old Messenger chat dashboard skill, and why it exists: Messenger hides most of a chat at any moment and has no export that fits a client file.
+
+Section four, What It Does. Nine things it handles, from checking the client project and working out the range, through the harvest, images, chat data and Drive filing, to the new chat page, the related pages, and moving the mark forward. A workflow diagram, with a colour key, shows every step and who does it.
+
+Section five, How to Use It. The phrases that start it, then eight steps on the Mac, from opening the client's project to reviewing the report. A second table gives the Windows steps, which have not been tried yet.
+
+Section six, Skills It Depends On. Client desk and vibe dashboard are required, with the built in browser skill for the harvest, the Chrome browser skill as a fallback, and Google workspace when it makes Google files.
+
+Section seven, Programs It Depends On. The Claude desktop app on the Mac, or Chrome with Claude in Chrome, plus the client desk kit, Python, git, the Google Drive connector and the Kokoro voice in Claude's workspace.
+
+Section eight, Capabilities and Limitations. It picks up exactly where the last run stopped, handles any range, gets full size images even from encrypted chats, and only reads. But it needs a signed in browser, depends on Facebook's page layout, and the new version has not had a real run yet.
+
+Section nine, Scheduled Tasks. None. It runs only when Swami asks.
+
+Section ten, Where It Runs. The harvest runs in the desktop app linked to the Mac. Cloud sessions do everything else, and Windows, Claude Code and other assistants are untested.
+
+Section eleven, Gotchas. Ten traps, from opening chats on facebook dot com instead of messenger dot com, to big images, Drive uploads, and the order of the mark.
+
+Section twelve, Other Requirements. A client set up by client desk, a computer with the desktop app or Chrome, a signed in Facebook account, Google Drive and GitHub access, and code execution.
+
+Section thirteen, Card and Freshness. Which version of the skill this page describes, and its fingerprint.
+
+Section fourteen, Mind Map. The whole page as bubbles you can open, hover for a summary, and click to jump to that spot.
+
+Section fifteen, Glossary. The terms used on this page, each linked to where it appears.
+
+Section sixteen, Source Document, Verbatim. The skill's own instructions, word for word. It opens formatted, and a switch shows it as plain text.
